@@ -17,7 +17,8 @@ const checkPlace = ( place, index, host ) => {
             fetch( `${host}/api/rest_v1/page/summary/${encodeURIComponent(place.title)}`).then((r)=>r.json())
                 .then((json)=> {
                     const coords = json.coordinates;
-                    if ( json.thumbnail ) {
+                    // Don't override an existing thumbnail choice
+                    if ( json.thumbnail && !place.thumbnail ) {
                         place.thumbnail = json.thumbnail.source;
                         place.thumbnail__source = json.originalimage.source;
                     }
