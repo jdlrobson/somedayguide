@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run data && babel-node scripts/init.js",
+    "cli": "babel-node scripts/cli.js",
     "data": "babel-node scripts/initData.js",
     "watch": "npm start && sleep 2 && npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1"
