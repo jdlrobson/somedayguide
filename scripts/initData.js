@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import places from './data/places.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
-
+import extractCard from './extractCard';
 import fs from 'fs';
 
 const pending = [];
@@ -16,18 +16,7 @@ const checkPlace = ( place, index, host ) => {
         pending.push(
             fetch( `${host}/api/rest_v1/page/summary/${encodeURIComponent(place.title)}`).then((r)=>r.json())
                 .then((json)=> {
-                    const coords = json.coordinates;
-                    // Don't override an existing thumbnail choice
-                    if ( json.thumbnail && !place.thumbnail ) {
-                        place.thumbnail = json.thumbnail.source;
-                        place.thumbnail__source = json.originalimage.source;
-                    }
-                    if ( coords ) {
-                        place.lat = coords.lat;
-                        place.lon = coords.lon;
-                    }
-                    place.summary = json.extract_html;
-                    place.description = json.description;
+                    place = extractCard(place, json);
                 })
         );
     }
