@@ -10,13 +10,13 @@ export default function ( { title, href, thumbnail, modifier, description } ) {
             <a class="card__link" href={href || `/destination/${title}.html`} aria-hidden="true"></a>
             <div class={getClassName('card__thumb', modifier)}
                 style={
-                    {
+                    thumbnail ? {
                         'background-image': `url(${thumbnail})`
-                    }
+                    } : {}
                 }
             ></div>
             <div class={getClassName('card__text', modifier)}>
-                <h3>{title.replace(/_/g, ' ')}</h3>
+                <h3 class={getClassName('card__text__heading')}>{title.replace(/_/g, ' ')}</h3>
                 <p class={getClassName('card__text__summary', modifier)}>
                     {description}
                 </p>
