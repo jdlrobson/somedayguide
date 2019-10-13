@@ -50,12 +50,7 @@ function menu() {
                     break;
                 case 1:
                     getUserInput('Which place?').then(( title ) => {
-                        if ( places.places.filter((p) => p.title === title).length ) {
-                            feedback('Already got that one.');
-                        } else {
-                            feedback(`Pushed "${title}"`);
-                            places.places.push( { title } );
-                        }
+                        places.places = places.places.filter((place)=>place.title !==title);
                         save();
                         return menu();
                     })
