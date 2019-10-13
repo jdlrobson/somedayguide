@@ -1,0 +1,25 @@
+{
+  "name": "somedayguide",
+  "version": "1.0.0",
+  "description": "Jon and Linzy's guide to the world.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run data && babel-node scripts/init.js",
+    "data": "babel-node scripts/initData.js",
+    "watch": "npm start && sleep 2 && npm run watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "fetch": "^1.1.0",
+    "mustache": "^3.1.0",
+    "node-fetch": "^2.6.0",
+    "preact": "^10.0.0",
+    "preact-render-to-string": "^5.0.6",
+    "wikipedia-react-components": "^1.8.3"
+  }
+}

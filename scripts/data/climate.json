@@ -1,0 +1,3 @@
+{
+    "San Francisco": {"data":[{"heading":"Jan","precipitation":104.1,"high":13.3,"low":7.8},{"heading":"Feb","precipitation":88.9,"high":15.6,"low":8.9},{"heading":"Mar","precipitation":73.7,"high":16.1,"low":9.4},{"heading":"Apr","precipitation":38.1,"high":17.2,"low":10},{"heading":"May","precipitation":12.7,"high":17.8,"low":10.6},{"heading":"Jun","precipitation":5.1,"high":18.9,"low":11.7},{"heading":"Jul","precipitation":0,"high":18.9,"low":12.2},{"heading":"Aug","precipitation":0,"high":18.9,"low":12.2},{"heading":"Sep","precipitation":5.1,"high":21.1,"low":13.3},{"heading":"Oct","precipitation":27.9,"high":20.6,"low":12.8},{"heading":"Nov","precipitation":66,"high":17.8,"low":10.6},{"heading":"Dec","precipitation":99.1,"high":13.9,"low":8.3}],"id":"4"}
+}
