@@ -9,7 +9,9 @@ export default function ( { places } ) {
             title="the world">
             <CardGrid>
                 {places.map((place) =>
-                    <Card title={place.title} description={place.description} thumbnail={place.thumbnail} />)}
+                    <Card title={place.title}
+                        href={`/country/${place.title}`}
+                        description={place.description} thumbnail={place.thumbnail} />)}
             </CardGrid>
         </Page>
     )
