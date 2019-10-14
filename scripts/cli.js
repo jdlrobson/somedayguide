@@ -1,12 +1,10 @@
 import util from 'util';
-import places from './data/places.json';
-import sights from './data/sights.json';
+import destinations from './data/destinations.json';
 import next from './data/next.json';
 import fs from 'fs';
 
 function save() {
-    fs.writeFileSync(`${__dirname}/data/places.json`, JSON.stringify(places));
-    fs.writeFileSync(`${__dirname}/data/sights.json`, JSON.stringify(sights));
+    fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
     fs.writeFileSync(`${__dirname}/data/next.json`, JSON.stringify(next));
 }
 
@@ -30,7 +28,8 @@ function menu() {
             '0: Add place',
             '1: Delete place',
             '2: Add sight',
-            '4: Add go next'
+            '4: Add go next',
+            '6: Set image'
     ];
     getUserInput( '\n\n\n**********************\n' + options.join('\n') + '\n**********************' )
         .then( ( val ) => {
@@ -38,11 +37,11 @@ function menu() {
             switch ( val ) {
                 case 0:
                     getUserInput('Which place?').then(( title ) => {
-                        if ( places.places.filter((p) => p.title === title).length ) {
+                        if ( destinations[title] ) {
                             feedback('Already got that one.');
                         } else {
                             feedback(`Pushed "${title}"`);
-                            places.places.push( { title } );
+                            destinations[title] = { title };
                         }
                         save();
                         return menu();
@@ -50,7 +49,7 @@ function menu() {
                     break;
                 case 1:
                     getUserInput('Which place?').then(( title ) => {
-                        places.places = places.places.filter((place)=>place.title !==title);
+                        delete destinations[title];
                         save();
                         return menu();
                     })
@@ -58,11 +57,11 @@ function menu() {
                 case 2:
                     getUserInput('Which place?').then(( title ) => {
                         return getUserInput('Which sight?').then(( sight ) => {
-                            if ( sights[title].filter((p) => p.title === sight).length ) {
+                            if ( destinations[title].sights.filter((p) => p.title === sight).length ) {
                                 feedback('Already got that one.');
                             } else {
                                 feedback(`Pushed "${sight}" to "${title}"`);
-                                sights[title].push( { title: sight } );
+                                destinations[title].sights.push( { title: sight } );
                             }
                             save();
                             return menu();
@@ -82,6 +81,24 @@ function menu() {
                             save();
                             return menu();
                         });
+                    });
+                    break;
+                case 6:
+                    getUserInput('Which place?').then(( title ) => {
+                        if ( !destinations[title] ) {
+                            console.log('no have');
+                            return menu();
+                        } else {
+                            return getUserInput('What is image thumbnail?').then(( thumbnail ) => {
+                                return getUserInput('What is commons title?').then(( source ) => {
+                                    destinations[title].thumbnail = thumbnail;
+                                    destinations[title].thumbnail__source = source;
+                                    console.log(`updated ${title}`);
+                                    save();
+                                    return menu();
+                                })
+                            });
+                        }
                     });
                     break;
                 default:

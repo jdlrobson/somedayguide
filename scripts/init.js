@@ -5,9 +5,7 @@ import Home from '../ui/pages/Home';
 import Destination from '../ui/pages/Destination';
 import Country from '../ui/pages/Country';
 import NotFound from '../ui/pages/NotFound';
-import places_json from './data/places.json';
-import climate_json from './data/climate.json';
-import sights_json from './data/sights.json';
+import places_json from './data/destinations.json';
 import next_json from './data/next.json';
 import countries_json from './data/countries.json';
 const mustache = require( 'mustache' );
@@ -17,27 +15,17 @@ function renderPage( filename, data ) {
     fs.writeFileSync( `public/${filename}`, mustache.render( template, data ) );
 }
 
-const places = places_json.places;
-const index = {};
-places.map(({title, thumbnail, description}) => {
-    index[title] = {
-        thumbnail, description
-    };
-});
-
-places.forEach((place) => {
+Object.keys(places_json).forEach((title) => {
+    const place = places_json[title];
     console.log(`Generate ${place.title}...`);
-    const title = place.title,
-        next = next_json[title] || [];
+    const next = next_json[title] || [];
 
     renderPage( `destination/${title}.html`, {
         page_title: title,
         url: `https://somedayguide.com/destination/${title}`,
         img: place.thumbnail,
         view: render( <Destination {...place}
-            climate={climate_json[title]}
-            sights={sights_json[title] || []}
-            next={next.map((title)=>Object.assign({}, index[title], { title }))} /> ),
+            next={next.filter((title) => !!places_json[title]).map((title) => places_json[title])} /> ),
         description: `Guide to ${place.title}`
     } );
 });
