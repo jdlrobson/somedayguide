@@ -47,6 +47,11 @@ Object.keys(countries_json).forEach((title) => {
     const country = countries_json[title];
     console.log(`Generate ${title}...`);
 
+    // remove destinations without an image...
+    country.destinations = country.destinations.filter((d) => d.thumbnail)
+        // destinations should not point to countries...
+        .filter((d) => countries_json[d.title] === undefined);
+
     renderPage( `country/${title}.html`, {
         page_title: title,
         url: `https://somedayguide.com/country/${title}`,
