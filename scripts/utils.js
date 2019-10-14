@@ -13,7 +13,7 @@ export function extractCard(place, json) {
         place.lat = coords.lat;
         place.lon = coords.lon;
     }
-    place.title = json.displaytitle || json.title;
+    place.title = json.title;
     place.summary = json.extract_html;
     place.description = json.description;
     return place;
