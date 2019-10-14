@@ -16,7 +16,6 @@ Object.keys(next).forEach((key) => {
     }
 });
 
-console.log(destinations['Pilsen'].sights);
 console.log('Checking go next is 2-way...');
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
