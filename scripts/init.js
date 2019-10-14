@@ -8,6 +8,7 @@ import NotFound from '../ui/pages/NotFound';
 import places_json from './data/destinations.json';
 import next_json from './data/next.json';
 import countries_json from './data/countries.json';
+import sights_json from './data/sights.json';
 const mustache = require( 'mustache' );
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
 
@@ -25,6 +26,7 @@ Object.keys(places_json).forEach((title) => {
         url: `https://somedayguide.com/destination/${title}`,
         img: place.thumbnail,
         view: render( <Destination {...place}
+            sights={place.sights.map((sight) => sights_json[sight])}
             next={next.filter((title) => !!places_json[title]).map((title) => places_json[title])} /> ),
         description: `Guide to ${place.title}`
     } );
@@ -36,7 +38,7 @@ Object.keys(countries_json).forEach((title) => {
     console.log(`Generate ${title}...`);
 
     // remove destinations without an image...
-    country.destinations = country.destinations
+    const destinations = country.destinations
         .map((title) => places_json[title] || {})
         .filter((d) => d.thumbnail)
         // destinations should link to places that exist.
@@ -48,7 +50,10 @@ Object.keys(countries_json).forEach((title) => {
         page_title: title,
         url: `https://somedayguide.com/country/${title}`,
         img: country.thumbnail,
-        view: render( <Country {...country} /> ),
+        view: render( <Country {...country}
+            destinations={destinations}
+            sights={country.sights.map((sight) => sights_json[sight])}
+        /> ),
         description: `Guide to ${title}`
     } );
 });

@@ -27,7 +27,7 @@ Object.keys(next).forEach((key) => {
 console.log('Checking countries');
 Object.keys(countries).forEach((countryName) => {
     const country = countries[countryName];
-    const newSights = country.sights.filter((sight) => !countries[sight.title]);
+    const newSights = country.sights.filter((sight) => !countries[sight]);
     if ( newSights.length !== country.sights.length ) {
         console.log(`Country ${countryName} listed another country as a sight.`);
         countries[countryName].sights = newSights;
@@ -53,8 +53,8 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         }
     })
     const newSights = place.sights.filter((sight) =>
-        !(next[place.title] || []).includes(sight.title) &&
-        (!countries[sight.title])
+        !(next[place.title] || []).includes(sight) &&
+        (!countries[sight])
     );
     if ( newSights.length !== place.sights.length) {
         console.log(`Removed sight that is go next/country in ${place.title}`);
