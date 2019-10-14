@@ -16,6 +16,7 @@ Object.keys(next).forEach((key) => {
     }
 });
 
+console.log(destinations['Pilsen'].sights);
 console.log('Checking go next is 2-way...');
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
@@ -33,6 +34,10 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         destinations[destinationTitle].sights = newSights;
         pending.push(Promise.resolve())
     }
+    /*place.sights.forEach((sight) => {
+        sight.thumbnail.replace(/[0-9]+px/, '400px')
+    })
+    pending.push(Promise.resolve())*/
 });
 
 if ( pending.length ) {
