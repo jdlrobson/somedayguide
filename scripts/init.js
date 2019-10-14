@@ -20,7 +20,7 @@ Object.keys(places_json).forEach((title) => {
     console.log(`Generate ${place.title}...`);
     const next = next_json[title] || [];
 
-    renderPage( `destination/${title}.html`, {
+    renderPage( `destination/${place.title}.html`, {
         page_title: title,
         url: `https://somedayguide.com/destination/${title}`,
         img: place.thumbnail,
