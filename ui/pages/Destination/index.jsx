@@ -12,7 +12,7 @@ export default function ( props ) {
     const childrenRight = [
         <Slideshow slides={[{ src: thumbnail, href: thumbnail__source } ]}></Slideshow>,
         <Box title="Climate">
-            <Climate {...climate} />
+            <Climate data={climate.length ? climate : undefined} />
         </Box>
     ];
     const childrenLeft = [
