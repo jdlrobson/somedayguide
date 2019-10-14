@@ -1,4 +1,4 @@
-export default function (place, json) {
+export function extractCard(place, json) {
     const coords = json.coordinates;
     // Don't override an existing thumbnail choice
     if ( json.thumbnail && !place.thumbnail ) {
@@ -13,8 +13,13 @@ export default function (place, json) {
         place.lat = coords.lat;
         place.lon = coords.lon;
     }
-    place.title = json.title;
+    place.title = json.displaytitle || json.title;
     place.summary = json.extract_html;
     place.description = json.description;
     return place;
 }
+
+export function getMissingKeys(obj, keys) {
+    const placeKeys = Object.keys(obj);
+    return keys.filter((key) => placeKeys.indexOf(key) === - 1 );
+};

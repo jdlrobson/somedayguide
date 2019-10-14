@@ -2,15 +2,14 @@ import fetch from 'node-fetch';
 import places from './data/places.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
-import extractCard from './extractCard';
+import { extractCard, getMissingKeys } from './utils';
 import fs from 'fs';
 
 const pending = [];
 const keys = ['title', 'lat', 'lon', 'thumbnail', 'summary', 'thumbnail__source', 'description'];
 
 const checkPlace = ( place, index, host ) => {
-    const placeKeys = Object.keys(place);
-    const missingKeys = keys.filter((key) => placeKeys.indexOf(key) === - 1 );
+    const missingKeys = getMissingKeys(place, keys);
     if ( missingKeys.length > 0 ) {
         console.log(`Updating ${place.title} (${missingKeys.join(',')})`);
         pending.push(
@@ -32,7 +31,6 @@ Object.keys(sights).forEach((key) => {
 console.log('Checking go next is 2-way...');
 places.places.forEach(( place ) => {
     ( next[place.title] || [] ).forEach((title) => {
-        const thisTitleNext = next[title];
         next[title] = next[title] || [];
         if ( next[title].indexOf(place.title) === -1) {
             next[title].push(place.title);
