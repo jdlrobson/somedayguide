@@ -3,6 +3,7 @@ import Page from '../Page';
 import Box from '../../components/Box';
 import Card from '../../components/Card';
 import Slideshow from '../../components/Slideshow';
+import CardGrid from '../../components/CardGrid';
 import Climate from '../../components/Climate';
 
 export default function ( props ) {
@@ -18,10 +19,6 @@ export default function ( props ) {
     const childrenLeft = [
         <Box title="Go next">
             {next.map((place) => <Card modifier="condensed" {...place}/>)}
-        </Box>,
-        <Box title="Sights">
-            {sights.map((sight) => <Card modifier="condensed" {...sight}
-                href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>
     ];
 
@@ -32,6 +29,11 @@ export default function ( props ) {
             <div class="note">
                 <p contentEditable>You will go there someday...</p>
             </div>
+            <CardGrid>
+            {sights.map((sight) => <Card modifier="condensed" {...sight}
+                thumbnail={sight.thumbnail && sight.thumbnail.replace(/[0-9]+px/, '400px')}
+                href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
+            </CardGrid>
         </Page>
     );
 };
