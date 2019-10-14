@@ -4,6 +4,7 @@ import preact, { h } from 'preact';
 import Home from '../ui/pages/Home';
 import Destination from '../ui/pages/Destination';
 import Country from '../ui/pages/Country';
+import NotFound from '../ui/pages/NotFound';
 import places_json from './data/places.json';
 import climate_json from './data/climate.json';
 import sights_json from './data/sights.json';
@@ -63,4 +64,9 @@ renderPage( 'index.html', {
     img: 'https://somedayguide.com/images/someday-map.png',
     view: render( <Home places={Object.keys(countries_json).map((key) => countries_json[key])} /> ),
     description: 'Jon and Linz\'s guide to the world'
+} );
+
+renderPage( '404.html', {
+    page_title: '4 oh no 4',
+    view: render( <NotFound /> )
 } );
