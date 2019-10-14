@@ -1,18 +1,26 @@
 import fetch from 'node-fetch';
 import destinations from './data/destinations.json';
 import next from './data/next.json';
+import { ignore } from './data/redirects.js';
 import countries from './data/countries.json';
 import fs from 'fs';
-
+const SHOW_WARNINGS = false;
 const pending = [];
 
-console.log('Remove duplicates in go next');
+console.log('Remove bad data entries in go next');
 Object.keys(next).forEach((key) => {
     const newSet = Array.from(new Set(next[key]));
     if ( newSet.length !== next[key].length) {
         console.log(`Remove duplicates in go next for ${key}`);
-        next[key] = newSet;
-        pending.push(Promise.resolve())
+    } else if (
+        SHOW_WARNINGS &&
+        newSet.filter((place) => destinations[place] !== undefined).length !== next[key].length
+    ) {
+        console.warn(`\t${key} points to destination(s) that do not exist`);
+    }
+    if ( SHOW_WARNINGS && destinations[key] === undefined) {
+        console.warn(`\t${key} is not a destination.`);
+        pending.push(Promise.resolve());
     }
 });
 
