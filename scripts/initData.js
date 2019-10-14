@@ -25,6 +25,12 @@ Object.keys(countries).forEach((countryName) => {
         countries[countryName].sights = newSights;
         pending.push(Promise.resolve())
     }
+    const destinationSet = new Set(country.destinations);
+    if(destinationSet.size !== country.destinations.length) {
+        console.log(`Removed duplicate destinations in ${countryName}`);
+        country.destinations = Array.from(destinationSet);
+        pending.push(Promise.resolve())
+    }
 })
 
 console.log('Checking go next is 2-way...');
