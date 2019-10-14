@@ -36,7 +36,9 @@ Object.keys(countries_json).forEach((title) => {
     console.log(`Generate ${title}...`);
 
     // remove destinations without an image...
-    country.destinations = country.destinations.filter((d) => d.thumbnail)
+    country.destinations = country.destinations
+        .map((title) => places_json[title] || {})
+        .filter((d) => d.thumbnail)
         // destinations should link to places that exist.
         .filter((d) => places_json[d.title])
         // destinations should not point to countries...
