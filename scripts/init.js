@@ -37,6 +37,8 @@ Object.keys(countries_json).forEach((title) => {
 
     // remove destinations without an image...
     country.destinations = country.destinations.filter((d) => d.thumbnail)
+        // destinations should link to places that exist.
+        .filter((d) => places_json[d.title])
         // destinations should not point to countries...
         .filter((d) => countries_json[d.title] === undefined);
 
