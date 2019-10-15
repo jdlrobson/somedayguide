@@ -1,11 +1,13 @@
 import util from 'util';
 import destinations from './data/destinations.json';
+import sights from './data/sights.json';
 import next from './data/next.json';
 import fs from 'fs';
 
 function save() {
     fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
     fs.writeFileSync(`${__dirname}/data/next.json`, JSON.stringify(next));
+    fs.writeFileSync(`${__dirname}/data/sights.json`, JSON.stringify(sights));
 }
 
 function feedback( msg ) {
@@ -57,11 +59,12 @@ function menu() {
                 case 2:
                     getUserInput('Which place?').then(( title ) => {
                         return getUserInput('Which sight?').then(( sight ) => {
-                            if ( destinations[title].sights.filter((p) => p.title === sight).length ) {
+                            if ( destinations[title].sights.filter((p) => p === sight).length ) {
                                 feedback('Already got that one.');
                             } else {
                                 feedback(`Pushed "${sight}" to "${title}"`);
-                                destinations[title].sights.push( { title: sight } );
+                                destinations[title].sights.push(sight);
+                                sights[sight] = { title: sight };
                             }
                             save();
                             return menu();
