@@ -1,14 +1,16 @@
 import fetch from 'node-fetch';
 import destinations from './data/destinations.json';
 import next from './data/next.json';
+import sights_json from './data/sights.json';
 import countries from './data/countries.json';
+import { ignore } from './data/ignore.js'
 import fs from 'fs';
 const SHOW_WARNINGS = true;
 const pending = [];
 
 console.log('Remove bad data entries in go next');
 Object.keys(next).forEach((key) => {
-    const newSet = Array.from(new Set(next[key]));
+    const newSet = Array.from(new Set(next[key].map((place) => typeof place === 'string' ? place : place[0])));
     if ( newSet.length !== next[key].length) {
         next[key] = newSet;
         pending.push(Promise.resolve());
@@ -63,6 +65,27 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         destinations[destinationTitle].sights = newSights;
         pending.push(Promise.resolve())
     }
+
+    // any sights that are actually destinations?
+    const sightsNotCities = [];
+    newSights.forEach((sight) => {
+        if (destinations[sight]) {
+            next[destinationTitle].push(sight);
+        } else {
+            if (!ignore.includes(sight)) {
+                if ( !sights_json[sight] ) {
+                    console.log(`No sight entry for ${sight}`)
+                }
+                sightsNotCities.push(sight);
+            }
+        }
+    });
+    if (sightsNotCities.length !== place.sights.length) {
+        place.sights = sightsNotCities;
+        console.log(`${destinationTitle} has sights that are actually destinations.`);
+        pending.push(Promise.resolve())
+    }
+
     /*place.sights.forEach((sight) => {
         sight.thumbnail.replace(/[0-9]+px/, '400px')
     })
