@@ -96,6 +96,11 @@ li {
     text-transform: uppercase;
 }
 
+.map__bg__heading__logo {
+    width: 100%;
+    height: auto;
+}
+
 .map__bg__subtitle {
     font-weight: 700;
     height: 20px;
@@ -164,7 +169,7 @@ li {
 .card-grid {
     max-width: none;
     grid-auto-rows: minmax(250px,auto);
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: 100%;
     overflow: hidden;
     background: #fff;
     display: grid;
@@ -200,7 +205,6 @@ li {
 }
 
 .card__thumb--card-grid {
-    width: 250px;
     height: 100%;
     background-size: cover;
 }
@@ -248,7 +252,7 @@ li {
 }
 
 .card--card-grid {
-    width: 250px;
+    width: 100%;
     height: 250px;
 }
 
@@ -382,6 +386,13 @@ li {
         width: 250px;
     }
     .page__column-three {
+        width: 250px;
+    }
+    .card-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+    .card__thumb--card-grid,
+    .card--card-grid {
         width: 250px;
     }
 }

@@ -12,7 +12,8 @@ export default function ( { place, lat = 0, lon = 0, zoom = 10, subtitle } ) {
                 <div>
                     <h1 class="map__bg__heading">
                         <a href="/">
-                            <img src="/images/someday-map.png" alt="Someday" height="146" width="400"/>
+                            <img  class="map__bg__heading__logo"
+                                src="/images/someday-map.png" alt="Someday" height="146" width="400"/>
                         </a>
                     </h1>
                     <div class="map__bg__subtitle">{subtitle}</div>
