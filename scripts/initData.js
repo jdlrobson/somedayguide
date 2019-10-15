@@ -10,6 +10,8 @@ console.log('Remove bad data entries in go next');
 Object.keys(next).forEach((key) => {
     const newSet = Array.from(new Set(next[key]));
     if ( newSet.length !== next[key].length) {
+        next[key] = newSet;
+        pending.push(Promise.resolve());
         console.log(`Remove duplicates in go next for ${key}`);
     } else if (
         SHOW_WARNINGS &&
