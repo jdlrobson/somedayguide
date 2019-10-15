@@ -4,6 +4,7 @@ import next from './data/next.json';
 import sights_json from './data/sights.json';
 import countries from './data/countries.json';
 import { ignore } from './data/ignore.js'
+import redirects from './data/redirections.json';
 import fs from 'fs';
 const SHOW_WARNINGS = true;
 const pending = [];
@@ -69,12 +70,32 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     // any sights that are actually destinations?
     const sightsNotCities = [];
     newSights.forEach((sight) => {
+        sight = redirects[sight] || sight;
         if (destinations[sight]) {
+            console.log(`${sight} is actually a city`)
             next[destinationTitle].push(sight);
+            pending.push(Promise.resolve())
         } else {
             if (!ignore.includes(sight)) {
                 if ( !sights_json[sight] ) {
                     console.log(`No sight entry for ${sight}`)
+                    pending.push(
+                        fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(sight)}`)
+                            .then((resp) => resp.json())
+                            .then((json) => {
+                                console.log('Add', sight);
+                                sights_json[sight] = {
+                                    title: sight,
+                                    description: json.description,
+                                    thumbnail: json.thumbnail && json.thumbnail.source,
+                                    thumbnail__source: json.originalimage && json.originalimage.source.split('/').slice(-1)[0],
+                                    summary: json.extract
+                                }
+                            }).catch((err) => {
+                                console.log(`${err} while trying to get ${sight}`)
+                                return Promise.resolve();
+                            })
+                    )
                 }
                 sightsNotCities.push(sight);
             }
@@ -102,6 +123,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
 if ( pending.length ) {
     console.log('Updating JSON');
     Promise.all( pending ).then(() => {
+        fs.writeFileSync(`${__dirname}/data/sights.json`, JSON.stringify(sights_json));
         fs.writeFileSync(`${__dirname}/data/countries.json`, JSON.stringify(countries));
         fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
         fs.writeFileSync(`${__dirname}/data/next.json`, JSON.stringify(next));
