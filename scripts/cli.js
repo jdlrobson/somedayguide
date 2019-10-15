@@ -31,6 +31,7 @@ function menu() {
             '1: Delete place',
             '2: Add sight',
             '4: Add go next',
+            '5: Remove go next',
             '6: Set image'
     ];
     getUserInput( '\n\n\n**********************\n' + options.join('\n') + '\n**********************' )
@@ -85,6 +86,21 @@ function menu() {
                             return menu();
                         });
                     });
+                    break;
+                case 5:
+                    getUserInput('Which place?').then(( title ) => {
+                        if ( !next[title] ) {
+                            console.log('no have');
+                            return menu();
+                        } else {
+                            return getUserInput('Remove which destination?')
+                                .then(( destination ) => {
+                                    next[title] = next[title].filter((title) => title !== destination);
+                                    save();
+                                    return menu();
+                                });
+                        }
+                    } );
                     break;
                 case 6:
                     getUserInput('Which place?').then(( title ) => {
