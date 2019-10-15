@@ -1,0 +1,51 @@
+export const updateLater = [
+    // missing images
+    "Eastern Thailand",
+    "Central Highlands (Guatemala)",
+    "Maiko National Park",
+    "Hainan",
+    "Central Highlands (Guatemala)",
+    "Northern Mozambique",
+    "Rio_Abiseo_National_Park",
+    "Southwest_Nigeria",
+    "North West Province",
+    "Sheki Region",
+    "Abéché",
+
+    // possible sights?
+    'Disney Cruise Line',
+    'Great Ocean Road',
+    "Jesuit Missions of the Chiquitos",
+    "Karakoram Highway",
+    "Painted Monasteries",
+    "Hajj",
+    "Kokoda Track"
+];
+
+export const ignore = [
+    "Helsinki%2FSouth#Suomenlinna",
+    "UNESCO_World_Heritage_List",
+    "UNESCO World Heritage Site",
+    "UNESCO World Heritage List",
+    "UNESCO World Heritage List (India)",
+    "Sacred sites of the Indian sub-continent",
+    "Natural wonders of India",
+    "Indian zoos and botanical gardens",
+    "Indian national parks and wildlife sanctuaries",
+    "Finnish National Parks",
+    "Cruising the Baltic Sea",
+    "Jerusalem/Old City",
+    "UNESCO_World_Heritage_List",
+    "UNESCO World Heritage List",
+    "Datong_City#See",
+    "Sarand%C3%AB#Further_afield",
+    "Jujuy#Other_destinations",
+    "Sarand%C3%AB#Further_afield",
+    "M%C3%B8re_og_Romsdal#Atlanterhavsveien",
+    "Moulay_Idriss#Volubilis",
+    "Mauritius#West",
+    "Helsinki%2FSouth#Suomenlinna",
+    "Nasiriyah#See",
+    "Ruzomberok#Q392365",
+    "Ninh_Binh#See",
+];
