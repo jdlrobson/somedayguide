@@ -3,7 +3,7 @@ import destinations from './data/destinations.json';
 import next from './data/next.json';
 import countries from './data/countries.json';
 import fs from 'fs';
-const SHOW_WARNINGS = false;
+const SHOW_WARNINGS = true;
 const pending = [];
 
 console.log('Remove bad data entries in go next');
@@ -17,10 +17,12 @@ Object.keys(next).forEach((key) => {
         SHOW_WARNINGS &&
         newSet.filter((place) => destinations[place] !== undefined).length !== next[key].length
     ) {
-        console.warn(`\t${key} points to destination(s) that do not exist`);
+        console.warn(`\t${key} points to destination(s) that do not exist: Compare ${next[key].join(',')} with ${newSet.join(',')}`);
     }
     if ( SHOW_WARNINGS && destinations[key] === undefined) {
         console.warn(`\t${key} is not a destination.`);
+        delete next[key];
+        pending.push(Promise.resolve());
     }
 });
 
