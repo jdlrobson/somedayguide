@@ -20,13 +20,18 @@ Object.keys(places_json).forEach((title) => {
     const place = places_json[title];
     console.log(`Generate ${place.title}...`);
     const next = next_json[title] || [];
+    const sights = place.sights.map((sight) => sights_json[sight])
+        .filter((sight) => sight);
+    if ( sights.length !== place.sights.length ) {
+        console.log(`data integrity problem in sights for ${title}`);
+    }
 
     renderPage( `destination/${place.title}.html`, {
         page_title: title,
         url: `https://somedayguide.com/destination/${title}`,
         img: place.thumbnail,
         view: render( <Destination {...place}
-            sights={place.sights.map((sight) => sights_json[sight])}
+            sights={sights}
             next={next.filter((title) => !!places_json[title]).map((title) => places_json[title])} /> ),
         description: `Guide to ${place.title}`
     } );
@@ -46,13 +51,18 @@ Object.keys(countries_json).forEach((title) => {
         // destinations should not point to countries...
         .filter((d) => countries_json[d.title] === undefined);
 
+    const sights = country.sights.map((sight) => sights_json[sight])
+        .filter((sight) => sight);
+    if ( sights.length !== country.sights.length ) {
+        console.log(`data integrity problem in sights for ${title}`);
+    }
     renderPage( `country/${title}.html`, {
         page_title: title,
         url: `https://somedayguide.com/country/${title}`,
         img: country.thumbnail,
         view: render( <Country {...country}
             destinations={destinations}
-            sights={country.sights.map((sight) => sights_json[sight])}
+            sights={sights}
         /> ),
         description: `Guide to ${title}`
     } );
