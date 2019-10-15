@@ -63,6 +63,13 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         sight.thumbnail.replace(/[0-9]+px/, '400px')
     })
     pending.push(Promise.resolve())*/
+
+    // Make sure sights are array of strings
+    if (newSights.length > 0 && typeof newSights[0] !== 'string') {
+        destinations[destinationTitle].sights = newSights.map((sight) => sight.title);
+        console.log(`Sights for ${destinationTitle} should be list of strings`);
+        pending.push(Promise.resolve());
+    }
 });
 
 if ( pending.length ) {
