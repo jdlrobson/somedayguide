@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import destinations from './data/destinations.json';
 import next from './data/next.json';
-import { ignore } from './data/redirects.js';
 import countries from './data/countries.json';
 import fs from 'fs';
 const SHOW_WARNINGS = false;
@@ -20,7 +19,6 @@ Object.keys(next).forEach((key) => {
     }
     if ( SHOW_WARNINGS && destinations[key] === undefined) {
         console.warn(`\t${key} is not a destination.`);
-        pending.push(Promise.resolve());
     }
 });
 
