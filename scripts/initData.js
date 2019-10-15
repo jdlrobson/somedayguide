@@ -107,11 +107,6 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         pending.push(Promise.resolve())
     }
 
-    /*place.sights.forEach((sight) => {
-        sight.thumbnail.replace(/[0-9]+px/, '400px')
-    })
-    pending.push(Promise.resolve())*/
-
     // Make sure sights are array of strings
     if (newSights.length > 0 && typeof newSights[0] !== 'string') {
         destinations[destinationTitle].sights = newSights.map((sight) => sight.title);
