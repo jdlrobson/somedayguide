@@ -16,6 +16,11 @@ function show(overlay) {
     overlay.setAttribute('style', '');
 }
 
+function empty(node) {
+    while ( node.firstChild ) {
+        node.removeChild( node.firstChild );
+    }
+}
 function matches(str) {
     return function ( title ) {
         return title.toLowerCase().indexOf(str) > -1;
@@ -32,6 +37,7 @@ function cardlist(links) {
     <a class="cardlist__item__link" href="${url}">${title}</a>`).join('')}`;
     return ul;
 }
+
 function searchoverlay() {
     const overlay = document.createElement('div');
     overlay.setAttribute('class', 'overlay overlay--search');
@@ -43,7 +49,14 @@ function searchoverlay() {
         </div>
     `;
     const resultsNode = overlay.querySelector('.overlay__results');
-    overlay.querySelector('input').addEventListener('input', (ev) => {
+    const mask = overlay.querySelector('.overlay__mask');
+    const input = overlay.querySelector('input');
+    mask.addEventListener('click', function ( ev ) {
+        input.value = '';
+        empty(resultsNode);
+        hide(overlay);
+    });
+    input.addEventListener('input', (ev) => {
         const
             matchFn = matches(ev.target.value.toLowerCase()),
             results = searchindex.countries.filter(matchFn).map((title) => {
@@ -54,12 +67,7 @@ function searchoverlay() {
                         return { title, url: titleToLink(title, '/destination')}
                     })
                 );
-        if ( resultsNode.firstChild ) {
-            resultsNode.removeChild(resultsNode.firstChild);
-        }
-        if ( resultsNode.firstChild ) {
-            resultsNode.removeChild(resultsNode.firstChild);
-        }
+        empty(resultsNode);
         resultsNode.appendChild(cardlist(results, '/country'));
     });
     hide(overlay);
@@ -72,9 +80,7 @@ if ( fetch ) {
     const search = searchoverlay();
     document.querySelectorAll('.map__search').forEach((node) => {
         node.addEventListener('click', (ev) => {
-            console.log('hello?');
             show(search);
-            //search.querySelector('input').focus();
             if (!searchindex) {
                 searchindex = { countries: [], destinations: [] };
                 loadCSS('/index--js.css');
@@ -82,6 +88,13 @@ if ( fetch ) {
                     searchindex = json;
                 });
             }
+            const input = search.querySelector('input');
+            input.scrollIntoView();
+            setTimeout( function () {
+                input.focus();
+            }, 0 );
+            ev.stopPropagation();
+            ev.preventDefault();
         });
     })
 }
