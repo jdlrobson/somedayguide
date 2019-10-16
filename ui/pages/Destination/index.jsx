@@ -8,10 +8,11 @@ import Climate from '../../components/Climate';
 
 export default function ( props ) {
     const { summary, climate, sights,
-            title, lat, lon, thumbnail, next = [], thumbnail__source } = props;
+            title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
+            slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
     const childrenRight = [
-        <Slideshow slides={[{ src: thumbnail, href: thumbnail__source } ]}></Slideshow>,
+        <Slideshow slides={slides}></Slideshow>,
         <Box title="Climate">
             <Climate data={climate.length ? climate : undefined} />
         </Box>
