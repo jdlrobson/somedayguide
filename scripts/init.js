@@ -16,9 +16,10 @@ function renderPage( filename, data ) {
     fs.writeFileSync( `public/${filename}`, mustache.render( template, data ) );
 }
 
-Object.keys(places_json).forEach((title) => {
+const destinations = Object.keys(places_json);
+console.log(`Generate ${destinations.length} destinations...`);
+destinations.forEach((title) => {
     const place = places_json[title];
-    console.log(`Generate ${place.title}...`);
     const next = next_json[title] || [];
     const sights = place.sights.map((sight) => sights_json[sight])
         .filter((sight) => sight);
@@ -37,10 +38,10 @@ Object.keys(places_json).forEach((title) => {
     } );
 });
 
-console.log('Generate countries...')
-Object.keys(countries_json).forEach((title) => {
+const countries = Object.keys(countries_json);
+console.log(`Generate ${countries.length} countries...`);
+countries.forEach((title) => {
     const country = countries_json[title];
-    console.log(`Generate ${title}...`);
 
     // remove destinations without an image...
     const destinations = country.destinations
