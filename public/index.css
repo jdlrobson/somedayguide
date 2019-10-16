@@ -143,6 +143,7 @@ li {
     text-transform: uppercase;
     background: #fff;
     padding-left: 30px;
+    cursor: pointer;
 }
 
 .map__search__cta {
@@ -366,8 +367,7 @@ li {
 
 /* TODO: Features to implement */
 .menu__item:last-child,
-.map__bg__launch-icon,
-.map__search > * {
+.map__bg__launch-icon {
     /* TODO: Enable search */
     visibility: hidden;
 }

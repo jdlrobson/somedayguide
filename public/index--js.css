@@ -1,0 +1,56 @@
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+}
+.overlay__mask {
+    opacity: .2;
+    background: black;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.overlay__content,
+.overlay__mask {
+    top: 0;
+    z-index: 1;
+}
+.overlay__content {
+    position: relative;
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+    margin-top: 288px;
+}
+.overlay__input {
+    display: block;
+    width: 100%;
+    border: 1px solid #a2a9b1;
+    border-radius: 2px;
+    height: 40px;
+}
+.cardlist__item {
+    height: 80px;
+    position: relative;
+    width: 100%;
+    border: 1px solid rgba(0,0,0,.2);
+    display: block;
+}
+.cardlist__item__link {
+    display: block;
+    left: 0;
+    right: 0;
+    color: #333;
+    text-decoration: none;
+    font-size: 1.3em;
+    margin-left: 100px;
+    position: absolute;
+    padding-top: 20px;
+    bottom: 0;
+    top: 0;
+}
