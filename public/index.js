@@ -60,11 +60,19 @@ function searchoverlay() {
         const
             matchFn = matches(ev.target.value.toLowerCase()),
             results = searchindex.countries.filter(matchFn).map((title) => {
-                        return { title, url: titleToLink(title, '/country')}
+                    const t = decodeURIComponent(title).replace(/_/g, ' ');
+                    return {
+                        title: t,
+                        url: titleToLink(t, '/country')
+                    };
                 })
                 .concat(
                     searchindex.destinations.filter(matchFn).map((title) => {
-                        return { title, url: titleToLink(title, '/destination')}
+                        const t = decodeURIComponent(title).replace(/_/g, ' ');
+                        return {
+                            title: t,
+                            url: titleToLink(t, '/destination')
+                        };
                     })
                 );
         empty(resultsNode);
