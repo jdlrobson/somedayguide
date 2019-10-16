@@ -1,29 +1,11 @@
 import preact from 'preact';
 
 class Climate extends preact.Component {
-	onChange( ev ) {
-		this.setState( { month: ev.currentTarget.value } );
-	}
-	constructor( props ) {
-		super( props );
-		this.state = {
-			month: props.month
-		};
-	}
-	componentDidMount() {
-		this.setState( { month: this.getCurrentMonth() } );
-	}
-	getCurrentMonth() {
-		return ( new Date() ).getMonth();
-	}
 	renderInfo() {
 		var options,
 			props = this.props,
 			climate = props.data,
-			curMonthNum = this.state.month || this.getCurrentMonth(),
-			curMonth = climate[ curMonthNum ],
-			degSuffix = curMonth.imperial ? '°F' : '°C',
-			precSuffix = curMonth.imperial ? 'inches' : 'mm';
+			curMonthNum = ( new Date() ).getMonth();
 
 		options = climate.map( function ( data, i ) {
 			return (
@@ -32,18 +14,22 @@ class Climate extends preact.Component {
 		} );
 
 		return (
-			<div className="climate hydratable"
-				data-component="climate"
-				data-props={JSON.stringify( props )}>
+			<div class="climate">
 				<div>
-					<select class="climate__select" value={curMonthNum}
-						disabled={this.state.month === undefined}
-						onChange={this.onChange.bind( this )}>{options}</select>
-					<h4>Average temperatures</h4>
-					<span className="climate__high">{curMonth.high}<sup>{degSuffix}</sup></span>
-					<span className="climate__low">{curMonth.low}</span>
+					<h3 class="climate__heading">Average temperatures</h3>
+					<input type="range" min="0" max="11"
+						title="Slide to change months"
+						class="climate__select" value={curMonthNum} disabled/>
+					{climate.map(( { precipitation, low, high, imperial, heading }, i ) => {
+						return <div class={`climate__details climate__details--${i}`}>
+								<h4 class="climate__details__heading">{heading}</h4>
+								<span className="climate__high">{high}
+									<sup>{imperial ? '°F' : '°C'}</sup></span>
+								<span className="climate__low">{low}</span>
+								<div>Precipitation: {precipitation} {imperial ? 'inches' : 'mm'}</div>
+							</div>;
+					})}
 				</div>
-				<div>Precipitation: { curMonth.precipitation} {precSuffix}</div>
 			</div>
 		);
 	}

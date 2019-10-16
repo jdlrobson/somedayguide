@@ -83,7 +83,15 @@ function searchoverlay() {
     return overlay;
 }
 
+// Setup climate
+document.querySelectorAll('.climate__select').forEach( function ( climate ) {
+    climate.removeAttribute('disabled');
+    climate.addEventListener('change', function () {
+        this.setAttribute('value', this.value);
+    });
+} );
 
+// Enable search
 if ( fetch ) {
     const search = searchoverlay();
     document.querySelectorAll('.map__search').forEach((node) => {

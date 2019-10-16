@@ -14,7 +14,7 @@ export default function ( props ) {
     const childrenRight = [
         <Slideshow slides={slides}></Slideshow>,
         <Box title="Climate">
-            <Climate data={climate.length ? climate : undefined} />
+            <Climate data={climate && climate.length ? climate : undefined} />
         </Box>
     ];
     const childrenLeft = [

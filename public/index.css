@@ -348,10 +348,35 @@ li {
 }
 
 .climate__select {
-    max-width: 200px;
-    height: 40px;
-    min-width: 100px;
-    margin: 1em 0;
+    visibility: visible;
+}
+.climate__select[disabled] {
+    visibility: hidden;
+}
+
+.climate__select ~ .climate__details {
+    display: none;
+}
+
+.climate__select[value="0"] ~ .climate__details--0,
+.climate__select[value="1"] ~ .climate__details--1,
+.climate__select[value="2"] ~ .climate__details--2,
+.climate__select[value="3"] ~ .climate__details--3,
+.climate__select[value="4"] ~ .climate__details--4,
+.climate__select[value="5"] ~ .climate__details--5,
+.climate__select[value="6"] ~ .climate__details--6,
+.climate__select[value="7"] ~ .climate__details--7,
+.climate__select[value="8"] ~ .climate__details--8,
+.climate__select[value="9"] ~ .climate__details--9,
+.climate__select[value="10"] ~ .climate__details--10,
+.climate__select[value="11"] ~ .climate__details--11 {
+    display: block;
+}
+
+.climate__details__heading {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    margin: 8px 0;
 }
 
 .climate__high {
