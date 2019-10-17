@@ -5,7 +5,7 @@ import Card from '../../components/Card';
 
 export default function ( { places, title } ) {
     return (
-        <Page subtitle="guide to" zoom={1}
+        <Page zoom={1}
             title={title || "the world"}>
             <CardGrid>
                 {places.map((place) =>

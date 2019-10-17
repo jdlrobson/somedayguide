@@ -3,7 +3,9 @@ import NavigationBar from '../../components/NavigationBar';
 
 const MAP_URL = ( lat, lon, zoom ) => `https://maps.wikimedia.org/img/osm-intl,${zoom},${lat},${lon},1000x500.png?lang=en`;
 
-export default function ( { place, lat = 0, lon = 0, id, zoom = 10, subtitle } ) {
+export default function ( { place, lat = 0, lon = 0, id, zoom = 10,
+    subtitle = 'we will see', parent, parentLink
+} ) {
     return (
         <div class="map">
             <div class="map__overlay" style={
@@ -16,7 +18,8 @@ export default function ( { place, lat = 0, lon = 0, id, zoom = 10, subtitle } )
                     </a>
                 </h1>
                 <div class="map__overlay__subtitle">{subtitle}</div>
-                <h2 class="map__overlay__page-title" id="section_0">{place}</h2>
+                <h2 class="map__overlay__page-title">{place}</h2>
+                <a class="map__overlay__parent" href={parentLink}>{parent}</a>
             </div>
             <button class="map__launch-icon"
                 data-zoom={zoom} data-title={place}

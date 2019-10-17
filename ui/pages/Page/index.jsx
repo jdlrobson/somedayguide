@@ -3,8 +3,8 @@ import NavigationBar from '../../components/NavigationBar';
 import Map from '../../components/Map';
 
 export default function ( {
-    lat, lon, zoom,
-    title, subtitle = 'guide to', children, childrenLeft, childrenRight
+    lat, lon, zoom, parent, parentLink,
+    title, subtitle, children, childrenLeft, childrenRight
 } ) {
     return (
         <div class="page">
@@ -14,6 +14,8 @@ export default function ( {
             <div class="page__column page__column--two">
                 <NavigationBar />
                 <Map id="map"
+                    parent={parent}
+                    parentLink={parentLink}
                     lat={lat}
                     lon={lon}
                     zoom={zoom}
