@@ -1,10 +1,12 @@
 import util from 'util';
+import countries from './data/countries.json';
 import destinations from './data/destinations.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
 import fs from 'fs';
 
 function save() {
+    fs.writeFileSync(`${__dirname}/data/countries.json`, JSON.stringify(countries));
     fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
     fs.writeFileSync(`${__dirname}/data/next.json`, JSON.stringify(next));
     fs.writeFileSync(`${__dirname}/data/sights.json`, JSON.stringify(sights));
@@ -30,6 +32,7 @@ function menu() {
             '0: Add place',
             '1: Delete place',
             '2: Add sight',
+            '3D: Remove country destination',
             '4: Go next',
             '4A: Add go next',
             '4B: Remove go next',
@@ -70,6 +73,20 @@ function menu() {
                             save();
                             return menu();
                         });
+                    });
+                    break;
+                case '3D':
+                    getUserInput('Which country?').then(( title ) => {
+                        const country = countries[title];
+                        if ( country ) {
+                            return getUserInput('Which destination?').then(( dest ) => {
+                                country.destinations = country.destinations.filter((d) => d !== dest);
+                                save();
+                                return menu(); 
+                            });
+                        } else {
+                            return menu();
+                        }
                     });
                     break;
                 case '4':
