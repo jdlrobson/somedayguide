@@ -40,6 +40,11 @@
     border: 1px solid rgba(0,0,0,.2);
     display: block;
 }
+.cardlist__item__thumb {
+    background-size: cover;
+    width: 80px;
+    height: 100%;
+}
 .cardlist__item__link {
     display: block;
     left: 0;

@@ -32,8 +32,8 @@ function empty(node) {
     }
 }
 function matches(str) {
-    return function ( title ) {
-        return title.toLowerCase().indexOf(str) > -1;
+    return function ( obj ) {
+        return obj.title.toLowerCase().indexOf(str) > -1;
     }
 }
 
@@ -43,7 +43,8 @@ function titleToLink(title, root) {
 
 function cardlist(links) {
     const ul = document.createElement('ul');
-    ul.innerHTML = `${links.map(({ title, url }) => `<li class="cardlist__item">
+    ul.innerHTML = `${links.map(({ title, url, thumbnail }, i) => `<li class="cardlist__item">
+    <div class="cardlist__item__thumb" style="background-image:url(${thumbnail});"></div>
     <a class="cardlist__item__link" href="${url}">${title}</a>`).join('')}`;
     return ul;
 }
@@ -69,18 +70,20 @@ function searchoverlay() {
     input.addEventListener('input', (ev) => {
         const
             matchFn = matches(ev.target.value.toLowerCase()),
-            results = searchindex.countries.filter(matchFn).map((title) => {
-                    const t = decodeURIComponent(title).replace(/_/g, ' ');
+            results = searchindex.countries.filter(matchFn).map((obj) => {
+                    const t = decodeURIComponent(obj.title).replace(/_/g, ' ');
                     return {
                         title: t,
+                        thumbnail: obj.thumbnail,
                         url: titleToLink(t, '/country')
                     };
                 })
                 .concat(
-                    searchindex.destinations.filter(matchFn).map((title) => {
-                        const t = decodeURIComponent(title).replace(/_/g, ' ');
+                    searchindex.destinations.filter(matchFn).map((obj) => {
+                        const t = decodeURIComponent(obj.title).replace(/_/g, ' ');
                         return {
                             title: t,
+                            thumbnail: obj.thumbnail,
                             url: titleToLink(t, '/destination')
                         };
                     })
