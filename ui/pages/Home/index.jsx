@@ -3,10 +3,10 @@ import Page from '../Page';
 import CardGrid from '../../components/CardGrid';
 import Card from '../../components/Card';
 
-export default function ( { places } ) {
+export default function ( { places, title } ) {
     return (
         <Page subtitle="guide to" zoom={1}
-            title="the world">
+            title={title || "the world"}>
             <CardGrid>
                 {places.map((place) =>
                     <Card title={place.title}
