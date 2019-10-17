@@ -147,19 +147,9 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
 
     if ( !maploaded ) {
         togglemap();
-        loadCSS('/leaflet/leaflet.css')
-        loadJS('/leaflet/leaflet.js', function () {
-            var map = L.map('map').setView([data.lat, data.lon], data.zoom);
-            L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            if ( data.lat !== '0' && data.lon !== '0' ) {
-                L.marker([data.lat, data.lon]).addTo(map)
-                    .bindPopup(data.title)
-                    .openPopup();
-            }
-        })
+        loadJS('/scripts/map.js', function () {
+            window.initMap(data);
+        });
         maploaded = true;
     } else {
         togglemap();
