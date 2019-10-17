@@ -10,6 +10,28 @@ const SHOW_WARNINGS = true;
 const pending = [];
 const CHECK_THUMBNAILS = false;
 
+const COUNTRY_PROPERTY = 'P17';
+
+function getWikidata(entity, property) {
+    return fetch(`https://wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=${entity}&property=${property}&props=`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            const claims = json.claims || {};
+            return Object.keys(claims).map((key) => claims[key] && claims[key][0] &&
+                claims[key][0].mainsnak &&
+                claims[key][0].mainsnak.datavalue &&
+                claims[key][0].mainsnak.datavalue.value &&
+                claims[key][0].mainsnak.datavalue.value.id)[0];
+        }).then((value) => {
+            return fetch(`https://wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${value}&sites=enwiki&titles=&props=descriptions%7Clabels&languages=en`)
+        }).then((resp) => resp.json())
+        .then((json) => {
+            const entities = Object.keys(json.entities);
+            const entity = json.entities[entities[0]];
+            return entity && entity.labels && entity.labels.en.value;
+        });
+}
+
 function getThumbnail(title) {
     return CHECK_THUMBNAILS ? fetch(`https://en.wikipedia.org/api/rest_v1/page/media/${encodeURIComponent(title)}`)
         .then((resp) => resp.json())
@@ -34,6 +56,7 @@ function getSummary(title, project='wikipedia') {
         .then((json) => {
             return {
                 title,
+                wb: json.wikibase_item,
                 description: json.description,
                 thumbnail: json.thumbnail && json.thumbnail.source,
                 thumbnail__source: json.originalimage && json.originalimage.source.split('/').slice(-1)[0],
@@ -81,17 +104,7 @@ Object.keys(countries).forEach((countryName) => {
         country.destinations = Array.from(destinationSet);
         pending.push(Promise.resolve())
     }
-    destinationSet.forEach((key) => {
-        if ( !destinations[key] ) {
-            //console.log(`Destination ${key} is missing.`);
-        } else if ( destinations[key].country === undefined ) {
-            console.log(`Associate ${key} with country ${countryName}.`);
-            destinations[key].country = countryName;
-        } else if ( destinations[key].country !== countryName ) {
-            console.log(`Conflicting countries for ${key}: ${countryName} or ${destinations[key].country}?`);
-        }
-    })
-})
+});
 
 console.log('do not use SVGs for sights where possible.');
 Object.keys(sights_json).forEach((sightName) => {
@@ -106,8 +119,25 @@ Object.keys(sights_json).forEach((sightName) => {
 });
 
 console.log('Checking go next is 2-way...');
-Object.keys(destinations).forEach(( destinationTitle ) => {
+Object.keys(destinations).slice(0, 100).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
+    if ( !place.country ) {
+        console.log(`${destinationTitle} lacking wikibase id.`)
+        if ( place.wb ) {
+            console.log(`${destinationTitle} does not have a country associated. We can check its wikibase ${place.wb}.`)
+            pending.push(
+                getWikidata(place.wb, COUNTRY_PROPERTY).then((country) => {
+                    place.country = country;
+                })
+            );
+        } else {
+            pending.push(
+                getSummary(place.title, 'wikivoyage').then((json) => {
+                    place.wb = json.wb;
+                })
+            )
+        }
+    }
     // https://github.com/jdlrobson/somedayguide/issues/1
     if ( place.summary.indexOf('.mw-parser-output') > -1 ) {
         console.log(`Bad description in ${place.title}`);
