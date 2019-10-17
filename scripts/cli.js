@@ -27,6 +27,24 @@ function getUserInput( msg ) {
     })
 }
 
+function removeDestination() {
+    getUserInput('Which country?').then(( title ) => {
+        const country = countries[title];
+        if ( country ) {
+            return getUserInput('Which destination?').then(( dest ) => {
+                country.destinations = country.destinations.filter((d) => d !== dest);
+                if ( destinations[dest] ) {
+                    destinations[dest].country = undefined;
+                }
+                console.log(country.title, '\n', country.destinations.join(','))
+                save();
+                return removeDestination();
+            });
+        } else {
+            return menu();
+        }
+    });
+}
 function menu() {
     const options = [
             '0: Add place',
@@ -62,32 +80,27 @@ function menu() {
                     break;
                 case '2':
                     getUserInput('Which place?').then(( title ) => {
-                        return getUserInput('Which sight?').then(( sight ) => {
-                            if ( destinations[title].sights.filter((p) => p === sight).length ) {
-                                feedback('Already got that one.');
-                            } else {
-                                feedback(`Pushed "${sight}" to "${title}"`);
-                                destinations[title].sights.push(sight);
-                                sights[sight] = { title: sight };
-                            }
-                            save();
-                            return menu();
-                        });
-                    });
-                    break;
-                case '3D':
-                    getUserInput('Which country?').then(( title ) => {
-                        const country = countries[title];
-                        if ( country ) {
-                            return getUserInput('Which destination?').then(( dest ) => {
-                                country.destinations = country.destinations.filter((d) => d !== dest);
+                        const place = destinations[title] || countries[title];
+                        if ( place ) {
+                            return getUserInput('Which sight?').then(( sight ) => {
+                                if ( place.sights.filter((p) => p === sight).length ) {
+                                    feedback('Already got that one.');
+                                } else {
+                                    feedback(`Pushed "${sight}" to "${title}"`);
+                                    place.sights.push(sight);
+                                    sights[sight] = { title: sight };
+                                }
                                 save();
-                                return menu(); 
+                                return menu();
                             });
                         } else {
+                            console.log(`Cannot find ${title}`);
                             return menu();
                         }
                     });
+                    break;
+                case '3D':
+                    return removeDestination();
                     break;
                 case '4':
                     getUserInput('Which place does the journey begin?').then(( title ) => {
