@@ -9,6 +9,8 @@ setTimeout(function(){l(e)})},s.addEventListener&&s.addEventListener("load",func
 !function(e){var t=function(t,o,n){"use strict";var r,a=e.document.getElementsByTagName("script")[0],c=e.document.createElement("script");return"boolean"==typeof o&&(r=n,n=o,o=r),c.src=t,c.async=!n,a.parentNode.insertBefore(c,a),o&&"function"==typeof o&&(c.onload=o),c};"undefined"!=typeof module?module.exports=t:e.loadJS=t}("undefined"!=typeof global?global:this);
 
 let searchindex = false;
+let maploaded = false;
+let mapdisplayed = false;
 
 function hide(overlay, visibility) {
     if ( visibility ) {
@@ -31,6 +33,7 @@ function empty(node) {
         node.removeChild( node.firstChild );
     }
 }
+
 function matches(str) {
     return function ( obj ) {
         return obj.title.toLowerCase().indexOf(str) > -1;
@@ -104,19 +107,25 @@ document.querySelectorAll('.climate__select').forEach( function ( climate ) {
     });
 } );
 
+function setup() {
+    if (!searchindex) {
+        searchindex = { countries: [], destinations: [] };
+        loadCSS('/index--js.css');
+        return fetch('/index.json').then((resp) => resp.json()).then((json)=>{
+            searchindex = json;
+        });
+    } else {
+        return Promise.resolve();
+    }
+}
+
 // Enable search
 if ( fetch ) {
     const search = searchoverlay();
     document.querySelectorAll('.map__search').forEach((node) => {
         node.addEventListener('click', (ev) => {
+            setup();
             show(search);
-            if (!searchindex) {
-                searchindex = { countries: [], destinations: [] };
-                loadCSS('/index--js.css');
-                fetch('/index.json').then((resp) => resp.json()).then((json)=>{
-                    searchindex = json;
-                });
-            }
             const input = search.querySelector('input');
             input.focus();
             window.scrollTo(0,0);
@@ -125,9 +134,6 @@ if ( fetch ) {
         });
     })
 }
-
-let maploaded = false;
-let mapdisplayed = false;
 
 function togglemap() {
     const map = document.querySelector('.map');
@@ -147,10 +153,12 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
 
     if ( !maploaded ) {
         togglemap();
-        loadJS('/scripts/map.js', function () {
-            window.initMap(data);
+        setup().then( function () {
+            loadJS('/scripts/map.js', function () {
+                window.initMap(data, titleToLink, searchindex.destinations);
+            });
+            maploaded = true;
         });
-        maploaded = true;
     } else {
         togglemap();
     }
