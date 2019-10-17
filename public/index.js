@@ -34,9 +34,22 @@ function empty(node) {
     }
 }
 
+/**
+ * Fold accents in a string
+ * @param {string} str
+ * @return {string}
+ */
+function accentFold(str) {
+    return str.replace(/[éēěè]/g, 'e' )
+        .replace(/[àāǎá]/g, 'a' )
+        .replace(/[ǒóōò]/g, 'o' )
+        .replace(/[ūǚúùǔ]/g, 'u' )
+        .replace(/[īìíǐ]/g, 'i' );
+}
+
 function matches(str) {
     return function ( obj ) {
-        return obj.title.toLowerCase().indexOf(str) > -1;
+        return accentFold(obj.title.toLowerCase()).indexOf(str) > -1;
     }
 }
 
@@ -72,7 +85,7 @@ function searchoverlay() {
     });
     input.addEventListener('input', (ev) => {
         const
-            matchFn = matches(ev.target.value.toLowerCase()),
+            matchFn = matches(accentFold(ev.target.value.toLowerCase())),
             results = searchindex.countries.filter(matchFn).map((obj) => {
                     const t = decodeURIComponent(obj.title).replace(/_/g, ' ');
                     return {
