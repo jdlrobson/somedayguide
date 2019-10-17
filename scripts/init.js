@@ -99,7 +99,7 @@ Object.keys(regions_json).forEach((region) => {
         page_title: 'Someday guide',
         url: `https://somedayguide.com/region/${region}`,
         img: 'https://somedayguide.com/images/someday-map.png',
-        view: render( <Home places={regions_json[region].countries.filter((key) => countries_json[key] !== undefined)
+        view: render( <Home title={region} places={regions_json[region].countries.filter((key) => countries_json[key] !== undefined)
             .map((key) => countries_json[key])} /> ),
         description: 'Jon and Linz\'s guide to the world'
     });
