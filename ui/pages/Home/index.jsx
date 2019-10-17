@@ -10,7 +10,7 @@ export default function ( { places } ) {
             <CardGrid>
                 {places.map((place) =>
                     <Card title={place.title}
-                        href={`/country/${place.title}`}
+                        href={place.href || `/country/${place.title}`}
                         description={place.description} thumbnail={place.thumbnail} />)}
             </CardGrid>
         </Page>

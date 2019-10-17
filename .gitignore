@@ -1,5 +1,6 @@
 public/destination
 public/country
+public/region
 node_modules/
 public/index.html
 public/404.html

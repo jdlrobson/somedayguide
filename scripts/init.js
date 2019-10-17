@@ -8,6 +8,7 @@ import NotFound from '../ui/pages/NotFound';
 import places_json from './data/destinations.json';
 import next_json from './data/next.json';
 import countries_json from './data/countries.json';
+import regions_json from './data/regions.json';
 import sights_json from './data/sights.json';
 const mustache = require( 'mustache' );
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
@@ -83,15 +84,39 @@ countries.forEach((title) => {
     } );
 });
 
-console.log(`Generate index.html`);
-// Render home page.
-renderPage( 'index.html', {
+console.log(`Generate country index.html`);
+renderPage( 'country/index.html', {
     page_title: 'Someday guide',
     url: 'https://somedayguide.com/',
     img: 'https://somedayguide.com/images/someday-map.png',
     view: render( <Home places={Object.keys(countries_json).map((key) => countries_json[key])} /> ),
     description: 'Jon and Linz\'s guide to the world'
 } );
+
+console.log(`Generate regions`);
+Object.keys(regions_json).forEach((region) => {
+    renderPage( `region/${region}.html`, {
+        page_title: 'Someday guide',
+        url: `https://somedayguide.com/region/${region}`,
+        img: 'https://somedayguide.com/images/someday-map.png',
+        view: render( <Home places={regions_json[region].countries.filter((key) => countries_json[key] !== undefined)
+            .map((key) => countries_json[key])} /> ),
+        description: 'Jon and Linz\'s guide to the world'
+    });
+});
+
+console.log(`Generate index.html`);
+// Render home page.
+renderPage( 'index.html', {
+    page_title: 'Someday guide',
+    url: 'https://somedayguide.com/',
+    img: 'https://somedayguide.com/images/someday-map.png',
+    view: render( <Home places={Object.keys(regions_json).map((key) => {
+        return Object.assign({}, regions_json[key], { href: `/region/${key}` });
+    })} /> ),
+    description: 'Jon and Linz\'s guide to the world'
+} );
+
 
 renderPage( '404.html', {
     page_title: '4 oh no 4',
