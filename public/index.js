@@ -115,10 +115,8 @@ if ( fetch ) {
                 });
             }
             const input = search.querySelector('input');
-            input.scrollIntoView();
-            setTimeout( function () {
-                input.focus();
-            }, 0 );
+            input.focus();
+            window.scrollTo(0,0);
             ev.stopPropagation();
             ev.preventDefault();
         });
