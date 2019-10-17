@@ -11,8 +11,22 @@ import countries_json from './data/countries.json';
 import sights_json from './data/sights.json';
 const mustache = require( 'mustache' );
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
+const MODE = process.env.MODE;
+
+const analyticsHTML = MODE === 'production' ?
+`<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129740290-1"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-129740290-1');
+		</script>` : '';
+
+console.log(`Mode is ${MODE}`);
 
 function renderPage( filename, data ) {
+    data.analyticsHTML = analyticsHTML;
     fs.writeFileSync( `public/${filename}`, mustache.render( template, data ) );
 }
 
