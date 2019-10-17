@@ -9,6 +9,24 @@ import fs from 'fs';
 const SHOW_WARNINGS = true;
 const pending = [];
 
+function getSummary(title, project='wikipedia') {
+    return fetch(`https://en.${project}.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            return {
+                title,
+                description: json.description,
+                thumbnail: json.thumbnail && json.thumbnail.source,
+                thumbnail__source: json.originalimage && json.originalimage.source.split('/').slice(-1)[0],
+                summary: json.extract
+            };
+        })
+        .catch((err) => {
+            console.log(`${err} while trying to get ${title}`)
+            return Promise.resolve();
+        })
+}
+
 console.log('Remove bad data entries in go next');
 Object.keys(next).forEach((key) => {
     const newSet = Array.from(new Set(next[key].map((place) => typeof place === 'string' ? place : place[0])));
@@ -49,6 +67,15 @@ Object.keys(countries).forEach((countryName) => {
 console.log('Checking go next is 2-way...');
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
+    // https://github.com/jdlrobson/somedayguide/issues/1
+    if ( place.summary.indexOf('.mw-parser-output') > -1 ) {
+        console.log(`Bad description in ${place.title}`);
+        pending.push(
+            getSummary(place.title, 'wikivoyage').then((json) => {
+                place.summary = json.summary;
+            })
+        );
+    }
     ( next[place.title] || [] ).forEach((nextTitle) => {
         next[nextTitle] = next[nextTitle] || [];
         if ( next[nextTitle].indexOf(place.title) === -1) {
@@ -80,20 +107,10 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
                 if ( !sights_json[sight] ) {
                     console.log(`No sight entry for ${sight}`)
                     pending.push(
-                        fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(sight)}`)
-                            .then((resp) => resp.json())
+                        getSummary(sight)
                             .then((json) => {
                                 console.log('Add', sight);
-                                sights_json[sight] = {
-                                    title: sight,
-                                    description: json.description,
-                                    thumbnail: json.thumbnail && json.thumbnail.source,
-                                    thumbnail__source: json.originalimage && json.originalimage.source.split('/').slice(-1)[0],
-                                    summary: json.extract
-                                }
-                            }).catch((err) => {
-                                console.log(`${err} while trying to get ${sight}`)
-                                return Promise.resolve();
+                                sights_json[sight] = json;
                             })
                     )
                 }
