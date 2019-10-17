@@ -7,7 +7,7 @@ import CardGrid from '../../components/CardGrid';
 import Climate from '../../components/Climate';
 
 export default function ( props ) {
-    const { summary, climate, sights,
+    const { summary, climate, sights, links = [],
             title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
             slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
@@ -15,6 +15,9 @@ export default function ( props ) {
         <Slideshow slides={slides}></Slideshow>,
         <Box title="Climate">
             <Climate data={climate && climate.length ? climate : undefined} />
+        </Box>,
+        <Box title="Useful links">
+            <ul>{links.map((link) =><li><a href={link.href}>{link.text}</a></li> )}</ul>
         </Box>
     ];
     const childrenLeft = [
