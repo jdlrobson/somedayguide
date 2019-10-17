@@ -30,15 +30,15 @@ function menu() {
             '0: Add place',
             '1: Delete place',
             '2: Add sight',
-            '4: Add go next',
-            '5: Remove go next',
+            '4: Go next',
+            '4A: Add go next',
+            '4B: Remove go next',
             '6: Set image'
     ];
     getUserInput( '\n\n\n**********************\n' + options.join('\n') + '\n**********************' )
         .then( ( val ) => {
-            val = parseInt( val, 10 );
             switch ( val ) {
-                case 0:
+                case '0':
                     getUserInput('Which place?').then(( title ) => {
                         if ( destinations[title] ) {
                             feedback('Already got that one.');
@@ -50,14 +50,14 @@ function menu() {
                         return menu();
                     })
                     break;
-                case 1:
+                case '1':
                     getUserInput('Which place?').then(( title ) => {
                         delete destinations[title];
                         save();
                         return menu();
                     })
                     break;
-                case 2:
+                case '2':
                     getUserInput('Which place?').then(( title ) => {
                         return getUserInput('Which sight?').then(( sight ) => {
                             if ( destinations[title].sights.filter((p) => p === sight).length ) {
@@ -72,7 +72,15 @@ function menu() {
                         });
                     });
                     break;
-                case 4:
+                case '4':
+                    getUserInput('Which place does the journey begin?').then(( title ) => {
+                        console.log(
+                            (next[title] || []).join('\n')
+                        );
+                        return menu();
+                    });
+                    break;
+                case '4A':
                     getUserInput('Which place does the journey begin?').then(( title ) => {
                         return getUserInput('Where can I go next?').then(( gonext ) => {
                             next[title] = next[title] || [];
@@ -87,7 +95,7 @@ function menu() {
                         });
                     });
                     break;
-                case 5:
+                case '4B':
                     getUserInput('Which place?').then(( title ) => {
                         if ( !next[title] ) {
                             console.log('no have');
@@ -102,7 +110,7 @@ function menu() {
                         }
                     } );
                     break;
-                case 6:
+                case '6':
                     getUserInput('Which place?').then(( title ) => {
                         if ( !destinations[title] ) {
                             console.log('no have');
