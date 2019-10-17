@@ -49,7 +49,8 @@ function menu() {
     const options = [
             '0: Add place',
             '1: Delete place',
-            '2: Add sight',
+            '2A: Add sight',
+            '2B: Remove sight',
             '3D: Remove country destination',
             '4: Go next',
             '4A: Add go next',
@@ -78,11 +79,12 @@ function menu() {
                         return menu();
                     })
                     break;
-                case '2':
+                case '2A':
                     getUserInput('Which place?').then(( title ) => {
                         const place = destinations[title] || countries[title];
                         if ( place ) {
                             return getUserInput('Which sight?').then(( sight ) => {
+                                place.sights = place.sights || [];
                                 if ( place.sights.filter((p) => p === sight).length ) {
                                     feedback('Already got that one.');
                                 } else {
@@ -97,6 +99,13 @@ function menu() {
                             console.log(`Cannot find ${title}`);
                             return menu();
                         }
+                    });
+                    break;
+                case '2B':
+                    return getUserInput('Which sight?').then(( sight ) => {
+                        delete sights[sight];
+                        save();
+                        return menu();
                     });
                     break;
                 case '3D':
