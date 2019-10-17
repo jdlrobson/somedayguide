@@ -389,6 +389,10 @@ li {
     margin-right: 4px;
 }
 
+.climate__high sup {
+    font-size: .4em;
+}
+
 .climate__low {
     font-size: 2em;
     color: #aaa;
