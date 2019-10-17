@@ -31,12 +31,15 @@ li {
     display: grid;
 }
 
-.page__column-one {
-    grid-row: 2;
+.page__column {
+    max-width: 500px;
+    margin: auto;
+    height: 100%;
+    width: 100%;
 }
 
-.page__column-three {
-    margin-top: 76px;
+.page__column--one {
+    grid-row: 2;
 }
 
 .menu {
@@ -98,6 +101,7 @@ li {
 
 .map__bg__heading__logo {
     width: 100%;
+    max-width: 400px;
     height: auto;
 }
 
@@ -403,21 +407,22 @@ li {
         grid-template-columns: 250px 500px 250px;
         width: 1000px; /* add grid template columns together*/
     }
-    .page__column-one {
+    .page__column--one {
         margin-top: 146px;
         grid-row: 1;
     }
-    .slideshow {
-        width: 250px;
-    }
-    .page__column-three {
-        width: 250px;
+    .page__column--three {
+        margin-top: 76px;
     }
     .card-grid {
         grid-template-columns: repeat(2,1fr);
     }
+    .slideshow,
+    .page__column--one,
+    .page__column--three,
     .card__thumb--card-grid,
     .card--card-grid {
         width: 250px;
+        max-width: 250px;
     }
 }

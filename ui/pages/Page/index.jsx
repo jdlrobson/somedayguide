@@ -8,10 +8,10 @@ export default function ( {
 } ) {
     return (
         <div class="page">
-            <div class="page__column-one">
+            <div class="page__column page__column--one">
                 {childrenLeft}
             </div>
-            <div class="page__column-two">
+            <div class="page__column page__column--two">
                 <NavigationBar />
                 <Map
                     lat={lat}
@@ -22,7 +22,7 @@ export default function ( {
                 />
                 <div class="content">{children}</div>
             </div>
-            <div class="page__column-three">
+            <div class="page__column page__column--three">
                 {childrenRight}
             </div>
         </div>
