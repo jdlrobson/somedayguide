@@ -21,7 +21,7 @@ export default function ( props ) {
         </Box>
     ];
     const childrenLeft = [
-        <Box title="Go next">
+        <Box title="Go next" id="destinations">
             {next.map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>
     ];

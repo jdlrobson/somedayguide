@@ -98,6 +98,11 @@ li {
     text-transform: uppercase;
 }
 
+.map__overlay__parent {
+    color: #555;
+    text-decoration: none;
+}
+
 .map__canvas {
     left: -1px;
     overflow: hidden;
@@ -242,6 +247,10 @@ li {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.card__text__geodata {
+    display: none;
 }
 
 .card {

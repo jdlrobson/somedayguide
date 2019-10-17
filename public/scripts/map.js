@@ -45,6 +45,18 @@ window.initMap = function (props, titleToLink, validDestinations) {
             marker = addMarker(map, props, titleToLink);
             marker.openPopup();
         }
+        document.querySelectorAll('#destinations .geo').forEach((node) => {
+            var lat = node.querySelector('.geodata .latitude');
+            var lon = node.querySelector('.geodata .longitude');
+            var title = node.querySelector('.card__text__heading');
+            if ( lat && lon ) {
+                addMarker(map, {
+                    title: title && title.textContent,
+                    lat: lat && lat.textContent,
+                    lon: lon && lon.textContent,
+                }, titleToLink);
+            }
+        });
         map.on('dragend', function () {
             onExplore(map, titleToLink, validDestinations);
         })

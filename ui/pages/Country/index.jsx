@@ -19,7 +19,7 @@ export default function ( props ) {
         </Box>
     ];
     const childrenLeft = [
-        <Box title="Destinations">
+        <Box title="Destinations" id="destinations">
             {destinations.map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>
     ];
