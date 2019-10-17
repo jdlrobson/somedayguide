@@ -8,7 +8,26 @@ import redirects from './data/redirections.json';
 import fs from 'fs';
 const SHOW_WARNINGS = true;
 const pending = [];
+const CHECK_THUMBNAILS = false;
 
+function getThumbnail(title) {
+    return CHECK_THUMBNAILS ? fetch(`https://en.wikipedia.org/api/rest_v1/page/media/${encodeURIComponent(title)}`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            const thumb = json.items.map((item) => {
+                return {
+                    thumbnail: item.thumbnail && item.thumbnail.source,
+                    thumbnail__source: item.titles && item.titles.canonical
+                };
+            }).filter((item) => item.thumbnail && item.thumbnail.indexOf('svg') === -1)[0] || {};
+            console.log(`Updating SVG thumbnail for ${title}`);
+            return thumb;
+        })
+        .catch((err) => {
+            console.log(`${err} while trying to get ${title}`)
+            return Promise.resolve();
+        }) : Promise.resolve();
+}
 function getSummary(title, project='wikipedia') {
     return fetch(`https://en.${project}.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
         .then((resp) => resp.json())
@@ -64,6 +83,18 @@ Object.keys(countries).forEach((countryName) => {
     }
 })
 
+console.log('do not use SVGs for sights where possible.');
+Object.keys(sights_json).forEach((sightName) => {
+    const thumbnail = sights_json[sightName].thumbnail;
+    if ( thumbnail && thumbnail.indexOf('.svg') > -1 ) {
+        pending.push(
+            getThumbnail(sightName).then((thumbData) => {
+                Object.assign(sights_json[sightName], thumbData);
+            })
+        )
+    }
+});
+
 console.log('Checking go next is 2-way...');
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
@@ -75,6 +106,9 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
                 place.summary = json.summary;
             })
         );
+    }
+    if ( place.thumbnail && place.thumbnail.indexOf('.svg') > -1 ) {
+        console.log(`SVG thumbnail for ${place.title}`);
     }
     ( next[place.title] || [] ).forEach((nextTitle) => {
         next[nextTitle] = next[nextTitle] || [];
@@ -98,6 +132,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     const sightsNotCities = [];
     newSights.forEach((sight) => {
         sight = redirects[sight] || sight;
+
         if (destinations[sight]) {
             console.log(`${sight} is actually a city`)
             next[destinationTitle].push(sight);
