@@ -81,6 +81,16 @@ Object.keys(countries).forEach((countryName) => {
         country.destinations = Array.from(destinationSet);
         pending.push(Promise.resolve())
     }
+    destinationSet.forEach((key) => {
+        if ( !destinations[key] ) {
+            //console.log(`Destination ${key} is missing.`);
+        } else if ( destinations[key].country === undefined ) {
+            console.log(`Associate ${key} with country ${countryName}.`);
+            destinations[key].country = countryName;
+        } else if ( destinations[key].country !== countryName ) {
+            console.log(`Conflicting countries for ${key}: ${countryName} or ${destinations[key].country}?`);
+        }
+    })
 })
 
 console.log('do not use SVGs for sights where possible.');
