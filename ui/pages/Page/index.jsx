@@ -13,7 +13,7 @@ export default function ( {
             </div>
             <div class="page__column page__column--two">
                 <NavigationBar />
-                <Map
+                <Map id="map"
                     lat={lat}
                     lon={lon}
                     zoom={zoom}

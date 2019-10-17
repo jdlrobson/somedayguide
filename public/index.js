@@ -5,15 +5,25 @@ return t?d=t:(r=(f.body||f.getElementsByTagName("head")[0]).childNodes,d=r[r.len
 setTimeout(function(){l(e)})},s.addEventListener&&s.addEventListener("load",function(){this.media=u}),s.onloadcssdefined=l,l(function(){s.media!==u&&(s.media=u)}),s}
 "undefined"!=typeof exports?exports.loadCSS=n:e.loadCSS=n}("undefined"!=typeof global?global:this)
 
+// https://github.com/filamentgroup/loadJS
+!function(e){var t=function(t,o,n){"use strict";var r,a=e.document.getElementsByTagName("script")[0],c=e.document.createElement("script");return"boolean"==typeof o&&(r=n,n=o,o=r),c.src=t,c.async=!n,a.parentNode.insertBefore(c,a),o&&"function"==typeof o&&(c.onload=o),c};"undefined"!=typeof module?module.exports=t:e.loadJS=t}("undefined"!=typeof global?global:this);
 
 let searchindex = false;
 
-function hide(overlay) {
-    overlay.setAttribute('style', 'display:none');
+function hide(overlay, visibility) {
+    if ( visibility ) {
+        overlay.style.visibility = 'hidden';
+    } else {
+        overlay.style.display = 'none';
+    }
 }
 
-function show(overlay) {
-    overlay.setAttribute('style', '');
+function show(overlay, visibility) {
+    if ( visibility ) {
+        overlay.style.visibility = 'visible';
+    } else {
+        overlay.style.display = '';
+    }
 }
 
 function empty(node) {
@@ -114,3 +124,43 @@ if ( fetch ) {
         });
     })
 }
+
+let maploaded = false;
+let mapdisplayed = false;
+
+function togglemap() {
+    const map = document.querySelector('.map');
+    const overlay = map.querySelector('.map__overlay');
+    const canvas = map.querySelector('.map__canvas');
+    if ( mapdisplayed ) {
+        show(overlay, true);
+        hide(canvas, true);
+    } else {
+        hide(overlay, true);
+        show(canvas, true);
+    }
+    mapdisplayed = !mapdisplayed;
+}
+document.querySelector('.map__launch-icon').addEventListener('click', function () {
+    const data = this.dataset;
+
+    if ( !maploaded ) {
+        togglemap();
+        loadCSS('/leaflet/leaflet.css')
+        loadJS('/leaflet/leaflet.js', function () {
+            var map = L.map('map').setView([data.lat, data.lon], data.zoom);
+            L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            if ( data.lat !== '0' && data.lon !== '0' ) {
+                L.marker([data.lat, data.lon]).addTo(map)
+                    .bindPopup(data.title)
+                    .openPopup();
+            }
+        })
+        maploaded = true;
+    } else {
+        togglemap();
+    }
+});

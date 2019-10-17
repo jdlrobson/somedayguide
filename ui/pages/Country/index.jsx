@@ -25,7 +25,7 @@ export default function ( props ) {
     ];
 
     return (
-        <Page title={title} lat={lat} lon={lon}
+        <Page title={title} lat={lat} lon={lon} zoom={5}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
             <div class="note">

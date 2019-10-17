@@ -85,7 +85,20 @@ li {
     border-bottom: 1px solid rgba(0,0,0,.2);
 }
 
-.map__bg {
+.map__overlay {
+    background-size: auto 400px;
+    background-position: center center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 40px;
+    z-index: 2;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.map__canvas {
     left: -1px;
     overflow: hidden;
     position: relative;
@@ -95,23 +108,21 @@ li {
     background-repeat: no-repeat;
     background-size: auto 100%;
     background-position: 50%;
-    text-align: center;
-    text-transform: uppercase;
 }
 
-.map__bg__heading__logo {
+.map__overlay__heading__logo {
     width: 100%;
     max-width: 400px;
     height: auto;
 }
 
-.map__bg__subtitle {
+.map__overlay__subtitle {
     font-weight: 700;
     height: 20px;
     margin-top: -20px;
 }
 
-.map__bg__page-title {
+.map__overlay__page-title {
     font-weight: 700;
     font-size: 1.9em;
     font-family: sans-serif;
@@ -122,7 +133,7 @@ li {
     padding-top: 4px;
 }
 
-.map__bg__launch-icon {
+.map__launch-icon {
     background: none;
     border: none;
     background-image: url(/images/mapicon.png);
@@ -134,7 +145,9 @@ li {
     height: 50px;
     background-position: 50%;
     position: absolute;
-    bottom: 0;
+    bottom: 40px;
+    /* forced high by leaflet */
+    z-index: 1000;
     left: 20px;
 }
 
@@ -399,8 +412,7 @@ li {
 }
 
 /* TODO: Features to implement */
-.menu__item:last-child,
-.map__bg__launch-icon {
+.menu__item:last-child {
     /* TODO: Enable search */
     visibility: hidden;
 }
