@@ -23,6 +23,11 @@ export default function ( props ) {
     const childrenLeft = [
         <Box title="Go next" id="destinations">
             {next.map((place) => <Card modifier="condensed" {...place}/>)}
+        </Box>,
+        <Box title="Sights" id="sights">
+            {sights.map((sight) => <Card modifier="condensed" {...sight}
+                thumbnail={sight.thumbnail && sight.thumbnail.replace(/[0-9]+px/, '400px')}
+                href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>
     ];
 
@@ -34,11 +39,6 @@ export default function ( props ) {
             <div class="note">
                 <p contentEditable>You will go there someday...</p>
             </div>
-            <CardGrid>
-            {sights.map((sight) => <Card modifier="condensed" {...sight}
-                thumbnail={sight.thumbnail && sight.thumbnail.replace(/[0-9]+px/, '400px')}
-                href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
-            </CardGrid>
         </Page>
     );
 };
