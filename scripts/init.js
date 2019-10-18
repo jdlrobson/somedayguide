@@ -36,9 +36,9 @@ console.log(`Generate ${destinations.length} destinations...`);
 destinations.forEach((title) => {
     const place = places_json[title];
     const next = next_json[title] || [];
-    const sights = place.sights.map((sight) => sights_json[sight])
+    const sights = (place.sights || []).map((sight) => sights_json[sight])
         .filter((sight) => sight);
-    if ( sights.length !== place.sights.length ) {
+    if ( place.sights && sights.length !== place.sights.length ) {
         console.log(`data integrity problem in sights for ${title}`);
     }
 

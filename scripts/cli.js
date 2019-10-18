@@ -27,6 +27,27 @@ function getUserInput( msg ) {
     })
 }
 
+function gonext() {
+    function nextplace( title ) {
+        return getUserInput('Where can I go next?').then(( gonext ) => {
+            if ( !gonext ) {
+                return menu();
+            }
+            next[title] = next[title] || [];
+            if ( next[title].filter((p) => p.title === gonext).length ) {
+                feedback('Already got that one.');
+            } else {
+                feedback(`Pushed "${gonext}" to "${title}"`);
+                next[title].push( gonext );
+            }
+            save();
+            return nextplace(title);
+        });
+    }
+    return getUserInput('Which place does the journey begin?').then(( title ) => {
+        return nextplace(title);
+    });
+}
 function removeDestination() {
     getUserInput('Which country?').then(( title ) => {
         const country = countries[title];
@@ -120,19 +141,7 @@ function menu() {
                     });
                     break;
                 case '4A':
-                    getUserInput('Which place does the journey begin?').then(( title ) => {
-                        return getUserInput('Where can I go next?').then(( gonext ) => {
-                            next[title] = next[title] || [];
-                            if ( next[title].filter((p) => p.title === gonext).length ) {
-                                feedback('Already got that one.');
-                            } else {
-                                feedback(`Pushed "${gonext}" to "${title}"`);
-                                next[title].push( gonext );
-                            }
-                            save();
-                            return menu();
-                        });
-                    });
+                    return gonext();
                     break;
                 case '4B':
                     getUserInput('Which place?').then(( title ) => {

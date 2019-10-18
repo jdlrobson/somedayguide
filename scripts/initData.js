@@ -26,9 +26,13 @@ function getWikidata(entity, property) {
             return fetch(`https://wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${value}&sites=enwiki&titles=&props=descriptions%7Clabels&languages=en`)
         }).then((resp) => resp.json())
         .then((json) => {
-            const entities = Object.keys(json.entities);
-            const entity = json.entities[entities[0]];
-            return entity && entity.labels && entity.labels.en.value;
+            if ( json.error ) {
+                return false;
+            } else {
+                const entities = Object.keys(json.entities);
+                const entity = json.entities[entities[0]];
+                return entity && entity.labels && entity.labels.en.value;
+            }
         });
 }
 
@@ -119,27 +123,33 @@ Object.keys(sights_json).forEach((sightName) => {
 });
 
 console.log('Checking go next is 2-way...');
-Object.keys(destinations).slice(0, 100).forEach(( destinationTitle ) => {
+Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
-    if ( !place.country ) {
-        console.log(`${destinationTitle} lacking wikibase id.`)
+    if ( !place.sights ) {
+        place.sights = [];
+    }
+    if ( place.country === undefined ) {
         if ( place.wb ) {
             console.log(`${destinationTitle} does not have a country associated. We can check its wikibase ${place.wb}.`)
             pending.push(
                 getWikidata(place.wb, COUNTRY_PROPERTY).then((country) => {
                     place.country = country;
+                    console.log('set', country);
                 })
             );
-        } else {
+        } else if ( place.wb !== undefined ) {
+            console.log(`Destination ${destinationTitle} lacking wikibase id.`)
             pending.push(
                 getSummary(place.title, 'wikivoyage').then((json) => {
                     place.wb = json.wb;
+                }, () => {
+                    place.wb = false;
                 })
             )
         }
     }
     // https://github.com/jdlrobson/somedayguide/issues/1
-    if ( place.summary.indexOf('.mw-parser-output') > -1 ) {
+    if ( place.summary && place.summary.indexOf('.mw-parser-output') > -1 ) {
         console.log(`Bad description in ${place.title}`);
         pending.push(
             getSummary(place.title, 'wikivoyage').then((json) => {
@@ -175,6 +185,9 @@ Object.keys(destinations).slice(0, 100).forEach(( destinationTitle ) => {
 
         if (destinations[sight]) {
             console.log(`${sight} is actually a city`)
+            if ( !next[destinationTitle] ) {
+                next[destinationTitle] = [];
+            }
             next[destinationTitle].push(sight);
             pending.push(Promise.resolve())
         } else {
