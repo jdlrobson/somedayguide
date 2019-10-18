@@ -1,7 +1,6 @@
 import destinations_json from './data/destinations.json';
 import sights_json from './data/sights.json';
 import next from './data/next.json';
-
 const MIN_SIGHTS = 1;
 
 const destinations = Object.keys(destinations_json);
@@ -16,4 +15,7 @@ console.log(`Total sights: ${Object.keys(sights_json).length}`);
 console.log(`Lacking sights: ${lacking_sights.length}/${destinations.length}`);
 console.log(`Lacking next: ${lacking_gonext.length}/${destinations.length}`);
 console.log(`Lacking all: ${nosightsnonext.length}`);
-console.log(nosightsnonext.join('\n'));
+
+export {
+    nosightsnonext
+}

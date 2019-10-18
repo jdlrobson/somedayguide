@@ -6,35 +6,16 @@ import countries from './data/countries.json';
 import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
+import { nosightsnonext } from './stats';
+import { getWikidata, getClaims, getClaimValue,
+    isInstanceOfIsland, isInstanceOfNationalPark,
+    isInstanceOfSight, isInstanceOfCity } from './utils';
+
 const SHOW_WARNINGS = true;
 const pending = [];
 const CHECK_THUMBNAILS = false;
 
 const COUNTRY_PROPERTY = 'P17';
-
-function getWikidata(entity, property) {
-    return fetch(`https://wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=${entity}&property=${property}&props=`)
-        .then((resp) => resp.json())
-        .then((json) => {
-            const claims = json.claims || {};
-            return Object.keys(claims).map((key) => claims[key] && claims[key][0] &&
-                claims[key][0].mainsnak &&
-                claims[key][0].mainsnak.datavalue &&
-                claims[key][0].mainsnak.datavalue.value &&
-                claims[key][0].mainsnak.datavalue.value.id)[0];
-        }).then((value) => {
-            return fetch(`https://wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${value}&sites=enwiki&titles=&props=descriptions%7Clabels&languages=en`)
-        }).then((resp) => resp.json())
-        .then((json) => {
-            if ( json.error ) {
-                return false;
-            } else {
-                const entities = Object.keys(json.entities);
-                const entity = json.entities[entities[0]];
-                return entity && entity.labels && entity.labels.en.value;
-            }
-        });
-}
 
 function getThumbnail(title) {
     return CHECK_THUMBNAILS ? fetch(`https://en.wikipedia.org/api/rest_v1/page/media/${encodeURIComponent(title)}`)
@@ -228,6 +209,55 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         pending.push(Promise.resolve());
     }
 });
+
+nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
+    .forEach((destinationTitle) => {
+        const place = destinations[destinationTitle];
+        if ( place.wbsight ) {
+            // todo: check the location.. is it near any of the destinations?
+        } else if ( place.wb === undefined ) {
+            console.log(`Destination ${destinationTitle} lacking wikibase id.`)
+            pending.push(
+                getSummary(place.title, 'wikivoyage').then((json) => {
+                    place.wb = json.wb;
+                }, () => {
+                    place.wb = false;
+                })
+            )
+        } else if (
+            place.wbsight === undefined &&
+            place.wbcity === undefined &&
+            place.wbisland === undefined &&
+            place.wbnp === undefined
+        ) {
+            pending.push(
+                getClaims(place.wb, 'P31').then((claims)=> {
+                    if ( isInstanceOfSight(claims) ) {
+                        // it's a sight..
+                        console.log(`${destinationTitle} (${place.wb}) is actually sight.`);
+                        place.wbsight = true;
+                    } else if (
+                        isInstanceOfCity(claims)
+                     ) {
+                        console.log(`Place ${destinationTitle} confirmed as city.`);
+                        place.wbcity = true;
+                    } else if (
+                        isInstanceOfIsland(claims)
+                    ) {
+                        console.log(`Place ${destinationTitle} confirmed as island.`);
+                        place.wbisland = true;
+                    } else if (
+                        isInstanceOfNationalPark(claims)
+                    ) {
+                        console.log(`Place ${destinationTitle} confirmed as national park.`);
+                        place.wbnp = true;
+                    } else {
+                       console.log('Unknown claims', place.wb, claims);
+                    }
+                })
+            );
+        }
+    })
 
 if ( pending.length ) {
     console.log('Updating JSON');
