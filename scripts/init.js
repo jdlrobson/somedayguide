@@ -106,14 +106,15 @@ Object.keys(regions_json).forEach((region) => {
 });
 
 console.log(`Generate index.html`);
+const randomPlaces = Object.keys(places_json).sort(()=>Math.random() < 0.5 ? -1 : 1)
+    .slice(0, 100).map((key) => places_json[key]);
+
 // Render home page.
 renderPage( 'index.html', {
     page_title: 'Someday guide',
     url: 'https://somedayguide.com/',
     img: 'https://somedayguide.com/images/someday-map.png',
-    view: render( <Home places={Object.keys(regions_json).map((key) => {
-        return Object.assign({}, regions_json[key], { href: `/region/${key}` });
-    })} /> ),
+    view: render( <Home linkPrefix = '/destination/' places={randomPlaces} /> ),
     description: 'Jon and Linz\'s guide to the world'
 } );
 

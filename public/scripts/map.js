@@ -45,7 +45,7 @@ window.initMap = function (props, titleToLink, validDestinations) {
             marker = addMarker(map, props, titleToLink);
             marker.openPopup();
         }
-        document.querySelectorAll('#destinations .geo').forEach((node) => {
+        document.querySelectorAll('#destinations .geo, #grid .geo').forEach((node) => {
             var lat = node.querySelector('.geodata .latitude');
             var lon = node.querySelector('.geodata .longitude');
             var title = node.querySelector('.card__text__heading');

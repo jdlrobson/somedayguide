@@ -3,15 +3,14 @@ import Page from '../Page';
 import CardGrid from '../../components/CardGrid';
 import Card from '../../components/Card';
 
-export default function ( { places, title } ) {
+export default function ( { places, title, linkPrefix = '/country/' } ) {
     return (
         <Page zoom={1}
             title={title || "the world"}>
-            <CardGrid>
+            <CardGrid id="grid">
                 {places.map((place) =>
-                    <Card title={place.title}
-                        href={place.href || `/country/${place.title}`}
-                        description={place.description} thumbnail={place.thumbnail} />)}
+                    <Card {...place}
+                        href={`${linkPrefix}${place.title}`} />)}
             </CardGrid>
         </Page>
     )
