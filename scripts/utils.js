@@ -174,3 +174,40 @@ export function isInstanceOfIsland(claims ) {
     ].filter((key) => claims.includes(key)).length > 0
 }
 
+export function getThumbnail(title) {
+    return CHECK_THUMBNAILS ? fetch(`https://en.wikipedia.org/api/rest_v1/page/media/${encodeURIComponent(title)}`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            const thumb = json.items.map((item) => {
+                return {
+                    thumbnail: item.thumbnail && item.thumbnail.source,
+                    thumbnail__source: item.titles && item.titles.canonical
+                };
+            }).filter((item) => item.thumbnail && item.thumbnail.indexOf('svg') === -1)[0] || {};
+            console.log(`Updating SVG thumbnail for ${title}`);
+            return thumb;
+        })
+        .catch((err) => {
+            console.log(`${err} while trying to get ${title}`)
+            return Promise.resolve();
+        }) : Promise.resolve();
+}
+
+export function getSummary(title, project='wikipedia') {
+    return fetch(`https://en.${project}.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            return {
+                title,
+                wb: json.wikibase_item,
+                description: json.description,
+                thumbnail: json.thumbnail && json.thumbnail.source,
+                thumbnail__source: json.originalimage && json.originalimage.source.split('/').slice(-1)[0],
+                summary: json.extract
+            };
+        })
+        .catch((err) => {
+            console.log(`${err} while trying to get ${title}`)
+            return Promise.resolve();
+        })
+}

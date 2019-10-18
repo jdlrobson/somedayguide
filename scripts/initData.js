@@ -8,51 +8,14 @@ import redirects from './data/redirections.json';
 import fs from 'fs';
 import { nosightsnonext } from './stats';
 import { getWikidata, getClaims, getClaimValue,
+    getThumbnail, getSummary,
     isInstanceOfIsland, isInstanceOfNationalPark,
     isInstanceOfSight, isInstanceOfCity } from './utils';
 
 const SHOW_WARNINGS = true;
 const pending = [];
-const CHECK_THUMBNAILS = false;
 
 const COUNTRY_PROPERTY = 'P17';
-
-function getThumbnail(title) {
-    return CHECK_THUMBNAILS ? fetch(`https://en.wikipedia.org/api/rest_v1/page/media/${encodeURIComponent(title)}`)
-        .then((resp) => resp.json())
-        .then((json) => {
-            const thumb = json.items.map((item) => {
-                return {
-                    thumbnail: item.thumbnail && item.thumbnail.source,
-                    thumbnail__source: item.titles && item.titles.canonical
-                };
-            }).filter((item) => item.thumbnail && item.thumbnail.indexOf('svg') === -1)[0] || {};
-            console.log(`Updating SVG thumbnail for ${title}`);
-            return thumb;
-        })
-        .catch((err) => {
-            console.log(`${err} while trying to get ${title}`)
-            return Promise.resolve();
-        }) : Promise.resolve();
-}
-function getSummary(title, project='wikipedia') {
-    return fetch(`https://en.${project}.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
-        .then((resp) => resp.json())
-        .then((json) => {
-            return {
-                title,
-                wb: json.wikibase_item,
-                description: json.description,
-                thumbnail: json.thumbnail && json.thumbnail.source,
-                thumbnail__source: json.originalimage && json.originalimage.source.split('/').slice(-1)[0],
-                summary: json.extract
-            };
-        })
-        .catch((err) => {
-            console.log(`${err} while trying to get ${title}`)
-            return Promise.resolve();
-        })
-}
 
 console.log('Remove bad data entries in go next');
 Object.keys(next).forEach((key) => {
