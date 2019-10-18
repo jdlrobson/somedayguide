@@ -42,7 +42,7 @@ function empty(node) {
 function accentFold(str) {
     return str.replace(/[éēěè]/g, 'e' )
         .replace(/[àāǎá]/g, 'a' )
-        .replace(/[ǒóōò]/g, 'o' )
+        .replace(/[ǒóōòô]/g, 'o' )
         .replace(/[ūǚúùǔ]/g, 'u' )
         .replace(/[īìíǐ]/g, 'i' );
 }
