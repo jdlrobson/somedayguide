@@ -147,6 +147,15 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
                 })
             )
         }
+    } else {
+        if (place.country && !countries[place.country]) {
+            if ( redirects[place.country] ) {
+                place.country = redirects[place.country];
+                pending.push(Promise.resolve());
+            } else {
+                console.log(`Unknown country ${place.country}`);
+            }
+        }
     }
     // https://github.com/jdlrobson/somedayguide/issues/1
     if ( place.summary && place.summary.indexOf('.mw-parser-output') > -1 ) {

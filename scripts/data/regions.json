@@ -2,12 +2,12 @@
     "Asia": {
         "title": "Asia",
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Map_of_Asia.png/750px-Map_of_Asia.png",
-        "countries": ["Afghanistan", "Armenia", "Azerbaijan", "Bahrain", "Bangladesh", "Bhutan", "Brunei", "Cambodia", "China", "Cyprus", "Egypt", "Georgia (country)", "India", "Indonesia", "Iran", "Iraq", "Israel", "Japan", "Jordan", "Kazakhstan", "North Korea", "South Korea", "Kuwait", "Kyrgyzstan", "Laos", "Lebanon", "Malaysia", "Maldives", "Mongolia", "Myanmar", "Nepal", "Oman", "Pakistan", "Philippines", "Qatar", "Russia", "Saudi Arabia", "Singapore", "Sri Lanka", "Syria", "Tajikistan", "Thailand", "East Timor", "Turkey", "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"]
+        "countries": ["Abkhazia", "Afghanistan", "Armenia", "Azerbaijan", "Nagorno-Karabakh", "Bahrain", "Bangladesh", "Bhutan", "Brunei", "Cambodia", "China", "Cyprus", "Egypt", "Georgia (country)", "India", "Indonesia", "Iran", "Iraq", "Israel", "Japan", "Jordan", "Kazakhstan", "North Korea", "South Korea", "Kuwait", "Kyrgyzstan", "Laos", "Lebanon", "Malaysia", "Maldives", "Mongolia", "Myanmar", "Nepal", "Oman", "Pakistan", "Philippines", "Qatar", "Russia", "Saudi Arabia", "Singapore", "Sri Lanka", "Syria", "Taiwan", "Tajikistan", "Thailand", "East Timor", "Turkey", "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"]
     },
     "Africa": {
         "title": "Africa",
         "thumbnail": "//upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Map-Africa-Regions-Islands.png/471px-Map-Africa-Regions-Islands.png",
-        "countries": ["Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi", "Cameroon", "Cape Verde", "Central African Republic", "Chad", "Comoros", "Democratic Republic of the Congo", "Republic of the Congo", "Ivory Coast", "Djibouti", "Egypt", "Equatorial Guinea", "Eritrea", "Eswatini", "Ethiopia", "Gabon", "The Gambia", "Ghana", "Guinea", "Guinea-Bissau", "Kenya", "Lesotho", "Liberia", "Libya", "Madagascar", "Malawi", "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique", "Namibia", "Niger", "Nigeria", "Rwanda", "S%C3%A3o Tom%C3%A9 and Pr%C3%ADncipe", "Senegal", "Seychelles", "Sierra Leone", "Somalia", "South Africa", "South Sudan", "Sudan", "Tanzania", "Togo", "Tunisia", "Uganda", "Zambia", "Zimbabwe"]
+        "countries": ["Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi", "Cameroon", "Cape Verde", "Central African Republic", "Chad", "Comoros", "Democratic Republic of the Congo", "Republic of the Congo", "Côte d'Ivoire", "Djibouti", "Egypt", "Equatorial Guinea", "Eritrea", "Eswatini", "Ethiopia", "Gabon", "Gambia", "Ghana", "Guinea", "Guinea-Bissau", "Kenya", "Lesotho", "Liberia", "Libya", "Madagascar", "Malawi", "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique", "Namibia", "Niger", "Nigeria", "Rwanda", "São Tomé and Príncipe", "Senegal", "Seychelles", "Sierra Leone", "Somalia", "Somaliland", "South Africa", "South Sudan", "Sudan", "Tanzania", "Togo", "Tunisia", "Uganda", "Western Sahara", "Zambia", "Zimbabwe"]
     },
     "Central America": {
         "title": "Central America",
@@ -17,22 +17,22 @@
     "Europe": {
         "title": "Europe",
         "thumbnail": "//upload.wikimedia.org/wikipedia/commons/thumb/5/57/Europe_regions_minimal_cities.svg/500px-Europe_regions_minimal_cities.svg.png",
-        "countries": ["Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Georgia (country)", "Germany", "Greece", "Hungary", "Iceland", "Republic of Ireland", "Italy", "Kazakhstan", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "Kingdom of the Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Vatican City"]
+        "countries": ["Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Nagorno-Karabakh", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Georgia (country)", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "Northern Cyprus", "Kingdom of the Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "South Ossetia", "Spain", "Sweden", "Switzerland", "Transnistria", "Turkey", "Ukraine", "United Kingdom", "Vatican City"]
     },
     "Middle East": {
         "title": "Middle East",
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Map_of_Middle_East.svg/400px-Map_of_Middle_East.svg.png",
-        "countries": ["Bahrain", "Egypt", "Iran", "Iraq", "Israel", "Jordan", "Kuwait", "Lebanon", "Oman", "Palestinian Territories", "Qatar", "Saudi Arabia", "Syria", "Turkey", "United Arab Emirates", "Yemen"]
+        "countries": ["Bahrain", "Egypt", "Iran", "Iraq", "Israel", "Jordan", "Kuwait", "Lebanon", "Oman", "Palestinian territories", "Qatar", "Saudi Arabia", "Syria", "Turkey", "United Arab Emirates", "Yemen"]
     },
     "North America": {
         "title": "North America",
         "thumbnail": "//upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Map_of_North_America.png/400px-Map_of_North_America.png",
-        "countries": ["Antigua and Barbuda", "The Bahamas", "Barbados", "Belize", "Canada", "Costa Rica", "Cuba", "Dominica", "Dominican Republic", "El Salvador", "Grenada", "Guatemala", "Haiti", "Honduras", "Jamaica", "Mexico", "Nicaragua", "Panama", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Trinidad and Tobago", "United States"]
+        "countries": ["Antigua and Barbuda", "Bahamas", "Barbados", "Belize", "Canada", "Costa Rica", "Cuba", "Dominica", "Dominican Republic", "El Salvador", "Grenada", "Guatemala", "Haiti", "Honduras", "Jamaica", "Mexico", "Nicaragua", "Panama", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Trinidad and Tobago", "United States of America"]
     },
     "Oceania": {
         "title": "Oceania",
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Oceania_regions_map.png/750px-Oceania_regions_map.png",
-        "countries": ["Australia", "Federated States of Micronesia", "Fiji", "Kiribati", "Marshall Islands", "Nauru", "New Zealand", "Palau", "Papua New Guinea", "Samoa", "Solomon Islands", "Tonga", "Tuvalu", "Vanuatu"]
+        "countries": ["Australia", "Cook Islands", "Federated States of Micronesia", "Fiji", "Kiribati", "Marshall Islands", "Nauru", "Niue", "New Zealand", "Palau", "Papua New Guinea", "Samoa", "Solomon Islands", "Tonga", "Tuvalu", "Vanuatu"]
     },
     "South America": {
         "title": "South America",
@@ -42,6 +42,6 @@
     "West Indies": {
         "title": "West Indies",
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Map_of_the_Caribbean.png/500px-Map_of_the_Caribbean.png",
-        "countries": ["Anguilla", "Antigua and Barbuda", "Aruba", "Barbados", "British Virgin Islands", "Cayman Islands", "Collectivity of Saint Martin", "Cuba", "Cura%C3%A7ao", "Dominica", "Dominican Republic", "Grenada", "Haiti", "Jamaica", "Montserrat", "Puerto Rico", "Saint Barth%C3%A9lemy", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Sint Maarten", "The Bahamas", "Trinidad and Tobago", "Turks and Caicos Islands", "United States Virgin Islands"]
+        "countries": ["Anguilla", "Antigua and Barbuda", "Aruba", "Barbados", "British Virgin Islands", "Cayman Islands", "Collectivity of Saint Martin", "Cuba", "Cura%C3%A7ao", "Dominica", "Dominican Republic", "Grenada", "Haiti", "Jamaica", "Montserrat", "Puerto Rico", "Saint Barth%C3%A9lemy", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Sint Maarten", "Bahamas", "Trinidad and Tobago", "Turks and Caicos Islands", "United States Virgin Islands"]
     }
 }
