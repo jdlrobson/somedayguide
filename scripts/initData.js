@@ -9,6 +9,7 @@ import fs from 'fs';
 import { nosightsnonext } from './stats';
 import { getWikidata, getClaims, getClaimValue,
     getThumbnail, getSummary, calculateDistance, getNearby,
+    getNearbyUntilHave,
     isInstanceOfIsland, isInstanceOfNationalPark,
     isInstanceOfSight, isInstanceOfCity } from './utils';
 
@@ -18,6 +19,16 @@ const pending = [];
 const COUNTRY_PROPERTY = 'P17';
 
 console.log('Remove bad data entries in go next');
+
+function updateLatLn(place, key, project) {
+    pending.push(
+        getSummary(key, project).then((json) => {
+            place.lat = json.lat;
+            place.lon = json.lon;
+        })
+    );
+}
+
 Object.keys(next).forEach((key) => {
     const newSet = Array.from(new Set(next[key].map((place) => typeof place === 'string' ? place : place[0])));
     if ( newSet.length !== next[key].length) {
@@ -40,8 +51,8 @@ Object.keys(next).forEach((key) => {
                 console.log(`Country ${place.country} has no destinations`);
             }
             // Look through country destinations
-            // TODO: Check neighbouring countries
-            getNearby(place.title, country.destinations || [], 160).forEach((title) => {
+            // https://github.com/jdlrobson/somedayguide/issues/14
+            getNearbyUntilHave(place.title, Object.keys(destinations), 3).forEach((title) => {
                 console.log(`${place.title} is near ${title}`);
                 next[place.title].push(title);
                 pending.push(Promise.resolve());
@@ -50,12 +61,7 @@ Object.keys(next).forEach((key) => {
             console.warn(`\t${key} needs country.`);
         } else if (!place.lat) {
             console.warn(`\t${key} needs lat/lon.`);
-            pending.push(
-                getSummary(key).then((json) => {
-                    place.lat = json.lat;
-                    place.lon = json.lon;
-                })
-            );
+            updateLatLn(place, key);
         }
     }
     if (
@@ -234,7 +240,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     }
 });
 
-nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
+nosightsnonext
     .forEach((destinationTitle) => {
         const place = destinations[destinationTitle];
         if ( !place ) {
@@ -295,12 +301,30 @@ nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
                         console.log(`Place ${destinationTitle} confirmed as national park.`);
                         place.wbnp = true;
                     } else {
-                       console.log('Unknown claims', place.wb, claims);
+                       console.log('Unknown claims for destination', place.title, place.wb, claims);
                     }
                 })
             );
+        } else {
+            console.log(`Destination ${destinationTitle} has a problem`);
         }
     })
+
+nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
+    place.wbcity || place.wbnp || place.wbisland).forEach((place) => {
+    if ( !place.lat ) {
+        console.log(`No have lat: ${place.title}`)
+        updateLatLn(place, place.title, 'wikivoyage');
+    } else {
+        console.log(`Find places nearby to ${place.title}, ${place.lat},${place.lon}`)
+        const nearby = getNearbyUntilHave(place.title, Object.keys(destinations), 3);
+        if ( nearby.length ) {
+            console.log( `${place.title} is nearby: ${nearby.join(',')}`);
+            next[place.title] = nearby;
+            pending.push(Promise.resolve());
+        }
+    }
+});
 
 if ( pending.length ) {
     console.log('Updating JSON');

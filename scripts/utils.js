@@ -62,6 +62,14 @@ export function getWikidata(entity, property) {
 
 export function isInstanceOfSight( claims ) {
     return [
+        // activity
+        'Q1914636',
+        // heritage
+        'Q30634609',
+        // dark sky preserve
+        'Q3457162',
+        // highland
+        'Q878223',
         // natural region
         'Q1970725',
         // concentration camp
@@ -125,6 +133,8 @@ export function isInstanceOfSight( claims ) {
         'Q1286517',
         // arch site
         'Q839954',
+        // waterfall
+        'Q34038',
         // mountain
         'Q8502',
         'Q1437459',
@@ -171,21 +181,23 @@ export function isInstanceOfSight( claims ) {
 export function isInstanceOfCity(claims ) {
     return [
         'Q6784672', 'Q620471',
-        'Q2177636',
-        'Q7830262',
-        'Q7930614',
+        'Q2177636', 'Q56436498',
+        'Q7830262', 'Q1357964',
+        'Q7930614', 'Q24698',
         'Q28659128',
-        'Q16858213',
-        'Q667509',
-        'Q2989400',
-        'Q2577883',
-        'Q3191695',
-        'Q605291',
+        'Q16858213', 'Q498162',
+        'Q667509', 'Q747074', 'Q191093', 'Q180673', 'Q765865',
+        'Q2989400', 'Q748149', 'Q59341087',
+        'Q2577883', 'Q10742', 'Q216712', 'Q643589',
+        'Q3191695', 'Q11828004', 'Q844713',
+        'Q605291', 'Q13212489',
         'Q1758856',
         'Q659103',
         'Q2590631',
-        'Q2706302',
+        'Q2706302','Q104157',
         'Q15584664',
+        // state
+        'Q7275',
         // suburb
         'Q188509',
         // village
@@ -198,6 +210,9 @@ export function isInstanceOfCity(claims ) {
         'Q2264924',
         // district
         'Q2292572',
+        'Q59136',
+        // canton
+        'Q1146429',
         // first-level administrative country subdivision
         'Q10864048',
         // chile
@@ -205,6 +220,7 @@ export function isInstanceOfCity(claims ) {
         // border town
         'Q902814',
         // muncip
+        'Q24764',
         'Q6005581',
         'Q3556889',
         // tunisia
@@ -218,6 +234,7 @@ export function isInstanceOfCity(claims ) {
         'Q34763',
         // provinces
         'Q24746',
+        'Q83116',
         'Q1025116',
         // commune
         'Q3266850',
@@ -231,7 +248,10 @@ export function isInstanceOfCity(claims ) {
         'Q1780506',
         // city
         'Q515',
+        'Q29946056',
+        'Q1093829',
         'Q7930989',
+        'Q1549591',
         // human settlement
         'Q486972'
     ].filter((key) => claims.includes(key)).length > 0;
@@ -239,13 +259,16 @@ export function isInstanceOfCity(claims ) {
 
 export function isInstanceOfNationalPark(claims ) {
     return [
-        'Q20537528',
-        'Q20489083',
+        'Q20537528', 'Q2006279',
+        'Q20489083', 'Q18618843',
+        'Q1896949',
         'Q1317754',
         'Q20488347',
         'Q18618832',
         'Q18618819',
         'Q46169',
+        'Q1132998',
+        'Q34918903',
         // finland
         'Q14215551',
         // zambia
@@ -334,7 +357,8 @@ export function getNearby(title, titles, radius) {
     const place = destinations_json[title],
         from = place && { lat: place.lat, lon: place.lon };
 
-    if ( !place ) {
+    if ( !place || !place.lat ) {
+        console.log(title, '!!');
         return [];
     } else {
         return titles.filter((k) => {
@@ -343,5 +367,16 @@ export function getNearby(title, titles, radius) {
                 calculateDistance(from, { lat: d.lat, lon: d.lon } );
             return dist && dist > 0 && dist <  radius;
         });
+    }
+}
+
+export function getNearbyUntilHave(title, titles, number, distance = 160) {
+    let nearby = getNearby(title, titles, distance),
+        page = destinations_json[title];
+
+    if ( page && page.lat && nearby.length < number ) {
+        return getNearbyUntilHave(title, titles, number, distance + 20);
+    } else {
+        return nearby;
     }
 }
