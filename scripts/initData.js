@@ -26,14 +26,15 @@ Object.keys(next).forEach((key) => {
         console.log(`Remove duplicates in go next for ${key}`);
     }
     const knownDestinations = newSet.filter((place) => destinations[place] !== undefined);
+    const place = destinations[key];
     if (
         SHOW_WARNINGS &&
+        place &&
         knownDestinations.length !== next[key].length &&
         knownDestinations.length === 0
     ) {
-        console.warn(`\t${key} points to destination(s) that do not exist and has no known destinations.`);
-        const place = destinations[key];
         if ( place.lat && place.country ) {
+            console.warn(`\t${key} points to destination(s) that do not exist and has no known destinations.`);
             const from = { lat: place.lat, lon: place.lon },
                 country = countries[place.country];
             if ( !country.destinations ) {
@@ -52,6 +53,16 @@ Object.keys(next).forEach((key) => {
                 }
                 return dist && dist < 160;
             })
+        } else if (!place.country) {
+            console.warn(`\t${key} needs country.`);
+        } else if (!place.lat) {
+            console.warn(`\t${key} needs lat/lon.`);
+            pending.push(
+                getSummary(key).then((json) => {
+                    place.lat = json.lat;
+                    place.lon = json.lon;
+                })
+            );
         }
     }
     if (
@@ -121,11 +132,11 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
                     console.log('set', country);
                 })
             );
-        } else if ( place.wb !== undefined ) {
+        } else if ( place.wb === undefined ) {
             console.log(`Destination ${destinationTitle} lacking wikibase id.`)
             pending.push(
                 getSummary(place.title, 'wikivoyage').then((json) => {
-                    place.wb = json.wb;
+                    place.wb = json.wb || false;
                 }, () => {
                     place.wb = false;
                 })
@@ -234,11 +245,11 @@ nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
             console.log(`Destination ${destinationTitle} lacking wikibase id.`)
             pending.push(
                 getSummary(place.title, 'wikivoyage').then((json) => {
-                    place.wb = json.wb;
+                    place.wb = json.wb || false;
                 }, () => {
                     place.wb = false;
                 })
-            )
+            );
         } else if (
             place.wbsight === undefined &&
             place.wbcity === undefined &&
