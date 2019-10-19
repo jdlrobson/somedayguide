@@ -157,7 +157,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         }
     })
     const newSights = place.sights.filter((sight) =>
-        !(next[place.title] || []).includes(sight) &&
+        sight && !(next[place.title] || []).includes(sight) &&
         (!countries[sight])
     );
     if ( newSights.length !== place.sights.length) {
