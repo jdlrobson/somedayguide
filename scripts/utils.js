@@ -308,7 +308,8 @@ export function getThumbnail(title) {
 }
 
 export function getSummary(title, project='wikipedia') {
-    return fetch(`https://en.${project}.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
+    const url = `https://en.${project}.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+    return fetch(url, { redirect: 'follow' })
         .then((resp) => resp.json())
         .then((json) => {
             return {
