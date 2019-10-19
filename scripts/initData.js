@@ -104,6 +104,12 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
             } else {
                 console.log(`Unknown country ${place.country}`);
             }
+        } else if ( place.country ) {
+            if ( countries[place.country].destinations.indexOf(place.title) === -1 ) {
+                console.log(`${place.country} doesn't list ${place.title}`);
+                countries[place.country].destinations.push(place.title);
+                pending.push(Promise.resolve());
+            }
         }
     }
     // https://github.com/jdlrobson/somedayguide/issues/1
