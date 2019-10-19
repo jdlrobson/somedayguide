@@ -240,6 +240,12 @@ nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
         if ( !place ) {
             // renamed during session
             return;
+        } else if ( place.wbcountry ) {
+            if ( countries[place.title] ) {
+                console.log(`${place.title} is country`);
+                delete destinations[place.title];
+                pending.push(Promise.resolve());
+            }
         } else if ( place.wbsight && place.country ) {
             // Fixes: https://github.com/jdlrobson/somedayguide/issues/10
             console.log(`Repurpose ${destinationTitle} as sight on ${place.country}`);
@@ -261,11 +267,15 @@ nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
             place.wbsight === undefined &&
             place.wbcity === undefined &&
             place.wbisland === undefined &&
+            place.wbcountry === undefined &&
             place.wbnp === undefined
         ) {
             pending.push(
                 getClaims(place.wb, 'P31').then((claims)=> {
-                    if ( isInstanceOfSight(claims) ) {
+                    if ( claims.includes('Q6256') ) {
+                        console.log(`${place.title} is a country.`);
+                        place.wbcountry = true;
+                    } else if ( isInstanceOfSight(claims) ) {
                         // it's a sight..
                         console.log(`${destinationTitle} (${place.wb}) is actually sight.`);
                         place.wbsight = true;
