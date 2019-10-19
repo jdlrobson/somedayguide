@@ -24,14 +24,19 @@ Object.keys(next).forEach((key) => {
         next[key] = newSet;
         pending.push(Promise.resolve());
         console.log(`Remove duplicates in go next for ${key}`);
-    } else if (
+    }
+    const knownDestinations = newSet.filter((place) => destinations[place] !== undefined);
+    if (
         SHOW_WARNINGS &&
-        newSet.filter((place) => destinations[place] !== undefined).length !== next[key].length
+        knownDestinations.length !== next[key].length &&
+        knownDestinations.length === 0
     ) {
-        console.warn(`\t${key} points to destination(s) that do not exist: Compare ${next[key].join(',')} with ${newSet.join(',')}`);
+        console.warn(`\t${key} points to destination(s) that do not exist and has no known destinations.`);
     }
     if ( SHOW_WARNINGS && destinations[key] === undefined) {
-        console.warn(`\t${key} is not a destination.`);
+        if ( !countries[key] && !sights_json[key] ) {
+            console.warn(`\t${key} is not a known destination.`);
+        }
         delete next[key];
         pending.push(Promise.resolve());
     }
@@ -115,7 +120,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     }
     ( next[place.title] || [] ).forEach((nextTitle) => {
         next[nextTitle] = next[nextTitle] || [];
-        if ( next[nextTitle].indexOf(place.title) === -1) {
+        if ( next[nextTitle].indexOf(place.title) === -1 && destinations[nextTitle]) {
             next[nextTitle].push(place.title);
             console.log(`Mark ${nextTitle} -> ${place.title} path.`);
             pending.push(Promise.resolve())

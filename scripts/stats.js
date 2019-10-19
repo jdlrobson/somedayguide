@@ -1,7 +1,7 @@
 import destinations_json from './data/destinations.json';
 import sights_json from './data/sights.json';
 import next from './data/next.json';
-const MIN_SIGHTS = 1;
+const MIN_SIGHTS = 2;
 
 const destinations = Object.keys(destinations_json);
 const no_climate = destinations.filter((key) => destinations_json[key].climate && destinations_json[key].climate.length === 0);

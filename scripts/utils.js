@@ -61,10 +61,22 @@ export function getWikidata(entity, property) {
 
 export function isInstanceOfSight( claims ) {
     return [
+        // natural region
+        'Q1970725',
+        // concentration camp
+        'Q153813',
+        // coral reef
+        'Q11292',
+        // heritage site
+        'Q38048753',
+        // ski resort
+        'Q130003',
+        // lake
+        'Q23397',
         // oasis
         'Q43742',
         // tourist attraction
-        'Q484170',
+        'Q570116',
         // rift lake
         'Q6341928',
         // power station
@@ -87,24 +99,35 @@ export function isInstanceOfSight( claims ) {
         'Q204324',
         // strict nature reserve of Madagascar
         'Q20489120',
+        'Q179049',
         // salt mine
         'Q40551',
         // biosphere reserve
         'Q158454',
+        // volcano
+        'Q212057',
+        'Q169358',
         // desert
         'Q8514',
         // valley
         'Q39816',
         // forest
         'Q4421',
+        // pilgramage
+        'Q15135589',
         // bend in river
         'Q17018380',
+        'Q43197',
         // protected area
         'Q473972',
+        // natural landscape
+        'Q1286517',
         // arch site
         'Q839954',
         // mountain
         'Q8502',
+        'Q1437459',
+        'Q133056',
         // swamp
         'Q166735',
         // plains
@@ -113,17 +136,76 @@ export function isInstanceOfSight( claims ) {
         'Q1714375',
         // savanna
         'Q42320',
+        // trail
+        'Q628179',
+        // river
+        'Q4022',
+        // hill station
+        'Q2393184',
+        // sea
+        'Q165',
+        // vegetation
+        'Q2083910',
+        // bay
+        'Q39594',
+        // beach
+        'Q40080',
+        // castle
+        'Q1064905',
         // reserve
         'Q20268453',
         // range
-        'Q46831'
+        'Q46831',
+        // headland cape
+        'Q191992', 'Q185113',
+        // country side
+        'Q175185',
+        // ethnic people
+        'Q41710',
+        // private island
+        'Q2984210'
     ].filter((key) => claims.includes(key)).length > 0
 }
 
 export function isInstanceOfCity(claims ) {
     return [
-        // munc dom
+        'Q6784672', 'Q620471',
+        'Q2177636',
+        'Q7830262',
+        'Q7930614',
+        'Q28659128',
+        'Q16858213',
+        'Q667509',
+        'Q2989400',
+        'Q2577883',
+        'Q3191695',
+        'Q605291',
+        'Q1758856',
+        'Q659103',
+        'Q2590631',
+        'Q2706302',
+        'Q15584664',
+        // suburb
+        'Q188509',
+        // village
+        'Q532',
+        // capital
+        'Q5119',
+        // neth
+        'Q2039348',
+        // port city
+        'Q2264924',
+        // district
+        'Q2292572',
+        // first-level administrative country subdivision
+        'Q10864048',
+        // chile
+        'Q25412763',
+        // border town
+        'Q902814',
+        // muncip
         'Q6005581',
+        'Q3556889',
         // tunisia
         'Q41067667',
         // portugal
@@ -133,8 +215,9 @@ export function isInstanceOfCity(claims ) {
         'Q12813115',
         // peninsular
         'Q34763',
-        // province of phil
+        // provinces
         'Q24746',
+        'Q1025116',
         // commune
         'Q3266850',
         // district
@@ -147,6 +230,7 @@ export function isInstanceOfCity(claims ) {
         'Q1780506',
         // city
         'Q515',
+        'Q7930989',
         // human settlement
         'Q486972'
     ].filter((key) => claims.includes(key)).length > 0;
@@ -154,6 +238,12 @@ export function isInstanceOfCity(claims ) {
 
 export function isInstanceOfNationalPark(claims ) {
     return [
+        'Q20537528',
+        'Q20489083',
+        'Q1317754',
+        'Q20488347',
+        'Q18618832',
+        'Q18618819',
         'Q46169',
         // finland
         'Q14215551',
