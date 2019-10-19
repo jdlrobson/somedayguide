@@ -60,6 +60,7 @@ Object.keys(next).forEach((key) => {
     ) {
         if ( !countries[key] && !sights_json[key] ) {
             console.warn(`\t${key} is not a known destination.`);
+            destinations[key] = { title: key };
         }
         delete next[key];
         pending.push(Promise.resolve());
