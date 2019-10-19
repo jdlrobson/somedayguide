@@ -82,6 +82,16 @@ Object.keys(countries).forEach((countryName) => {
         country.destinations = Array.from(destinationSet);
         pending.push(Promise.resolve())
     }
+    country.sights = country.sights.map((sight) => {
+        return typeof sight === 'string' ? sight : sight.title
+    } );
+    country.sights.forEach((sight) => {
+        if ( !sights_json[sight] ) {
+            console.log(`${sight} is not known.`)
+            sights_json[sight] = { title: sight };
+            pending.push(Promise.resolve())
+        }
+    })
 });
 
 console.log('do not use SVGs for sights where possible.');
