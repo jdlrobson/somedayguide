@@ -1,6 +1,7 @@
 import preact, { h } from 'preact';
 import NavigationBar from '../../components/NavigationBar';
 import Map from '../../components/Map';
+import Footer from '../../components/Footer';
 
 export default function ( {
     lat, lon, zoom, parent, parentLink,
@@ -27,6 +28,7 @@ export default function ( {
             <div class="page__column page__column--three">
                 {childrenRight}
             </div>
+            <Footer class="page__column--span" title={title} />
         </div>
     )
 };

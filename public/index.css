@@ -1,6 +1,7 @@
 /* resets*/
 body, html {
     height: 100%;
+    color: #333;
 }
 
 h1, h2, h3, h4, h5, p, ul,
@@ -38,6 +39,10 @@ li {
     width: 100%;
 }
 
+.page__column--span {
+    grid-column: 1 / 4;
+    max-width: 100%;
+}
 .page__column--one {
     grid-row: 2;
 }
@@ -426,6 +431,12 @@ li {
     visibility: hidden;
 }
 
+footer {
+    padding: 8px 0;
+    font-size: .8em;
+    color: #444;
+    border-top: 2px dotted #c1b094;
+}
 
 @media all and (min-width: 1000px) {
     .page {
