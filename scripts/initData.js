@@ -113,6 +113,17 @@ Object.keys(sights_json).forEach((sightName) => {
 console.log('Checking go next is 2-way...');
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
+    if ( destinationTitle.indexOf('_') > -1 || destinationTitle.indexOf('%') > -1) {
+        console.log(`Replacing _ characters in name ${destinationTitle}`);
+        let newTitle = destinationTitle.replace(/_/g, ' ');
+        if ( newTitle.indexOf('%') ) {
+            newTitle = decodeURIComponent(newTitle);
+        }
+        place.title = newTitle;
+        destinations[newTitle] = place;
+        delete destinations[destinationTitle];
+        return;
+    }
     if ( !place.sights ) {
         place.sights = [];
     }
@@ -226,7 +237,10 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
 nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
     .forEach((destinationTitle) => {
         const place = destinations[destinationTitle];
-        if ( place.wbsight && place.country ) {
+        if ( !place ) {
+            // renamed during session
+            return;
+        } else if ( place.wbsight && place.country ) {
             // Fixes: https://github.com/jdlrobson/somedayguide/issues/10
             console.log(`Repurpose ${destinationTitle} as sight on ${place.country}`);
             delete place.wbsight;
