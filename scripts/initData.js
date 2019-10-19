@@ -8,7 +8,7 @@ import redirects from './data/redirections.json';
 import fs from 'fs';
 import { nosightsnonext } from './stats';
 import { getWikidata, getClaims, getClaimValue,
-    getThumbnail, getSummary,
+    getThumbnail, getSummary, calculateDistance,
     isInstanceOfIsland, isInstanceOfNationalPark,
     isInstanceOfSight, isInstanceOfCity } from './utils';
 
@@ -32,8 +32,32 @@ Object.keys(next).forEach((key) => {
         knownDestinations.length === 0
     ) {
         console.warn(`\t${key} points to destination(s) that do not exist and has no known destinations.`);
+        const place = destinations[key];
+        if ( place.lat && place.country ) {
+            const from = { lat: place.lat, lon: place.lon },
+                country = countries[place.country];
+            if ( !country.destinations ) {
+                console.log(`Country ${place.country} has no destinations`);
+            }
+            // Look through country destinations
+            // TODO: Check neighbouring countries
+            (country.destinations || []).filter((k) => {
+                const d = destinations[k];
+                const dist = d && d.lat &&
+                    calculateDistance(from, { lat: d.lat, lon: d.lon } );
+                if ( dist > 0 && dist < 150 ) {
+                    console.log(key, k, dist);
+                    next[key].push(k);
+                    pending.push(Promise.resolve());
+                }
+                return dist && dist < 160;
+            })
+        }
     }
-    if ( SHOW_WARNINGS && destinations[key] === undefined) {
+    if (
+        knownDestinations.length === 0 &&
+        SHOW_WARNINGS && destinations[key] === undefined
+    ) {
         if ( !countries[key] && !sights_json[key] ) {
             console.warn(`\t${key} is not a known destination.`);
         }
