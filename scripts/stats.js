@@ -4,7 +4,7 @@ import next from './data/next.json';
 const MIN_SIGHTS = 2;
 
 const destinations = Object.keys(destinations_json);
-const no_climate = destinations.filter((key) => destinations_json[key].climate && destinations_json[key].climate.length === 0);
+const no_climate = destinations.filter((key) => !destinations_json[key].climate || destinations_json[key].climate.length === 0);
 const lacking_sights = destinations.filter((key) => (destinations_json[key].sights || []).length < MIN_SIGHTS);
 const lacking_gonext = destinations.filter((key) => !next[key] || next[key].length < MIN_SIGHTS);
 const nosightsnonext = lacking_gonext.filter((title) =>
