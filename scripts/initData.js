@@ -8,7 +8,7 @@ import redirects from './data/redirections.json';
 import fs from 'fs';
 import { nosightsnonext } from './stats';
 import { getWikidata, getClaims, getClaimValue,
-    getThumbnail, getSummary, calculateDistance,
+    getThumbnail, getSummary, calculateDistance, getNearby,
     isInstanceOfIsland, isInstanceOfNationalPark,
     isInstanceOfSight, isInstanceOfCity } from './utils';
 
@@ -35,24 +35,17 @@ Object.keys(next).forEach((key) => {
     ) {
         if ( place.lat && place.country ) {
             console.warn(`\t${key} points to destination(s) that do not exist and has no known destinations.`);
-            const from = { lat: place.lat, lon: place.lon },
-                country = countries[place.country];
+            const country = countries[place.country];
             if ( !country.destinations ) {
                 console.log(`Country ${place.country} has no destinations`);
             }
             // Look through country destinations
             // TODO: Check neighbouring countries
-            (country.destinations || []).filter((k) => {
-                const d = destinations[k];
-                const dist = d && d.lat &&
-                    calculateDistance(from, { lat: d.lat, lon: d.lon } );
-                if ( dist > 0 && dist < 150 ) {
-                    console.log(key, k, dist);
-                    next[key].push(k);
-                    pending.push(Promise.resolve());
-                }
-                return dist && dist < 160;
-            })
+            getNearby(place.title, country.destinations || [], 160).forEach((title) => {
+                console.log(`${place.title} is near ${title}`);
+                next[place.title].push(title);
+                pending.push(Promise.resolve());
+            });
         } else if (!place.country) {
             console.warn(`\t${key} needs country.`);
         } else if (!place.lat) {

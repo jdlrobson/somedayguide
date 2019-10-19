@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import destinations_json from './data/destinations.json';
 const CHECK_THUMBNAILS = false;
 
 export function extractCard(place, json) {
@@ -327,4 +328,20 @@ export function calculateDistance( from, to ) {
                 return 2 * radius * Math.asin( Math.sqrt( a ) );
         }
         return distance;
+}
+
+export function getNearby(title, titles, radius) {
+    const place = destinations_json[title],
+        from = place && { lat: place.lat, lon: place.lon };
+
+    if ( !place ) {
+        return [];
+    } else {
+        return titles.filter((k) => {
+            const d = destinations_json[k];
+            const dist = d && d.lat &&
+                calculateDistance(from, { lat: d.lat, lon: d.lon } );
+            return dist && dist > 0 && dist <  radius;
+        });
+    }
 }
