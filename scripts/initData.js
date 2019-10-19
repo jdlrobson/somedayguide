@@ -176,8 +176,14 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
 nosightsnonext.filter((c)=>c.indexOf('city') === -1 && c.indexOf('(') === -1)
     .forEach((destinationTitle) => {
         const place = destinations[destinationTitle];
-        if ( place.wbsight ) {
-            // todo: check the location.. is it near any of the destinations?
+        if ( place.wbsight && place.country ) {
+            // Fixes: https://github.com/jdlrobson/somedayguide/issues/10
+            console.log(`Repurpose ${destinationTitle} as sight on ${place.country}`);
+            delete place.wbsight;
+            sights_json[destinationTitle] = place;
+            delete destinations[destinationTitle];
+            countries[place.country].sights.push(place.title);
+            pending.push(Promise.resolve());
         } else if ( place.wb === undefined ) {
             console.log(`Destination ${destinationTitle} lacking wikibase id.`)
             pending.push(
