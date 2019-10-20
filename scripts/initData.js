@@ -6,7 +6,7 @@ import countries from './data/countries.json';
 import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
-import { nosightsnonext } from './stats';
+import { nosightsnonext, unusedsights } from './stats';
 import { getWikidata, getClaims, getClaimValue,
     getThumbnail, getSummary, calculateDistance, getNearby,
     getNearbyUntilHave,
@@ -27,6 +27,30 @@ function updateLatLn(place, key, project) {
             place.lon = json.lon;
         })
     );
+}
+
+function updateWikibase(place, project='wikivoyage') {
+    if ( place.wb && !place.country ) {
+        console.log(`${place.title} does not have a country associated. We can check its wikibase ${place.wb}.`)
+        pending.push(
+            getWikidata(place.wb, COUNTRY_PROPERTY).then((country) => {
+                place.country = country;
+                console.log(`set ${place.title} country to ${country}`);
+                return Promise.resolve();
+            })
+        );
+    } else if ( place.wb === undefined ) {
+        console.log(`${place.title} lacking wikibase id.`)
+        pending.push(
+            getSummary(place.title, project).then((json) => {
+                place.wb = json.wb || false;
+                return Promise.resolve();
+            }, () => {
+                place.wb = false;
+                return Promise.resolve();
+            })
+        )
+    }
 }
 
 Object.keys(next).forEach((key) => {
@@ -134,24 +158,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         place.sights = [];
     }
     if ( place.country === undefined ) {
-        if ( place.wb ) {
-            console.log(`${destinationTitle} does not have a country associated. We can check its wikibase ${place.wb}.`)
-            pending.push(
-                getWikidata(place.wb, COUNTRY_PROPERTY).then((country) => {
-                    place.country = country;
-                    console.log('set', country);
-                })
-            );
-        } else if ( place.wb === undefined ) {
-            console.log(`Destination ${destinationTitle} lacking wikibase id.`)
-            pending.push(
-                getSummary(place.title, 'wikivoyage').then((json) => {
-                    place.wb = json.wb || false;
-                }, () => {
-                    place.wb = false;
-                })
-            )
-        }
+        updateWikibase(place);
     } else {
         if (place.country && !countries[place.country]) {
             if ( redirects[place.country] ) {
@@ -326,9 +333,32 @@ nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
     }
 });
 
+// update any unused sights by associating it with a country
+unusedsights.forEach((title) => {
+    const sight = sights_json[title];
+    updateWikibase(sight, 'wikipedia');
+    if ( sight.country ) {
+        const country = countries[sight.country];
+        // guaranteed to be unique as an unused sight
+        if ( country ) {
+            country.sights = country.sights || [];
+            country.sights.push(title);
+            pending.push(Promise.resolve());
+        } else {
+            if ( redirects[sight.country] ) {
+                console.log(`Rename sight.country ${sight.country}`);
+                sight.country = redirects[sight.country];
+                pending.push(Promise.resolve());
+            } else {
+                console.log(`Country for ${title} is ${sight.country}`);
+            }
+        }
+    }
+});
+
 if ( pending.length ) {
-    console.log('Updating JSON');
     Promise.all( pending ).then(() => {
+        console.log('Updating JSON');
         fs.writeFileSync(`${__dirname}/data/sights.json`, JSON.stringify(sights_json));
         fs.writeFileSync(`${__dirname}/data/countries.json`, JSON.stringify(countries));
         fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
