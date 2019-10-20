@@ -7,7 +7,8 @@
     "start": "export MODE=production && npm run data && babel-node scripts/init.js",
     "search-index": "babel-node scripts/generateIndex.js",
     "cli": "babel-node scripts/cli.js",
-    "data": "babel-node scripts/initData.js && npm run search-index",
+    "blogs": "babel-node scripts/fetchblogs.js",
+    "data": "babel-node scripts/initData.js && npm run blogs && npm run search-index",
     "watch": "npm start && sleep 2 && npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

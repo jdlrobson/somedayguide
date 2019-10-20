@@ -11,6 +11,14 @@ body {
     font-size: 1em;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 body {
     background-color: #00ab9f;
 }
@@ -237,6 +245,11 @@ li {
     background-size: cover;
 }
 
+.card--note {
+    font-size: 0.7em;
+}
+
+.card__thumb--note,
 .card__thumb--condensed {
     background-color: #eee;
     background-repeat: no-repeat;
@@ -248,6 +261,7 @@ li {
     margin-right: 10px;
 }
 
+.card__text--note,
 .card__text--condensed {
     position: relative;
     top: 50%;
@@ -276,6 +290,8 @@ li {
     text-overflow: ellipsis;
 }
 
+
+.card__text__summary--note,
 .card__text__summary--condensed {
     color: #72777d;
     font-size: .8em;
@@ -288,6 +304,7 @@ li {
     height: 250px;
 }
 
+.card--note,
 .card--condensed {
     text-align: left;
     background-color: #fff;
@@ -308,6 +325,30 @@ li {
     padding: 1em 12px;
     line-height: 1.3;
     border: 1px solid transparent;
+}
+
+/* Breaking BEM for markdown */
+.note__heading {
+    font-size: 1.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.note__image {
+    padding: 8px 0px;
+}
+
+.note__image__thumbnail {
+    max-width: 100%;
+}
+
+.note__image__caption {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.note p {
+    padding: 8px 0;
 }
 
 /* BOXES */
