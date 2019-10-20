@@ -344,23 +344,30 @@ export function isInstanceOfIsland(claims ) {
     ].filter((key) => claims.includes(key)).length > 0
 }
 
-export function getThumbnail(title) {
-    return CHECK_THUMBNAILS ? fetch(`https://en.wikipedia.org/api/rest_v1/page/media/${encodeURIComponent(title)}`)
+export function getThumbnail(title, lastsync) {
+    const DAY = 1000 * 60 * 60 * 24;
+    // if last checked in under
+    if ( lastsync && (new Date() - new Date(lastsync)) < DAY * 30 ) {
+        return Promise.resolve({});
+    }
+    return fetch(`https://en.wikipedia.org/api/rest_v1/page/media/${encodeURIComponent(title)}`)
         .then((resp) => resp.json())
         .then((json) => {
-            const thumb = json.items.map((item) => {
+            const thumb = ( json.items || [] ).map((item) => {
                 return {
                     thumbnail: item.thumbnail && item.thumbnail.source,
                     thumbnail__source: item.titles && item.titles.canonical
                 };
             }).filter((item) => item.thumbnail && item.thumbnail.indexOf('svg') === -1)[0] || {};
-            console.log(`Updating SVG thumbnail for ${title}`);
+            console.log(`Updating SVG thumbnail for ${title} to ${thumb.thumbnail}`);
+            thumb.lastsync = new Date().toISOString();
+            console.log(`return ${thumb.lastsync}`);
             return thumb;
         })
         .catch((err) => {
             console.log(`${err} while trying to get ${title}`)
             return Promise.resolve();
-        }) : Promise.resolve();
+        });
 }
 
 export function getSummary(title, project='wikipedia') {

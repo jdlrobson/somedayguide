@@ -130,10 +130,11 @@ Object.keys(countries).forEach((countryName) => {
 
 console.log('do not use SVGs for sights where possible.');
 Object.keys(sights_json).forEach((sightName) => {
-    const thumbnail = sights_json[sightName].thumbnail;
-    if ( thumbnail && thumbnail.indexOf('.svg') > -1 ) {
+    const sight = sights_json[sightName];
+    const thumbnail = sight.thumbnail;
+    if ( !thumbnail || thumbnail.indexOf('.svg') > -1 ) {
         pending.push(
-            getThumbnail(sightName).then((thumbData) => {
+            getThumbnail(sightName, sight.lastsync).then((thumbData) => {
                 Object.assign(sights_json[sightName], thumbData);
             })
         )
@@ -184,9 +185,14 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
             })
         );
     }
-    if ( place.thumbnail && place.thumbnail.indexOf('.svg') > -1 ) {
-        console.log(`SVG thumbnail for ${place.title}`);
+    if ( !place.thumbnail ) {
+        pending.push(
+            getThumbnail(destinationTitle, place.lastsync).then((thumbData) => {
+                Object.assign(destinations[destinationTitle], thumbData);
+            })
+        );
     }
+
     ( next[place.title] || [] ).forEach((nextTitle) => {
         next[nextTitle] = next[nextTitle] || [];
         if ( next[nextTitle].indexOf(place.title) === -1 && destinations[nextTitle]) {
