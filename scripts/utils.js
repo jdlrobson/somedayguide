@@ -314,7 +314,7 @@ export function isInstanceOfCity(claims ) {
 
 export function isInstanceOfNationalPark(claims ) {
     return [
-        'Q728904',
+        'Q728904', 'Q20626607',
         'Q20537528', 'Q2006279',
         'Q20489083', 'Q18618843',
         'Q1896949',
