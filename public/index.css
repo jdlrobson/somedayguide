@@ -52,9 +52,11 @@ li {
     max-width: 100%;
 }
 .page__column--one {
+    grid-row: 3;
+}
+.page__column--three {
     grid-row: 2;
 }
-
 .menu {
     background: #3c2415;
     text-align: right;
@@ -490,6 +492,7 @@ footer {
     }
     .page__column--three {
         margin-top: 76px;
+        grid-row: auto;
     }
     .card-grid {
         grid-template-columns: repeat(2,1fr);
