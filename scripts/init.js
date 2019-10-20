@@ -10,7 +10,9 @@ import next_json from './data/next.json';
 import countries_json from './data/countries.json';
 import regions_json from './data/regions.json';
 import sights_json from './data/sights.json';
+import blogs_json from './data/blogs.json';
 const mustache = require( 'mustache' );
+import { renderer, getPersonalNote } from './utils';
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
 const MODE = process.env.MODE;
 
@@ -48,6 +50,7 @@ destinations.forEach((title) => {
         img: place.thumbnail,
         view: render( <Destination {...place}
             sights={sights}
+            blogs={(place.blogs || []).map((id) => blogs_json[id])}
             next={next.filter((title) => !!places_json[title]).map((title) => places_json[title])} /> ),
         description: `Guide to ${place.title}`
     } );
@@ -78,6 +81,7 @@ countries.forEach((title) => {
         img: country.thumbnail,
         view: render( <Country {...country}
             destinations={destinations}
+            personalNote={getPersonalNote('country', title)}
             sights={sights}
         /> ),
         description: `Guide to ${title}`

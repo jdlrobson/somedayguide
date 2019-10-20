@@ -7,7 +7,7 @@ import CardGrid from '../../components/CardGrid';
 import Climate from '../../components/Climate';
 
 export default function ( props ) {
-    const { summary, climate, sights, links = [], country,
+    const { summary, climate, sights, links = [], country, blogs = [],
             title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
             slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
@@ -38,6 +38,13 @@ export default function ( props ) {
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
             <div class="note">
                 <p contentEditable>You will go there someday...</p>
+            </div>
+            <div class="note">
+            {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
+            {blogs.length > 0 &&
+                blogs.map((blog) =>
+                    <Card modifier="note" {...blog}/>)
+            }
             </div>
         </Page>
     );

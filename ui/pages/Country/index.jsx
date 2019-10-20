@@ -6,7 +6,7 @@ import CardGrid from '../../components/CardGrid';
 import Slideshow from '../../components/Slideshow';
 
 export default function ( props ) {
-    const { summary, airports = [], sights = [], links = [],
+    const { summary, airports = [], sights = [], links = [], personalNote,
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
@@ -28,6 +28,10 @@ export default function ( props ) {
         <Page title={title} lat={lat} lon={lon} zoom={5}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
+            <div class="note">
+                <h4 class="note__heading">Personal note</h4>
+                <div dangerouslySetInnerHTML={ { __html: personalNote } } />
+            </div>
             <div class="note">
                 <p contentEditable>You will go there someday...</p>
             </div>

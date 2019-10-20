@@ -1,6 +1,54 @@
 import fetch from 'node-fetch';
 import destinations_json from './data/destinations.json';
+import countries_json from './data/countries.json';
+import sights_json from './data/sights.json';
+import marked from 'marked';
+import fs from 'fs';
+
 const CHECK_THUMBNAILS = false;
+const renderer = new marked.Renderer();
+
+const getImageSource = (text) => {
+    if (text.indexOf('flickr') > -1) {
+        return 'flickr';
+    } else if (text.indexOf('wikimedia.org')) {
+        return 'wikimedia';
+    } else {
+        return 'original'
+    }
+}
+
+const getUrl = (text) => {
+    if ( countries_json[text] ) {
+        return `/country/${text}`;
+    } else if ( destinations_json[text] ) {
+        return `/destination/${text}`;
+    } else if ( sights_json[text] ) {
+        return `https://en.wikipedia.org/wiki/${text}`
+    } else {
+        return '';
+    }
+};
+
+renderer.strong = function (text) {
+    const link = getUrl(text);
+    return link ? `<a href="${link}">${text}</a>` : `<strong>${text}</strong>`;
+};
+
+renderer.image = function (href, title, text) {
+    return `<div class="note__image">
+        <img src="${href}" class="note__image__thumbnail" />
+        <a href="${text}" class="note__image__caption">Source: ${getImageSource(text)}</a>
+    </div>`
+};
+
+export { renderer };
+
+export function getPersonalNote(type, title) {
+    const path = `${__dirname}/../somedayguide.wiki/${type}/${title}.md`;
+    const note = fs.existsSync(path) ? fs.readFileSync(path) : undefined;
+    return note && marked(note.toString(), { renderer });
+}
 
 export function extractCard(place, json) {
     const coords = json.coordinates;
