@@ -36,8 +36,8 @@ export default function ( props ) {
             parentLink={`/country/${country}`}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
-            <div class="note">
-                <p contentEditable>You will go there someday...</p>
+            <div class="note note--private" id="local-edit">
+                <p contentEditable>What's on your mind?</p>
             </div>
             <div class="note">
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}

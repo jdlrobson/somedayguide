@@ -329,6 +329,11 @@ li {
     border: 1px solid transparent;
 }
 
+.note--private {
+    font-style: italic;
+    font-weight: bold;
+}
+
 /* Breaking BEM for markdown */
 .note__heading {
     font-size: 1.1em;

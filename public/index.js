@@ -11,6 +11,7 @@ setTimeout(function(){l(e)})},s.addEventListener&&s.addEventListener("load",func
 let searchindex = false;
 let maploaded = false;
 let mapdisplayed = false;
+const LOCAL_NOTE = window.location.pathname;
 
 function hide(overlay, visibility) {
     if ( visibility ) {
@@ -176,3 +177,16 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
         togglemap();
     }
 });
+
+
+function setupLocalEditing() {
+    const localNote = document.querySelector('#local-edit [contenteditable]'),
+        note = localStorage.getItem(LOCAL_NOTE);
+    if (note) {
+        localNote.textContent = note;
+    }
+    localNote.addEventListener('input', function (ev) {
+        localStorage.setItem(LOCAL_NOTE, this.textContent);
+    })
+}
+setupLocalEditing();

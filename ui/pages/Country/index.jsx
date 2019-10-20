@@ -36,8 +36,8 @@ export default function ( props ) {
                 <h4 class="note__heading">Personal note</h4>
                 <div dangerouslySetInnerHTML={ { __html: personalNote } } />
             </div>
-            <div class="note">
-                <p contentEditable>You will go there someday...</p>
+            <div class="note note--private" id="local-edit">
+                <p contentEditable>What's on your mind?</p>
             </div>
         </Page>
     );
