@@ -235,7 +235,7 @@ export function isInstanceOfSight( claims ) {
 
 export function isInstanceOfCity(claims ) {
     return [
-        'Q6784672', 'Q620471',
+        'Q6784672', 'Q620471', 'Q3257686', 'Q572784',
         'Q2177636', 'Q56436498',
         'Q7830262', 'Q1357964',
         'Q7930614', 'Q24698',
@@ -314,6 +314,7 @@ export function isInstanceOfCity(claims ) {
 
 export function isInstanceOfNationalPark(claims ) {
     return [
+        'Q728904',
         'Q20537528', 'Q2006279',
         'Q20489083', 'Q18618843',
         'Q1896949',
