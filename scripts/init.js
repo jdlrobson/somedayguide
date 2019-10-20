@@ -81,7 +81,7 @@ countries.forEach((title) => {
         img: country.thumbnail,
         view: render( <Country {...country}
             destinations={destinations}
-            personalNote={getPersonalNote('country', title)}
+            personalNote={getPersonalNote(title)}
             sights={sights}
         /> ),
         description: `Guide to ${title}`

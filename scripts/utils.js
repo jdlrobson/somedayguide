@@ -44,8 +44,12 @@ renderer.image = function (href, title, text) {
 
 export { renderer };
 
-export function getPersonalNote(type, title) {
-    const path = `${__dirname}/../somedayguide.wiki/${type}/${title}.md`;
+export function getPersonalNote(title) {
+    let path = `${__dirname}/../somedayguide.wiki/${title}.md`;
+    if ( !fs.existsSync(path) && title.indexOf(' ') > -1 ) {
+        // try with '-' character.
+        path = `${__dirname}/../somedayguide.wiki/${title.replace(/ /g, '-')}.md`;
+    }
     const note = fs.existsSync(path) ? fs.readFileSync(path) : undefined;
     return note && marked(note.toString(), { renderer });
 }

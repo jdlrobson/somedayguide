@@ -32,10 +32,10 @@ export default function ( props ) {
         <Page title={title} lat={lat} lon={lon} zoom={5}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
-            <div class="note">
+            {personalNote &&<div class="note">
                 <h4 class="note__heading">Personal note</h4>
                 <div dangerouslySetInnerHTML={ { __html: personalNote } } />
-            </div>
+            </div>}
             <div class="note note--private" id="local-edit">
                 <p contentEditable>What's on your mind?</p>
             </div>
