@@ -21,7 +21,13 @@ Object.keys(destinations_json).map((place) => destinations_json[place].sights).f
 const unusedsights = Object.keys(sights_json).filter((sight) => {
     return !usedsights.has(sight);
 });
+const sightsnothumb = Object.keys(sights_json).filter((sight) => {
+    return !sights_json[sight].thumbnail;
+});
 const destinations = Object.keys(destinations_json);
+const destinationsnothumb = destinations.filter((t) => {
+    return !destinations_json[t].thumbnail;
+});
 const no_climate = destinations.filter((key) => !destinations_json[key].climate || destinations_json[key].climate.length === 0);
 const lacking_sights = destinations.filter((key) => (destinations_json[key].sights || []).length < MIN_SIGHTS);
 const lacking_gonext = destinations.filter((key) => !next[key] || next[key].length < MIN_SIGHTS);
@@ -34,6 +40,8 @@ console.log(`Lacking sights: ${lacking_sights.length}/${destinations.length}`);
 console.log(`Lacking next: ${lacking_gonext.length}/${destinations.length}`);
 console.log(`Lacking all: ${nosightsnonext.length}`);
 console.log(`Unused sights: ${unusedsights.length}`);
+console.log(`Sights without thumbnail: ${sightsnothumb.length}`);
+console.log(`Destinations without thumbnail: ${destinationsnothumb.length}`);
 
 export {
     unusedsights,
