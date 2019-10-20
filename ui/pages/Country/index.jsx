@@ -21,6 +21,10 @@ export default function ( props ) {
     const childrenLeft = [
         <Box title="Destinations" id="destinations">
             {destinations.map((place) => <Card modifier="condensed" {...place}/>)}
+        </Box>,
+        <Box title="Sights" id="sights">
+            {sights.map((sight) => <Card modifier="condensed" {...sight}
+                href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>
     ];
 
@@ -35,10 +39,6 @@ export default function ( props ) {
             <div class="note">
                 <p contentEditable>You will go there someday...</p>
             </div>
-            <CardGrid>
-                {sights.map((sight) => <Card modifier="condensed" {...sight}
-                    href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
-            </CardGrid>
         </Page>
     );
 };
