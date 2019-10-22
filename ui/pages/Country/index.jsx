@@ -6,7 +6,7 @@ import CardGrid from '../../components/CardGrid';
 import Slideshow from '../../components/Slideshow';
 
 export default function ( props ) {
-    const { summary, airports = [], sights = [], links = [], personalNote,
+    const { summary, airports = [], sights = [], links = [], personalNote, blogs = [],
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
@@ -38,6 +38,13 @@ export default function ( props ) {
             </div>}
             <div class="note note--private" id="local-edit">
                 <p contentEditable>What's on your mind?</p>
+            </div>
+            <div class="note">
+            {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
+            {blogs.length > 0 &&
+                blogs.map((blog) =>
+                    <Card modifier="note" {...blog}/>)
+            }
             </div>
         </Page>
     );

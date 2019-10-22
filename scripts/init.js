@@ -80,6 +80,7 @@ countries.forEach((title) => {
         url: `https://somedayguide.com/country/${title}`,
         img: country.thumbnail,
         view: render( <Country {...country}
+            blogs={(country.blogs || []).map((id) => blogs_json[id])}
             destinations={destinations}
             personalNote={getPersonalNote(title)}
             sights={sights}

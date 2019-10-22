@@ -33,7 +33,7 @@ const destinationsnothumb = destinations.filter((t) => {
 });
 const no_climate = destinations.filter((key) => !destinations_json[key].climate || destinations_json[key].climate.length === 0);
 const lacking_sights = destinations.filter((key) => (destinations_json[key].sights || []).length < MIN_SIGHTS);
-const lacking_gonext = destinations.filter((key) => !next[key] || next[key].length < MIN_SIGHTS);
+const lacking_gonext = destinations.filter((key) => !next[key] || next[key].length < 1);
 const nosightsnonext = lacking_gonext.filter((title) =>
     no_climate.indexOf(title) > -1 && lacking_sights.indexOf(title) > -1);
 const countrylackingsights = countries.filter((title) => {
