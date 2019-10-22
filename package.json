@@ -4,6 +4,7 @@
   "description": "Jon and Linzy's guide to the world.",
   "main": "index.js",
   "scripts": {
+    "server": "http-server public/",
     "start": "export MODE=production && npm run data && babel-node scripts/init.js",
     "search-index": "babel-node scripts/generateIndex.js",
     "cli": "babel-node scripts/cli.js",
