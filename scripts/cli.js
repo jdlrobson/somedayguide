@@ -66,6 +66,51 @@ function removeDestination() {
         }
     });
 }
+
+function listwithout(list, title) {
+    return list.filter((t) => t !== title);
+}
+
+function deleteplace(title) {
+    const dest = destinations[title];
+    if ( !dest ) {
+        return `Unknown place ${title}`;
+    }
+    if ( dest.country ) {
+        console.log(`Remove ${title} from ${dest.country} destinations`);
+        countries[dest.country].destinations = listwithout(countries[dest.country].destinations, title)
+    }
+    delete destinations[title];
+    next[title].forEach((to) => {
+        console.log(`Remove link from ${title} to ${to}`);
+        next[to] = listwithout(next[to], title);
+    });
+    delete next[title];
+}
+
+function removesight(sight) {
+    if ( !sights[sight] ) {
+        return `Unknown sight ${sight}`;
+    }
+    Object.keys(countries).forEach((key) => {
+        if (!countries[key].sights) {
+            countries[key].sights = [];
+        } else if (countries[key].sights.indexOf(sight) > -1) {
+            console.log(`Remove reference to ${sight} in ${key}`);
+            countries[key].sights = listwithout(countries[key].sights, sight);
+        }
+    });
+    Object.keys(destinations).forEach((key) => {
+        if (!destinations[key].sights) {
+            destinations[key].sights = [];
+        } else if (destinations[key].sights.indexOf(sight) > -1) {
+            console.log(`Remove reference to ${sight} in ${key}`);
+            destinations[key].sights = listwithout(destinations[key].sights, sight);
+        }
+    });
+    delete sights[sight];
+}
+
 function menu() {
     const options = [
             '0: Add place',
@@ -95,7 +140,7 @@ function menu() {
                     break;
                 case '1':
                     getUserInput('Which place?').then(( title ) => {
-                        delete destinations[title];
+                        deleteplace(title);
                         save();
                         return menu();
                     })
@@ -124,7 +169,7 @@ function menu() {
                     break;
                 case '2B':
                     return getUserInput('Which sight?').then(( sight ) => {
-                        delete sights[sight];
+                        removesight(sight);
                         save();
                         return menu();
                     });
