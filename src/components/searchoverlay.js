@@ -41,7 +41,7 @@ export default function searchoverlay(searchindex) {
                             url: titleToLink(t, '/destination')
                         };
                     })
-                );
+                ).slice(0, 10);
         empty(resultsNode);
         resultsNode.appendChild(cardlist(results, '/country'));
     });
