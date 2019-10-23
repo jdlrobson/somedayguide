@@ -1,5 +1,4 @@
 import loadJS from 'fg-loadjs';
-import { loadCSS } from 'fg-loadcss';
 import './index.css';
 
 let searchindex = false;
@@ -9,7 +8,6 @@ const LOCAL_NOTE = window.location.pathname;
 const IMG_PREFIX = '//upload.wikimedia.org/wikipedia/commons/';
 
 window.loadJS = loadJS;
-window.loadCSS = loadCSS;
 
 function hide(overlay, visibility) {
     if ( visibility ) {
@@ -165,7 +163,7 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
     if ( !maploaded ) {
         togglemap();
         setup().then( function () {
-            loadJS('/scripts/map.js', function () {
+            loadJS('/map.js', function () {
                 window.initMap(data, titleToLink, searchindex.destinations);
             });
             maploaded = true;

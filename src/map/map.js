@@ -1,3 +1,6 @@
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
 const GEOSEARCHAPI = 'https://en.wikivoyage.org/w/api.php?action=query&format=json&formatversion=2&prop=coordinates%7Cpageprops%7Cpageprops%7Cpageimages%7Cdescription&colimit=max&generator=geosearch&ggsradius=20000&ggsnamespace=0&ggslimit=50&ppprop=displaytitle&piprop=thumbnail&pithumbsize=150&pilimit=50&origin=*';
 
 function addMarker(map, props, titleToLink) {
@@ -33,32 +36,29 @@ function onExplore(map, titleToLink, validDestinations) {
 }
 
 window.initMap = function (props, titleToLink, validDestinations) {
-    loadCSS('/scripts/leaflet/leaflet.css')
-    loadJS('/scripts/leaflet/leaflet.js', function () {
-        var marker,
-            map = L.map('map').setView([props.lat, props.lon], props.zoom);
-        L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+    var marker,
+        map = L.map('map').setView([props.lat, props.lon], props.zoom);
+    L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-        if ( props.lat !== '0' && props.lon !== '0' ) {
-            marker = addMarker(map, props, titleToLink);
-            marker.openPopup();
+    if ( props.lat !== '0' && props.lon !== '0' ) {
+        marker = addMarker(map, props, titleToLink);
+        marker.openPopup();
+    }
+    document.querySelectorAll('#destinations .geo, #grid .geo').forEach((node) => {
+        var lat = node.querySelector('.geodata .latitude');
+        var lon = node.querySelector('.geodata .longitude');
+        var title = node.querySelector('.card__text__heading');
+        if ( lat && lon ) {
+            addMarker(map, {
+                title: title && title.textContent,
+                lat: lat && lat.textContent,
+                lon: lon && lon.textContent,
+            }, titleToLink);
         }
-        document.querySelectorAll('#destinations .geo, #grid .geo').forEach((node) => {
-            var lat = node.querySelector('.geodata .latitude');
-            var lon = node.querySelector('.geodata .longitude');
-            var title = node.querySelector('.card__text__heading');
-            if ( lat && lon ) {
-                addMarker(map, {
-                    title: title && title.textContent,
-                    lat: lat && lat.textContent,
-                    lon: lon && lon.textContent,
-                }, titleToLink);
-            }
-        });
-        map.on('dragend', function () {
-            onExplore(map, titleToLink, validDestinations);
-        })
     });
+    map.on('dragend', function () {
+        onExplore(map, titleToLink, validDestinations);
+    })
 };
