@@ -27,6 +27,9 @@ const unusedsights = Object.keys(sights_json).filter((sight) => {
 const sightsnothumb = Object.keys(sights_json).filter((sight) => {
     return !sights_json[sight].thumbnail;
 });
+const sightsnolonglat = Object.keys(sights_json).filter((sight) => {
+    return !sights_json[sight].lat;
+});
 const destinations = Object.keys(destinations_json);
 const destinationsnothumb = destinations.filter((t) => {
     return !destinations_json[t].thumbnail;
@@ -51,6 +54,7 @@ console.log(`Lacking next: ${lacking_gonext.length}/${destinations.length}`);
 console.log(`Lacking all: ${nosightsnonext.length}`);
 console.log(`Unused sights: ${unusedsights.length}`);
 console.log(`Sights without thumbnail: ${sightsnothumb.length}`);
+console.log(`Sights without lon/lat: ${sightsnolonglat.length}`);
 console.log(`Destinations without thumbnail: ${destinationsnothumb.length}`);
 
 console.log(countrylackingdestinations);
