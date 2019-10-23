@@ -4,7 +4,17 @@ const getClassName = (className, modifier, additional) => {
     return [ className, modifier && `${className}--${modifier}`, additional ].filter((c)=>c !== undefined).join(' ');
 }
 
-export default function ( { title, href, lat, lon, summary, thumbnail, modifier, description } ) {
+function toFriendlyDistance(km) {
+    if ( km < 1 ) {
+        return `${Math.floor(km * 1000)}m`
+    } else if (km < 10) {
+        return `${km.toFixed(1)}km`
+    } else {
+        return `${Math.floor(km)}km`
+    }
+}
+
+export default function ( { title, distance, href, lat, lon, summary, thumbnail, modifier, description } ) {
     return (
         <div class={getClassName('card', modifier)}>
             <a class="card__link" href={href || `/destination/${title}.html`} aria-hidden="true"></a>
@@ -20,6 +30,9 @@ export default function ( { title, href, lat, lon, summary, thumbnail, modifier,
                 <p class={getClassName('card__text__summary', modifier)}>
                     {description || summary}
                 </p>
+                { distance !== undefined && <p class={getClassName('card__text__distance', modifier)}>
+                    {toFriendlyDistance(distance)}
+                </p>}
                 <span class={getClassName('card__text__geodata', modifier, 'geodata')}>
                     <span class='latitude'>{lat}</span>
 				    <span class='longitude'>{lon}</span>

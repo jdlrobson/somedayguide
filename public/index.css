@@ -295,10 +295,17 @@ li {
 
 .card__text__summary--note,
 .card__text__summary--condensed {
-    color: #72777d;
+    color: #54595d;
     font-size: .8em;
     padding-right: .2em;
     margin: 2px 0 0;
+}
+
+.card__text__distance {
+    color: #72777d;
+    font-size: 0.8em;
+    line-height: 1.2;
+    font-weight: bold;
 }
 
 .card--card-grid {

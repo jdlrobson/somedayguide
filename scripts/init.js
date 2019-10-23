@@ -12,7 +12,7 @@ import regions_json from './data/regions.json';
 import sights_json from './data/sights.json';
 import blogs_json from './data/blogs.json';
 const mustache = require( 'mustache' );
-import { renderer, getPersonalNote } from './utils';
+import { renderer, getPersonalNote, withDistance } from './utils';
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
 const MODE = process.env.MODE;
 
@@ -39,7 +39,9 @@ destinations.forEach((title) => {
     const place = places_json[title];
     const next = next_json[title] || [];
     const sights = (place.sights || []).map((sight) => sights_json[sight])
-        .filter((sight) => sight);
+        .filter((sight) => sight)
+        .map(withDistance(place.lat, place.lon));
+
     if ( place.sights && sights.length !== place.sights.length ) {
         console.log(`data integrity problem in sights for ${title}`);
     }
@@ -51,7 +53,8 @@ destinations.forEach((title) => {
         view: render( <Destination {...place}
             sights={sights}
             blogs={(place.blogs || []).map((id) => blogs_json[id])}
-            next={next.filter((title) => !!places_json[title]).map((title) => places_json[title])} /> ),
+            next={next.filter((title) => !!places_json[title]).map((title) => places_json[title])
+                .map(withDistance(place.lat, place.lon))} /> ),
         description: `Guide to ${place.title}`
     } );
 });

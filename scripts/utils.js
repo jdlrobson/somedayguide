@@ -444,3 +444,23 @@ export function getNearbyUntilHave(title, titles, number, distance = 160) {
         return nearby;
     }
 }
+
+export function withDistance(lat, lon) {
+    if ( !lat || !lon ) {
+        return ((item) => item);
+    } else {
+        const from = { lat, lon };
+        return (item) => {
+            if ( !item.lat || !item.lon ) {
+                return item;
+            } else {
+                return Object.assign({}, item, {
+                    distance: calculateDistance( from, {
+                        lat: item.lat,
+                        lon: item.lon
+                    } )
+                });
+            }
+        }
+    }
+}
