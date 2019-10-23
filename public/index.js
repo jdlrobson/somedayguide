@@ -12,6 +12,7 @@ let searchindex = false;
 let maploaded = false;
 let mapdisplayed = false;
 const LOCAL_NOTE = window.location.pathname;
+const IMG_PREFIX = '//upload.wikimedia.org/wikipedia/commons/';
 
 function hide(overlay, visibility) {
     if ( visibility ) {
@@ -50,7 +51,7 @@ function accentFold(str) {
 
 function matches(str) {
     return function ( obj ) {
-        return accentFold(obj.title.toLowerCase()).indexOf(str) > -1;
+        return accentFold(obj[0]).indexOf(str) > -1;
     }
 }
 
@@ -88,19 +89,19 @@ function searchoverlay() {
         const
             matchFn = matches(accentFold(ev.target.value.toLowerCase())),
             results = searchindex.countries.filter(matchFn).map((obj) => {
-                    const t = decodeURIComponent(obj.title).replace(/_/g, ' ');
+                    const t = decodeURIComponent(obj[0]).replace(/_/g, ' ');
                     return {
                         title: t,
-                        thumbnail: obj.thumbnail,
+                        thumbnail: `${IMG_PREFIX}${obj[1]}`,
                         url: titleToLink(t, '/country')
                     };
                 })
                 .concat(
                     searchindex.destinations.filter(matchFn).map((obj) => {
-                        const t = decodeURIComponent(obj.title).replace(/_/g, ' ');
+                        const t = decodeURIComponent(obj[0]).replace(/_/g, ' ');
                         return {
                             title: t,
-                            thumbnail: obj.thumbnail,
+                            thumbnail: `${IMG_PREFIX}${obj[1]}`,
                             url: titleToLink(t, '/destination')
                         };
                     })

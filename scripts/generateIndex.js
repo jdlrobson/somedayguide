@@ -5,15 +5,16 @@ import countries from './data/countries.json';
 
 const mapResult = (index) => {
     return ( title ) => {
-        return {
-            title,
-            thumbnail: index[title] && index[title].thumbnail
-        };
+        return [
+            title && title.toLowerCase(),
+            index[title] && index[title].thumbnail && index[title].thumbnail
+                .replace('https:', '').replace('//upload.wikimedia.org/wikipedia/commons/', '')
+        ];
     }
 }
 const index = {
     countries: Object.keys(countries).map(mapResult(countries)),
-    destinations: Object.keys(destinations).map(mapResult(destinations))
+    destinations: Object.keys(destinations).map(mapResult(destinations)),
 };
 
 console.log('Updating JSON');
