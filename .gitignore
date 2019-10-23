@@ -2,6 +2,9 @@ public/destination
 public/country
 public/region
 node_modules/
+public/index.js
+public/index--js.css
+public/index.css
 public/index.html
 public/404.html
 public/index.json

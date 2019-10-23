@@ -1,18 +1,15 @@
-// https://github.com/filamentgroup/loadCSS
-!function(e){"use strict"
-var n=function(n,t,o){function i(e){return f.body?e():void setTimeout(function(){i(e)})}var d,r,a,l,f=e.document,s=f.createElement("link"),u=o||"all"
-return t?d=t:(r=(f.body||f.getElementsByTagName("head")[0]).childNodes,d=r[r.length-1]),a=f.styleSheets,s.rel="stylesheet",s.href=n,s.media="only x",i(function(){d.parentNode.insertBefore(s,t?d:d.nextSibling)}),l=function(e){for(var n=s.href,t=a.length;t--;)if(a[t].href===n)return e()
-setTimeout(function(){l(e)})},s.addEventListener&&s.addEventListener("load",function(){this.media=u}),s.onloadcssdefined=l,l(function(){s.media!==u&&(s.media=u)}),s}
-"undefined"!=typeof exports?exports.loadCSS=n:e.loadCSS=n}("undefined"!=typeof global?global:this)
-
-// https://github.com/filamentgroup/loadJS
-!function(e){var t=function(t,o,n){"use strict";var r,a=e.document.getElementsByTagName("script")[0],c=e.document.createElement("script");return"boolean"==typeof o&&(r=n,n=o,o=r),c.src=t,c.async=!n,a.parentNode.insertBefore(c,a),o&&"function"==typeof o&&(c.onload=o),c};"undefined"!=typeof module?module.exports=t:e.loadJS=t}("undefined"!=typeof global?global:this);
+import loadJS from 'fg-loadjs';
+import { loadCSS } from 'fg-loadcss';
+import './index.css';
 
 let searchindex = false;
 let maploaded = false;
 let mapdisplayed = false;
 const LOCAL_NOTE = window.location.pathname;
 const IMG_PREFIX = '//upload.wikimedia.org/wikipedia/commons/';
+
+window.loadJS = loadJS;
+window.loadCSS = loadCSS;
 
 function hide(overlay, visibility) {
     if ( visibility ) {
@@ -125,7 +122,6 @@ document.querySelectorAll('.climate__select').forEach( function ( climate ) {
 function setup() {
     if (!searchindex) {
         searchindex = { countries: [], destinations: [] };
-        loadCSS('/index--js.css');
         return fetch('/index.json').then((resp) => resp.json()).then((json)=>{
             searchindex = json;
         });
@@ -183,11 +179,11 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
 function setupLocalEditing() {
     const localNote = document.querySelector('#local-edit [contenteditable]'),
         note = localStorage.getItem(LOCAL_NOTE);
-    if (note) {
+    if (note && localNote) {
         localNote.textContent = note;
+        localNote.addEventListener('input', function (ev) {
+            localStorage.setItem(LOCAL_NOTE, this.textContent);
+        })
     }
-    localNote.addEventListener('input', function (ev) {
-        localStorage.setItem(LOCAL_NOTE, this.textContent);
-    })
 }
 setupLocalEditing();
