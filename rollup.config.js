@@ -33,7 +33,7 @@ export default [
         }
     },
     {
-        input: 'src/index--js.js',
+        input: 'src/search.js',
         plugins: pluginsjsonly,
         output: {
             format: 'iife',
