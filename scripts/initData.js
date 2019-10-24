@@ -7,8 +7,9 @@ import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
 import { nosightsnonext, unusedsights } from './stats';
-import { getWikidata, getClaims, getClaimValue,
-    getThumbnail, getSummary, calculateDistance, getNearby,
+import { getWikidata, getClaims,
+    getThumbnail, getSummary,
+    badthumbnail,
     getNearbyUntilHave,
     isInstanceOfIsland, isInstanceOfNationalPark,
     isInstanceOfSight, isInstanceOfCity } from './utils';
@@ -132,7 +133,7 @@ console.log('do not use SVGs for sights where possible.');
 Object.keys(sights_json).forEach((sightName) => {
     const sight = sights_json[sightName];
     const thumbnail = sight.thumbnail;
-    if ( !thumbnail || thumbnail.indexOf('.svg') > -1 ) {
+    if (badthumbnail(thumbnail)) {
         pending.push(
             getThumbnail(sightName, sight.lastsync).then((thumbData) => {
                 Object.assign(sights_json[sightName], thumbData);

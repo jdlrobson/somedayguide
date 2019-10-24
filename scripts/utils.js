@@ -344,6 +344,12 @@ export function isInstanceOfIsland(claims ) {
     ].filter((key) => claims.includes(key)).length > 0
 }
 
+export function badthumbnail(thumbnail) {
+    return !thumbnail || thumbnail.indexOf('.svg') > -1 ||
+        // Fixes: #24
+        thumbnail.indexOf('fileicon-ogg.png') > -1;
+}
+
 export function getThumbnail(title, lastsync) {
     const DAY = 1000 * 60 * 60 * 24;
     // if last checked in under
@@ -358,7 +364,7 @@ export function getThumbnail(title, lastsync) {
                     thumbnail: item.thumbnail && item.thumbnail.source,
                     thumbnail__source: item.titles && item.titles.canonical
                 };
-            }).filter((item) => item.thumbnail && item.thumbnail.indexOf('svg') === -1)[0] || {};
+            }).filter((item) => !badthumbnail(item.thumbnail))[0] || {};
             console.log(`Updating SVG thumbnail for ${title} to ${thumb.thumbnail}`);
             thumb.lastsync = new Date().toISOString();
             console.log(`return ${thumb.lastsync}`);
