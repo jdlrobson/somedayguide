@@ -394,7 +394,7 @@ export function getSummary(title, project='wikipedia') {
         })
         .catch((err) => {
             console.log(`${err} while trying to get ${title}`)
-            return Promise.resolve();
+            return Promise.resolve({});
         })
 }
 
