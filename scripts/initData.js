@@ -386,6 +386,11 @@ unusedsights.forEach((title) => {
     }
 });
 
+// #17
+Object.keys(sights_json).filter((key) => destinations[key]).forEach((key) => {
+    console.log( `${key} is a sight and a destination` );
+});
+
 if ( pending.length ) {
     Promise.all( pending ).then(() => {
         console.log('Updating JSON');
