@@ -201,8 +201,8 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
             }
         }
     }
-    // https://github.com/jdlrobson/somedayguide/issues/1
-    if ( place.summary && place.summary.indexOf('.mw-parser-output') > -1 ) {
+    // https://github.com/jdlrobson/somedayguide/issues/1 #25
+    if ( !place.summary || place.summary.indexOf('.mw-parser-output') > -1 ) {
         console.log(`Bad description in ${place.title}`);
         pending.push(
             getSummary(place.title, 'wikivoyage').then((json) => {
