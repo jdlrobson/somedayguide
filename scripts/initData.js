@@ -124,9 +124,14 @@ Object.keys(next).forEach((key) => {
 console.log('Checking countries');
 Object.keys(countries).forEach((countryName) => {
     const country = countries[countryName];
-    const newSights = country.sights.filter((sight) => !countries[sight]);
+    const newSights = Array.from(
+        // #26
+        new Set(
+            country.sights.filter((sight) => !countries[sight])
+        )
+    );
     if ( newSights.length !== country.sights.length ) {
-        console.log(`Country ${countryName} listed another country as a sight.`);
+        console.log(`Country ${countryName} listed another country as a sight or repeated a sight.`);
         countries[countryName].sights = newSights;
         pending.push(Promise.resolve())
     }
