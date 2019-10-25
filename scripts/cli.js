@@ -21,7 +21,8 @@ function getUserInput( msg ) {
             feedback( msg, true );
             process.stdin.setEncoding('utf8');
             process.stdin.once('data', function (text) {
-                    resolve( util.inspect(text).replace( /'([^\n]*)'/g, '$1' ).replace( '\\n', '' )
+                    resolve( util.inspect(text).replace(/_/g, ' ')
+                        .replace( /'([^\n]*)'/g, '$1' ).replace( '\\n', '' )
                             .replace(/\\/, '').trim() );
             });
     })
@@ -88,27 +89,85 @@ function deleteplace(title) {
     delete next[title];
 }
 
+function countrieswithsight(sight) {
+    return Object.keys(countries).filter((key) => {
+        if (!countries[key].sights) {
+            return false;
+        } else if (countries[key].sights.indexOf(sight) > -1) {
+            return true;
+        }
+    });
+}
+
+function destinationwithsight(sight) {
+    return Object.keys(destinations).filter((key) => {
+        if (!destinations[key].sights) {
+            return false;
+        } else if (destinations[key].sights.indexOf(sight) > -1) {
+            return true;
+        }
+    });
+}
+
+function removesightfromcountry(country, sight) {
+    console.log(`Remove reference to ${sight} in ${country}`);
+    countries[country].sights = listwithout(countries[country].sights, sight);
+}
+
+function removesightfromdestination(destination, sight) {
+    console.log(`Remove reference to ${sight} in ${destination}`);
+    destinations[destination].sights = listwithout(destinations[destination].sights, sight);
+}
+
 function removesight(sight) {
     if ( !sights[sight] ) {
         return `Unknown sight ${sight}`;
     }
-    Object.keys(countries).forEach((key) => {
-        if (!countries[key].sights) {
-            countries[key].sights = [];
-        } else if (countries[key].sights.indexOf(sight) > -1) {
-            console.log(`Remove reference to ${sight} in ${key}`);
-            countries[key].sights = listwithout(countries[key].sights, sight);
-        }
-    });
-    Object.keys(destinations).forEach((key) => {
-        if (!destinations[key].sights) {
-            destinations[key].sights = [];
-        } else if (destinations[key].sights.indexOf(sight) > -1) {
-            console.log(`Remove reference to ${sight} in ${key}`);
-            destinations[key].sights = listwithout(destinations[key].sights, sight);
-        }
-    });
+    countrieswithsight(sight).forEach((key) => removesightfromcountry(key, sight));
+    destinationwithsight(sight).forEach((key) => removesightfromdestination(key, sight));
     delete sights[sight];
+}
+
+function removesights() {
+    return getUserInput('Which sight?').then(( sight ) => {
+        if ( sight ) {
+            removesight(sight);
+            save();
+            return removesights();
+        } else {
+            return menu();
+        }
+    });
+}
+
+function addsighttodestination(key, sight) {
+    console.log(`Add sight ${sight} to ${key}`);
+    destinations[key].sights.push(sight);
+}
+
+function addsighttocountry(key, sight) {
+    console.log(`Add sight ${sight} to ${key}`);
+    countries[key].sights.push(sight);
+}
+
+function renamesight() {
+    return getUserInput('Which sight?').then(( original ) => {
+        return getUserInput('Rename to what?').then(( newName ) => {
+            sights[newName] = Object.assign({}, sights[original], { title: newName });
+            delete sights[original];
+            countrieswithsight(original).forEach((key) => {
+                removesightfromcountry(key, original);
+                addsighttocountry(key, newName);
+            });
+            destinationwithsight(original).forEach((key) => {
+                removesightfromdestination(key, original);
+                addsighttodestination(key, newName);
+            });
+        });
+    } ).then(() => {
+        save();
+        return menu();
+    })
 }
 
 function addSight() {
@@ -117,8 +176,6 @@ function addSight() {
             if ( !sight ) {
                 save();
                 return menu();
-            } else {
-                sight = sight.replace(/_/g, ' ');
             }
             place.sights = place.sights || [];
             if ( place.sights.filter((p) => p === sight).length ) {
@@ -147,6 +204,7 @@ function menu() {
             '1: Delete place',
             '2A: Add sight',
             '2B: Remove sight',
+            '2C: Rename sight',
             '3D: Remove country destination',
             '4: Go next',
             '4A: Add go next',
@@ -180,12 +238,9 @@ function menu() {
                     return addSight();
                     break;
                 case '2B':
-                    return getUserInput('Which sight?').then(( sight ) => {
-                        removesight(sight);
-                        save();
-                        return menu();
-                    });
-                    break;
+                    return removesights();
+                case '2C':
+                    return renamesight();
                 case '3D':
                     return removeDestination();
                     break;
