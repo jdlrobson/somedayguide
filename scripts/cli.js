@@ -111,6 +111,36 @@ function removesight(sight) {
     delete sights[sight];
 }
 
+function addSight() {
+    function addSightTo(place) {
+        return getUserInput('Which sight?').then(( sight ) => {
+            if ( !sight ) {
+                save();
+                return menu();
+            } else {
+                sight = sight.replace(/_/g, ' ');
+            }
+            place.sights = place.sights || [];
+            if ( place.sights.filter((p) => p === sight).length ) {
+                feedback('Already got that one.');
+            } else {
+                feedback(`Pushed "${sight}" to "${place.title}"`);
+                place.sights.push(sight);
+                sights[sight] = { title: sight };
+            }
+            return addSightTo(place);
+        });
+    }
+    return getUserInput('Which place?').then(( title ) => {
+        const place = destinations[title] || countries[title];
+        if ( place ) {
+            return addSightTo(place);
+        } else {
+            console.log(`Cannot find ${title}`);
+            return menu();
+        }
+    });
+}
 function menu() {
     const options = [
             '0: Add place',
@@ -121,7 +151,8 @@ function menu() {
             '4: Go next',
             '4A: Add go next',
             '4B: Remove go next',
-            '6: Set image'
+            '6A: Set field',
+            '6B: Set image'
     ];
     getUserInput( '\n\n\n**********************\n' + options.join('\n') + '\n**********************' )
         .then( ( val ) => {
@@ -146,26 +177,7 @@ function menu() {
                     })
                     break;
                 case '2A':
-                    getUserInput('Which place?').then(( title ) => {
-                        const place = destinations[title] || countries[title];
-                        if ( place ) {
-                            return getUserInput('Which sight?').then(( sight ) => {
-                                place.sights = place.sights || [];
-                                if ( place.sights.filter((p) => p === sight).length ) {
-                                    feedback('Already got that one.');
-                                } else {
-                                    feedback(`Pushed "${sight}" to "${title}"`);
-                                    place.sights.push(sight);
-                                    sights[sight] = { title: sight };
-                                }
-                                save();
-                                return menu();
-                            });
-                        } else {
-                            console.log(`Cannot find ${title}`);
-                            return menu();
-                        }
-                    });
+                    return addSight();
                     break;
                 case '2B':
                     return getUserInput('Which sight?').then(( sight ) => {
@@ -203,7 +215,22 @@ function menu() {
                         }
                     } );
                     break;
-                case '6':
+                case '6A':
+                    return getUserInput('Which place?').then(( title ) => {
+                        if ( !destinations[title] ) {
+                            console.log('no have');
+                            return menu();
+                        } else {
+                            return getUserInput('Which field?').then(( field ) => {
+                                return getUserInput('Which value?').then(( value ) => {
+                                    destinations[title][field] = value;
+                                    save();
+                                    return menu();
+                                } );
+                            } );
+                        }
+                    } );
+                case '6B':
                     getUserInput('Which place?').then(( title ) => {
                         if ( !destinations[title] ) {
                             console.log('no have');
