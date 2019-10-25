@@ -76,17 +76,19 @@ function deleteplace(title) {
     const dest = destinations[title];
     if ( !dest ) {
         console.log(`Unknown place ${title}`);
-    }
-    if ( dest.country ) {
+    } else if ( dest.country ) {
         console.log(`Remove ${title} from ${dest.country} destinations`);
         countries[dest.country].destinations = listwithout(countries[dest.country].destinations, title)
     }
     delete destinations[title];
-    next[title].forEach((to) => {
-        console.log(`Remove link from ${title} to ${to}`);
-        next[to] = listwithout(next[to], title);
-    });
-    delete next[title];
+    if ( next[title] ) {
+        console.log(`Delete ${title} from next`)
+        next[title].forEach((to) => {
+            console.log(`Remove link from ${title} to ${to}`);
+            next[to] = listwithout(next[to], title);
+        });
+        delete next[title];
+    }
 }
 
 function countrieswithsight(sight) {
