@@ -338,7 +338,7 @@ nosightsnonext
                     }
                 })
             );
-        } else {
+        } else if (!place.remote) {
             console.log(`Destination ${destinationTitle} is lacking sights and/or places to go next.`);
         }
     })
