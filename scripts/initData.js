@@ -10,7 +10,7 @@ import { nosightsnonext, unusedsights } from './stats';
 import { getWikidata, getClaims,
     getThumbnail, getSummary,
     badthumbnail,
-    getNearbyUntilHave,
+    getNearbyUntilHave, calculateDistance,
     isInstanceOfIsland, isInstanceOfNationalPark,
     isInstanceOfSight, isInstanceOfCity } from './utils';
 
@@ -18,6 +18,7 @@ const SHOW_WARNINGS = true;
 const pending = [];
 
 const COUNTRY_PROPERTY = 'P17';
+const MAX_NEARBY_DISTANCE = 500;
 
 console.log('Remove bad data entries in go next');
 
@@ -55,21 +56,28 @@ function updateWikibase(place, project='wikivoyage') {
 }
 
 Object.keys(next).forEach((key) => {
-    const newSet = Array.from(new Set(next[key].map((place) => typeof place === 'string' ? place : place[0])));
-    if ( newSet.length !== next[key].length) {
-        next[key] = newSet;
-        pending.push(Promise.resolve());
-        console.log(`Remove duplicates in go next for ${key}`);
-    }
+    const newSet = Array.from(
+        new Set(next[key].map((place) => typeof place === 'string' ? place : place[0]))
+    ).filter((toName) => {
+        const to = destinations[toName] || {};
+        // https://github.com/jdlrobson/somedayguide/issues/8
+        const d = calculateDistance(destinations[key], to);
+        return to.remote || d === -1 || d < MAX_NEARBY_DISTANCE;
+    });
     const knownDestinations = newSet.filter((place) => destinations[place] !== undefined);
     const place = destinations[key];
+    if ( place && !place.remote && newSet.length !== next[key].length) {
+        next[key] = newSet;
+        pending.push(Promise.resolve());
+        console.log(`Remove duplicates and far away places in go next for ${key}`);
+    }
     if (
         SHOW_WARNINGS &&
         place &&
         knownDestinations.length !== next[key].length &&
         knownDestinations.length === 0
     ) {
-        if ( place.lat && place.country ) {
+        if ( place.lat && place.country && !place.remote ) {
             console.warn(`\t${key} points to destination(s) that do not exist and has no known destinations.`);
             const country = countries[place.country];
             if ( !country.destinations ) {
@@ -77,11 +85,22 @@ Object.keys(next).forEach((key) => {
             }
             // Look through country destinations
             // https://github.com/jdlrobson/somedayguide/issues/14
-            getNearbyUntilHave(place.title, Object.keys(destinations), 3).forEach((title) => {
+            const nearby = getNearbyUntilHave(place.title, Object.keys(destinations), 3, 160, MAX_NEARBY_DISTANCE);
+            nearby.forEach((title) => {
                 console.log(`${place.title} is near ${title}`);
                 next[place.title].push(title);
                 pending.push(Promise.resolve());
             });
+            if ( !nearby.length ) {
+                const nearbyRemote = getNearbyUntilHave(place.title, Object.keys(destinations), 3);
+                if (nearbyRemote.length ) {
+                    console.log(`${place.title} appears to be a remote destination.`)
+                    place.remote = true;
+                    place.remote = true;
+                    next[place.title] = nearbyRemote;
+                    pending.push(Promise.resolve());
+                }
+            }
         } else if (!place.country) {
             console.warn(`\t${key} needs country.`);
         } else if (!place.lat) {
@@ -320,7 +339,7 @@ nosightsnonext
                 })
             );
         } else {
-            console.log(`Destination ${destinationTitle} has a problem`);
+            console.log(`Destination ${destinationTitle} is lacking sights and/or places to go next.`);
         }
     })
 
@@ -330,9 +349,8 @@ nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
         console.log(`No have lat: ${place.title}`)
         updateLatLn(place, place.title, 'wikivoyage');
     } else {
-        console.log(`Find places nearby to ${place.title}, ${place.lat},${place.lon}`)
-        const nearby = getNearbyUntilHave(place.title, Object.keys(destinations), 3);
-        if ( nearby.length ) {
+        const nearby = getNearbyUntilHave(place.title, Object.keys(destinations), 3, 160, MAX_NEARBY_DISTANCE);
+        if (nearby.length && nearby.length !== next[place.title].length) {
             console.log( `${place.title} is nearby: ${nearby.join(',')}`);
             next[place.title] = nearby;
             pending.push(Promise.resolve());

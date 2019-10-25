@@ -5,7 +5,6 @@ import sights_json from './data/sights.json';
 import marked from 'marked';
 import fs from 'fs';
 
-const CHECK_THUMBNAILS = false;
 const renderer = new marked.Renderer();
 
 const getImageSource = (text) => {
@@ -236,10 +235,10 @@ export function isInstanceOfSight( claims ) {
 export function isInstanceOfCity(claims ) {
     return [
         'Q6784672', 'Q620471', 'Q3257686', 'Q572784',
-        'Q2177636', 'Q56436498',
-        'Q7830262', 'Q1357964',
-        'Q7930614', 'Q24698',
-        'Q28659128',
+        'Q2177636', 'Q56436498', 'Q3184121', 'Q3249005', 'Q162602',
+        'Q7830262', 'Q1357964', 'Q1054813',
+        'Q7930614', 'Q24698', 'Q15149663',
+        'Q28659128', 'Q1496967',
         'Q16858213', 'Q498162',
         'Q667509', 'Q747074', 'Q191093', 'Q180673', 'Q765865',
         'Q2989400', 'Q748149', 'Q59341087',
@@ -399,28 +398,29 @@ export function getSummary(title, project='wikipedia') {
 }
 
 export function calculateDistance( from, to ) {
-        var distance, a,
-                toRadians = Math.PI / 180,
-                deltaLat, deltaLng,
-                startLat, endLat,
-                haversinLat, haversinLng,
-                radius = 6371.01; // radius of Earth in km
+    var a,
+        toRadians = Math.PI / 180,
+        deltaLat, deltaLng,
+        startLat, endLat,
+        haversinLat, haversinLng,
+        radius = 6371.01; // radius of Earth in km
 
-        if ( from.lat === to.lat && from.lon === to.lon ) {
-                distance = 0;
-        } else {
-                deltaLat = ( to.lon - from.lon ) * toRadians;
-                deltaLng = ( to.lat - from.lat ) * toRadians;
-                startLat = from.lat * toRadians;
-                endLat = to.lat * toRadians;
+    if ( !from || !to || !from.lat || !to.lat ) {
+        return -1;
+    } else if ( from.lat === to.lat && from.lon === to.lon ) {
+        return 0;
+    } else {
+        deltaLat = ( to.lon - from.lon ) * toRadians;
+        deltaLng = ( to.lat - from.lat ) * toRadians;
+        startLat = from.lat * toRadians;
+        endLat = to.lat * toRadians;
 
-                haversinLat = Math.sin( deltaLat / 2 ) * Math.sin( deltaLat / 2 );
-                haversinLng = Math.sin( deltaLng / 2 ) * Math.sin( deltaLng / 2 );
+        haversinLat = Math.sin( deltaLat / 2 ) * Math.sin( deltaLat / 2 );
+        haversinLng = Math.sin( deltaLng / 2 ) * Math.sin( deltaLng / 2 );
 
-                a = haversinLat + Math.cos( startLat ) * Math.cos( endLat ) * haversinLng;
-                return 2 * radius * Math.asin( Math.sqrt( a ) );
-        }
-        return distance;
+        a = haversinLat + Math.cos( startLat ) * Math.cos( endLat ) * haversinLng;
+        return 2 * radius * Math.asin( Math.sqrt( a ) );
+    }
 }
 
 export function getNearby(title, titles, radius) {
@@ -440,12 +440,12 @@ export function getNearby(title, titles, radius) {
     }
 }
 
-export function getNearbyUntilHave(title, titles, number, distance = 160) {
+export function getNearbyUntilHave(title, titles, number, distance = 160, maxDistance = 200000) {
     let nearby = getNearby(title, titles, distance),
         page = destinations_json[title];
 
-    if ( page && page.lat && nearby.length < number ) {
-        return getNearbyUntilHave(title, titles, number, distance + 20);
+    if ( distance < maxDistance && page && page.lat && nearby.length < number ) {
+        return getNearbyUntilHave(title, titles, number, distance + 20, maxDistance);
     } else {
         return nearby;
     }
