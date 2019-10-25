@@ -22,7 +22,8 @@ export default function ( props ) {
     ];
     const childrenLeft = [
         <Box title="Go next" id="destinations">
-            {next.map((place) => <Card modifier="condensed" {...place}/>)}
+            {next.sort((p1, p2)=>p1.distance < p2.distance ? -1 : 1)
+                .map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>,
         <Box title="Sights" id="sights">
             {sights.map((sight) => <Card modifier="condensed" {...sight}
