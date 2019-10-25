@@ -20,8 +20,6 @@ const pending = [];
 const COUNTRY_PROPERTY = 'P17';
 const MAX_NEARBY_DISTANCE = 500;
 
-console.log('Remove bad data entries in go next');
-
 function updateLatLn(place, key, project) {
     pending.push(
         getSummary(key, project).then((json) => {
@@ -121,7 +119,6 @@ Object.keys(next).forEach((key) => {
     }
 });
 
-console.log('Checking countries');
 Object.keys(countries).forEach((countryName) => {
     const country = countries[countryName];
     const newSights = Array.from(
@@ -150,7 +147,8 @@ Object.keys(countries).forEach((countryName) => {
             sights_json[sight] = { title: sight };
             pending.push(Promise.resolve())
         }
-    })
+    });
+    country.destinations = country.destinations.filter((destination) => !sights_json[destination])
 });
 
 console.log('do not use SVGs for sights where possible.');
@@ -166,7 +164,6 @@ Object.keys(sights_json).forEach((sightName) => {
     }
 });
 
-console.log('Checking go next is 2-way...');
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
     if ( destinationTitle.indexOf('_') > -1 || destinationTitle.indexOf('%') > -1) {
@@ -213,7 +210,9 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     if ( !place.thumbnail ) {
         pending.push(
             getThumbnail(destinationTitle, place.lastsync).then((thumbData) => {
-                Object.assign(destinations[destinationTitle], thumbData);
+                if ( destinations[destinationTitle] ) {
+                    Object.assign(destinations[destinationTitle], thumbData);
+                }
             })
         );
     }
@@ -232,6 +231,8 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     );
     if ( newSights.length !== place.sights.length) {
         console.log(`Removed sight that is go next/country in ${place.title}`);
+        console.log(newSights, place.sights, next[place.title]);
+        next[place.title] = next[place.title].filter((s) => !place.sights.includes(s));
         destinations[destinationTitle].sights = newSights;
         pending.push(Promise.resolve())
     }
@@ -248,6 +249,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
             }
             next[destinationTitle].push(sight);
             pending.push(Promise.resolve())
+            console.log(`${sight} is in destinations object.`);
         } else {
             if (!ignore.includes(sight)) {
                 if ( !sights_json[sight] ) {
@@ -261,6 +263,8 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
                     )
                 }
                 sightsNotCities.push(sight);
+            } else {
+                console.log(`${sight} is in ignore list`);
             }
         }
     });
@@ -355,6 +359,7 @@ nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
         updateLatLn(place, place.title, 'wikivoyage');
     } else {
         const nearby = getNearbyUntilHave(place.title, Object.keys(destinations), 3, 160, MAX_NEARBY_DISTANCE);
+        next[place.title] = next[place.title] || [];
         if (nearby.length && nearby.length !== next[place.title].length) {
             console.log( `${place.title} is nearby: ${nearby.join(',')}`);
             next[place.title] = nearby;
@@ -388,7 +393,29 @@ unusedsights.forEach((title) => {
 
 // #17
 Object.keys(sights_json).filter((key) => destinations[key]).forEach((key) => {
-    console.log( `${key} is a sight and a destination` );
+    console.log( `${key} is a sight and a destination/country` );
+});
+
+// make sure country sights are allocated to cities (#12)
+Object.keys(countries).forEach((countryName) => {
+    const country = countries[countryName];
+    country.sights.forEach((sightName) => {
+        const sight = sights_json[sightName];
+        if ( !sight.lat && !sight.nolat ) {
+            console.log(`No have lat for ${countryName}: ${sight.title}. If not location set nolat property.`)
+            updateLatLn(sight, sight.title, 'wikipedia');
+        } else {
+            country.destinations.forEach((destName) => {
+                const dest = destinations[destName];
+                const distance = calculateDistance(dest, sight);
+                if ( distance > 0 && distance < 150 && !dest.sights.includes(sightName)) {
+                    console.log(`${destName} is near ${sightName} ${distance}`);
+                    dest.sights.push(sightName);
+                    pending.push(Promise.resolve());
+                }
+            });
+        }
+    });
 });
 
 if ( pending.length ) {
