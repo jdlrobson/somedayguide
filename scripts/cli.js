@@ -75,7 +75,7 @@ function listwithout(list, title) {
 function deleteplace(title) {
     const dest = destinations[title];
     if ( !dest ) {
-        return `Unknown place ${title}`;
+        console.log(`Unknown place ${title}`);
     }
     if ( dest.country ) {
         console.log(`Remove ${title} from ${dest.country} destinations`);
@@ -121,7 +121,7 @@ function removesightfromdestination(destination, sight) {
 
 function removesight(sight) {
     if ( !sights[sight] ) {
-        return `Unknown sight ${sight}`;
+        console.log(`Unknown sight ${sight}`);
     }
     countrieswithsight(sight).forEach((key) => removesightfromcountry(key, sight));
     destinationwithsight(sight).forEach((key) => removesightfromdestination(key, sight));
@@ -153,8 +153,12 @@ function addsighttocountry(key, sight) {
 function renamesight() {
     return getUserInput('Which sight?').then(( original ) => {
         return getUserInput('Rename to what?').then(( newName ) => {
-            sights[newName] = Object.assign({}, sights[original], { title: newName });
-            delete sights[original];
+
+            if ( sights[original] ) {
+                console.log(`Reassign ${original} to ${newName}`);
+                sights[newName] = Object.assign({}, sights[original], { title: newName });
+                delete sights[original];
+            }
             countrieswithsight(original).forEach((key) => {
                 removesightfromcountry(key, original);
                 addsighttocountry(key, newName);
@@ -198,6 +202,20 @@ function addSight() {
         }
     });
 }
+
+function updatefieldvalue(obj) {
+    return getUserInput('Which field?').then(( field ) => {
+        if ( !field ) {
+            return menu();
+        }
+        return getUserInput('Which value?').then(( value ) => {
+            obj[field] = value;
+            save();
+            return updatefieldvalue(obj);
+        } );
+    } );
+}
+
 function menu() {
     const options = [
             '0: Add place',
@@ -210,7 +228,8 @@ function menu() {
             '4A: Add go next',
             '4B: Remove go next',
             '6A: Set field',
-            '6B: Set image'
+            '6B: Set image',
+            '7A: Set field on sight',
     ];
     getUserInput( '\n\n\n**********************\n' + options.join('\n') + '\n**********************' )
         .then( ( val ) => {
@@ -276,13 +295,7 @@ function menu() {
                             console.log('no have');
                             return menu();
                         } else {
-                            return getUserInput('Which field?').then(( field ) => {
-                                return getUserInput('Which value?').then(( value ) => {
-                                    destinations[title][field] = value;
-                                    save();
-                                    return menu();
-                                } );
-                            } );
+                            return updatefieldvalue(destinations[title]);
                         }
                     } );
                 case '6B':
@@ -303,6 +316,15 @@ function menu() {
                         }
                     });
                     break;
+                case '7A':
+                    return getUserInput('Which sight?').then(( title ) => {
+                        if ( !sights[title] ) {
+                            console.log('no have');
+                            return menu();
+                        } else {
+                            return updatefieldvalue(sights[title]);
+                        }
+                    } );
                 default:
                     feedback('Huh?');
                     menu();
