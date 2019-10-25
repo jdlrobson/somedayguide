@@ -60,7 +60,7 @@ Object.keys(next).forEach((key) => {
         const to = destinations[toName] || {};
         // https://github.com/jdlrobson/somedayguide/issues/8
         const d = calculateDistance(destinations[key], to);
-        return to.remote || d === -1 || d < MAX_NEARBY_DISTANCE;
+        return key !== toName && ( to.remote || d === -1 || d < MAX_NEARBY_DISTANCE );
     });
     const knownDestinations = newSet.filter((place) => destinations[place] !== undefined);
     const place = destinations[key];
