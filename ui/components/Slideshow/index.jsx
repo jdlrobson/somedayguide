@@ -2,7 +2,7 @@ import preact, { h } from 'preact';
 
 const getHref = (titleOrUrl) => {
     if( titleOrUrl.indexOf('https') === -1 ) {
-        return `https://commons.wikimedia.org/wiki/${titleOrUrl}`;
+        return `https://commons.wikimedia.org/wiki/File:${titleOrUrl}`;
     } else {
         return titleOrUrl;
     }
@@ -10,7 +10,7 @@ const getHref = (titleOrUrl) => {
 export default function ( {slides} ) {
     return (
         <div class="slideshow">
-            {slides.map(({src, href})=>{
+            {slides && slides.map(({src, href})=>{
                 return <div class="slideshow__slide"
                     style={{'background-image': `url(${src})`}}>
                     {href && <a class="slideshow__slide__caption"
@@ -19,6 +19,9 @@ export default function ( {slides} ) {
                     </a>}
                 </div>
             })}
+            {slides.length === 0 && <div class="slideshow__slide">
+                    <a class="slideshow__slide__caption"></a>
+                </div>}
         </div>
     );
 };

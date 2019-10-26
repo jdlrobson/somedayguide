@@ -59,6 +59,37 @@
     bottom: 0;
     top: 0;
 }
+.slideshow__arrow--right,
+.slideshow__arrow--left {
+    top: 0;
+    position: absolute;
+    z-index: 1;
+    opacity: .9;
+    height: 100%;
+    width: 40px;
+}
+
+.slideshow__arrow--right {
+    right: 0;
+}
+
+.slideshow__arrow--right:before,
+.slideshow__arrow--left:before {
+    content: "";
+    background-image: linear-gradient(transparent,transparent),url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -407 24 24'%3E%3Cpath d='M21.348-401.268q.94 0 1.61.668l.92.922-11.858 11.86L.198-399.66l.922-.94q.65-.686 1.59-.686.94 0 1.61.668l7.718 7.7 7.7-7.682q.67-.668 1.61-.668z' xmlns:default='http://www.w3.org/2000/svg' fill='%23FFF'/%3E%3C/svg%3E");
+    display: block;
+    height: 100%;
+    width: 40px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.slideshow__arrow--right:before {
+    transform: rotate(270deg);
+}
+.slideshow__arrow--left:before {
+    transform: rotate(90deg);
+}
 
 @media all and (min-width: 1000px) {
     .overlay__content {

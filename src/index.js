@@ -3,6 +3,8 @@ import './index.css';
 import localediting from './localediting.js';
 import searchindex from './searchindex.js';
 import { show, hide, titleToLink } from './components/utils';
+import './index--js.css';
+import carouselClickhandler from './carousel/carousel.js';
 
 let maploaded = false;
 let mapdisplayed = false;
@@ -60,4 +62,23 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
     }
 });
 
+function setupSlideshow() {
+    const slideshow = document.querySelector('.slideshow');
+    const leftArrow = document.createElement('div');
+    leftArrow.setAttribute('class', 'slideshow__arrow--left');
+    const rightArrow = document.createElement('div');
+    rightArrow.setAttribute('class', 'slideshow__arrow--right');
+    slideshow.prepend(leftArrow);
+    slideshow.appendChild(rightArrow);
+    const data = document.querySelector('.map__launch-icon').dataset;
+    const handleCarousel = carouselClickhandler(
+        document.querySelector('.slideshow__slide'),
+        data.lat, data.lon
+    );
+    leftArrow.addEventListener('click', handleCarousel);
+    rightArrow.addEventListener('click', handleCarousel);
+}
+
 localediting();
+
+setupSlideshow();

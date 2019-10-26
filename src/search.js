@@ -1,4 +1,3 @@
-import './index--js.css';
 import searchoverlay from './components/searchoverlay.js';
 import { show } from './components/utils';
 
