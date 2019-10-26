@@ -5,8 +5,8 @@ export default function setupLocalEditing() {
         note = localStorage.getItem(LOCAL_NOTE);
     if (note && localNote) {
         localNote.textContent = note;
-        localNote.addEventListener('input', function (ev) {
-            localStorage.setItem(LOCAL_NOTE, this.textContent);
-        })
     }
+    localNote.addEventListener('input', function (ev) {
+        localStorage.setItem(LOCAL_NOTE, this.textContent);
+    })
 }
