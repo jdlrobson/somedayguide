@@ -8,9 +8,10 @@ export default function ( { place, lat = 0, lon = 0, id, zoom = 10,
 } ) {
     return (
         <div class="map">
-            <div class="map__overlay" style={
+            <div class="map__overlay map__overlay--bg" style={
                 {'background-image': `url("${MAP_URL(lat, lon, zoom)}")`}
-            }>
+            }></div>
+            <div class="map__overlay map__overlay--canvas">
                 <h1 class="map__overlay__heading">
                     <a href="/">
                         <img  class="map__overlay__logo"

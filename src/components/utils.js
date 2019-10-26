@@ -1,16 +1,28 @@
 export function hide(overlay, visibility) {
-    if ( visibility ) {
-        overlay.style.visibility = 'hidden';
+    if ( overlay.length ) {
+        overlay.forEach(function (node) {
+            hide(node, visibility);
+        });
     } else {
-        overlay.style.display = 'none';
+        if ( visibility ) {
+            overlay.style.visibility = 'hidden';
+        } else {
+            overlay.style.display = 'none';
+        }
     }
 }
 
 export function show(overlay, visibility) {
-    if ( visibility ) {
-        overlay.style.visibility = 'visible';
+    if ( overlay.length ) {
+        overlay.forEach(function (node) {
+            show(node, visibility);
+        });
     } else {
-        overlay.style.display = '';
+        if ( visibility ) {
+            overlay.style.visibility = 'visible';
+        } else {
+            overlay.style.display = '';
+        }
     }
 }
 

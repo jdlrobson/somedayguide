@@ -32,7 +32,7 @@ if ( fetch ) {
 
 function togglemap() {
     const map = document.querySelector('.map');
-    const overlay = map.querySelector('.map__overlay');
+    const overlay = map.querySelectorAll('.map__overlay');
     const canvas = map.querySelector('.map__canvas');
     if ( mapdisplayed ) {
         show(overlay, true);

@@ -96,7 +96,7 @@ li {
     z-index: 2;
     max-height: none;
     height: 290px;
-    background-color: #b9d4ee;
+    background-color: #fcfbe8;
     border-bottom: 1px solid rgba(0,0,0,.2);
 }
 
@@ -113,8 +113,13 @@ li {
     text-transform: uppercase;
 }
 
+.map__overlay--bg {
+    opacity: 0.3;
+    background-color: white;
+}
+
 .map__overlay__parent {
-    color: #555;
+    color: #a7030f;
     text-decoration: none;
 }
 
@@ -134,12 +139,19 @@ li {
     width: 100%;
     max-width: 400px;
     height: auto;
+    margin-right: 30px;
+    margin-top: 14px;
+}
+.map__overlay__heading {
+    height: 165px;
+    width: 100%;
 }
 
 .map__overlay__subtitle {
     font-weight: 700;
     height: 20px;
-    margin-top: -20px;
+    margin-top: -25px;
+    color: #a7030f;
 }
 
 .map__overlay__page-title {
