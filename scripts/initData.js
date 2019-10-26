@@ -413,6 +413,17 @@ Object.keys(countries).forEach((countryName) => {
                     dest.sights.push(sightName);
                     pending.push(Promise.resolve());
                 }
+                // push sight back to country
+                ((dest && dest.sights) || []).forEach((sightName) => {
+                    if (!country.sights.includes(sightName)) {
+                        const distance = calculateDistance(dest, sights_json[sightName]);
+                        if (distance > 0 && distance < 20) {
+                            // #9
+                            console.log(`Pushing ${sightName} to ${country.title}`);
+                            country.sights.push(sightName);
+                        }
+                    }
+                })
             });
         }
     });
