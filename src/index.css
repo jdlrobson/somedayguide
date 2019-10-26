@@ -402,6 +402,8 @@ li {
     padding: 8px;
     font-size: .75em;
     background: white;
+    overflow: scroll;
+    max-height: 290px;
 }
 
 .slideshow {
