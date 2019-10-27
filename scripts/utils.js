@@ -79,17 +79,22 @@ export function getMissingKeys(obj, keys) {
     return keys.filter((key) => placeKeys.indexOf(key) === - 1 );
 };
 
-export function getClaims(entity, property) {
-    return fetch(`https://wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=${entity}&property=${property}&props=`)
+export function getAllClaims(entity) {
+    return fetch(`https://wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=${entity}&props=`)
         .then((resp) => resp.json())
         .then((json) => {
-            const claims = Object.keys(json.claims || {}).map((key) => json.claims[key])[0];
-            return (claims || []).map((claim) => claim.mainsnak &&
-                claim.mainsnak.datavalue &&
-                claim.mainsnak.datavalue.value &&
-                claim.mainsnak.datavalue.value.id);
+            const claims = {};
+            const jsonClaims = json.claims || {};
+
+            Object.keys(jsonClaims).forEach((key) => {
+                claims[key] = (jsonClaims[key] || []).map((claim) => claim.mainsnak &&
+                    claim.mainsnak.datavalue &&
+                    claim.mainsnak.datavalue.value &&
+                    claim.mainsnak.datavalue.value.id);
+            });
+            return claims;
         });
-};
+}
 
 export function getClaimValue(value) {
     return fetch(`https://wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${value}&sites=enwiki&titles=&props=descriptions%7Clabels&languages=en`)
@@ -106,8 +111,9 @@ export function getClaimValue(value) {
 };
 
 export function getWikidata(entity, property) {
-    return getClaims(entity, property).then((values) => {
-            return getClaimValue(values[0]);
+    return getAllClaims(entity).then((claims) => {
+        const values = claims[property] || [];
+        return getClaimValue(values[0]);
     });
 }
 

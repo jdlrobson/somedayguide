@@ -3,13 +3,14 @@ import destinations from './data/destinations.json';
 import next from './data/next.json';
 import sights_json from './data/sights.json';
 import countries from './data/countries.json';
+import countrywb from './data/countrywb.json';
 import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
 import { nosightsnonext, unusedsights } from './stats';
-import { getWikidata, getClaims,
+import { getAllClaims,
     getThumbnail, getSummary,
-    badthumbnail,
+    badthumbnail, getClaimValue,
     getNearbyUntilHave, calculateDistance,
     isInstanceOfIsland, isInstanceOfNationalPark,
     isInstanceOfSight, isInstanceOfCity } from './utils';
@@ -29,15 +30,41 @@ function updateLatLn(place, key, project) {
     );
 }
 
+function updatecountry(obj) {
+    return getAllClaims(obj.wb).then((claims) => {
+        const countrywbid = claims[COUNTRY_PROPERTY];
+        obj.claims = Object.keys(claims).length;
+        if (countrywb[countrywbid]) {
+            return countrywb[countrywbid];
+        } else {
+            return getClaimValue(countrywbid).then((country) => {
+                countrywb[countrywbid] = country;
+                return country;
+            }).then((country) => {
+                if(country !== false && !countries[country]) {
+                    if ( redirects[country] ) {
+                        return redirects[country];
+                    } else {
+                        console.log(`Unknown country ${country}. Please add to redirects.json`);
+                        throw 4;
+                    }
+                } else {
+                    return country;
+                }
+            })
+        }
+    }).then((country) => {
+        obj.country = country;
+        console.log(`set ${obj.title} country to ${country}`);
+        return Promise.resolve();
+    })
+}
+
 function updateWikibase(place, project='wikivoyage') {
     if ( place.wb && !place.country ) {
         console.log(`${place.title} does not have a country associated. We can check its wikibase ${place.wb}.`)
         pending.push(
-            getWikidata(place.wb, COUNTRY_PROPERTY).then((country) => {
-                place.country = country;
-                console.log(`set ${place.title} country to ${country}`);
-                return Promise.resolve();
-            })
+            updatecountry(place)
         );
     } else if ( place.wb === undefined ) {
         console.log(`${place.title} lacking wikibase id.`)
@@ -372,6 +399,7 @@ nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
 unusedsights.forEach((title) => {
     const sight = sights_json[title];
     updateWikibase(sight, 'wikipedia');
+    updateLatLn(sight, sight.title, 'wikipedia');
     if ( sight.country ) {
         const country = countries[sight.country];
         // guaranteed to be unique as an unused sight
@@ -436,6 +464,7 @@ if ( pending.length ) {
         fs.writeFileSync(`${__dirname}/data/countries.json`, JSON.stringify(countries));
         fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
         fs.writeFileSync(`${__dirname}/data/next.json`, JSON.stringify(next));
+        fs.writeFileSync(`${__dirname}/data/countrywb.json`, JSON.stringify(countrywb));
     });
 } else {
     console.log( 'No changes necessary.' );
