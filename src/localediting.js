@@ -6,7 +6,11 @@ function enableAdminMode() {
     const a = document.createElement('a');
     a.setAttribute('href', `https://github.com/jdlrobson/somedayguide/wiki/${title}`);
     a.textContent = 'Edit';
-    document.querySelectorAll('.note')[0].appendChild(a);
+    const note = document.querySelectorAll('.note');
+    // not home page
+    if (note) {
+        note[0].appendChild(a);
+    }
 }
 
 let lastKeys = [];
