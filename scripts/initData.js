@@ -30,6 +30,11 @@ function updateLatLn(place, key, project) {
     );
 }
 
+function belongsToCountry(obj, countryName) {
+    const objCountryName = obj.country;
+    return objCountryName === undefined || objCountryName === false || objCountryName === countryName;
+}
+
 function updatecountry(obj) {
     return getAllClaims(obj.wb).then((claims) => {
         const countrywbid = claims[COUNTRY_PROPERTY];
@@ -61,7 +66,7 @@ function updatecountry(obj) {
 }
 
 function updateWikibase(place, project='wikivoyage') {
-    if ( place.wb && !place.country ) {
+    if ( place.wb && place.country === undefined ) {
         console.log(`${place.title} does not have a country associated. We can check its wikibase ${place.wb}.`)
         pending.push(
             updatecountry(place)
@@ -151,11 +156,15 @@ Object.keys(countries).forEach((countryName) => {
     const newSights = Array.from(
         // #26
         new Set(
-            country.sights.filter((sight) => !countries[sight])
+            country.sights.filter((sight) => !countries[sight] &&
+                // https://github.com/jdlrobson/somedayguide/issues/15
+                belongsToCountry(sights_json[sight], countryName)
+            )
         )
     );
     if ( newSights.length !== country.sights.length ) {
-        console.log(`Country ${countryName} listed another country as a sight or repeated a sight.`);
+        console.log(`Country ${countryName} listed another country as a sight, or repeated a sight,
+            or listed a sight that belongs to another country.`);
         countries[countryName].sights = newSights;
         pending.push(Promise.resolve())
     }
@@ -252,12 +261,16 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
             pending.push(Promise.resolve())
         }
     })
-    const newSights = place.sights.filter((sight) =>
-        sight && !(next[place.title] || []).includes(sight) &&
-        (!countries[sight])
+    const newSights = Array.from(
+        new Set(
+            place.sights.filter((sight) =>
+                sight && !(next[place.title] || []).includes(sight) &&
+                (!countries[sight])
+            )
+        )
     );
     if ( newSights.length !== place.sights.length) {
-        console.log(`Removed sight that is go next/country in ${place.title}`);
+        console.log(`Removed sight that is go next/country/duplicate in ${place.title}`);
         console.log(newSights, place.sights, next[place.title]);
         next[place.title] = next[place.title].filter((s) => !place.sights.includes(s));
         destinations[destinationTitle].sights = newSights;
@@ -444,8 +457,10 @@ Object.keys(countries).forEach((countryName) => {
                 // push sight back to country
                 ((dest && dest.sights) || []).forEach((sightName) => {
                     if (!country.sights.includes(sightName)) {
-                        const distance = calculateDistance(dest, sights_json[sightName]);
-                        if (distance > 0 && distance < 20) {
+                        const sight = sights_json[sightName];
+                        // https://github.com/jdlrobson/somedayguide/issues/15
+                        const distance = calculateDistance(dest, sight);
+                        if (distance > 0 && distance < 20 && belongsToCountry(sight, countryName)) {
                             // #9
                             console.log(`Pushing ${sightName} to ${country.title}`);
                             country.sights.push(sightName);
