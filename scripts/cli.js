@@ -16,14 +16,17 @@ function feedback( msg ) {
     console.log( msg );
 }
 
-function getUserInput( msg ) {
+function getUserInput( msg, clean = true ) {
     return new Promise( ( resolve, reject ) => {
             feedback( msg, true );
             process.stdin.setEncoding('utf8');
             process.stdin.once('data', function (text) {
-                    resolve( util.inspect(text).replace(/_/g, ' ')
-                        .replace( /'([^\n]*)'/g, '$1' ).replace( '\\n', '' )
-                            .replace(/\\/, '').trim() );
+                    resolve(
+                        clean ? util.inspect(text).replace(/_/g, ' ')
+                            .replace( /'([^\n]*)'/g, '$1' ).replace( '\\n', '' )
+                                .replace(/\\/, '').trim()
+                        : text
+                     );
             });
     })
 }
@@ -306,7 +309,7 @@ function menu() {
                             console.log('no have');
                             return menu();
                         } else {
-                            return getUserInput('What is image thumbnail?').then(( thumbnail ) => {
+                            return getUserInput('What is image thumbnail?', false).then(( thumbnail ) => {
                                 return getUserInput('What is commons title?').then(( source ) => {
                                     destinations[title].thumbnail = thumbnail;
                                     destinations[title].thumbnail__source = source;
