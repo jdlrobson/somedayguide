@@ -23,7 +23,7 @@ export default function ( props ) {
             {destinations.map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>,
         <Box title="Sights" id="sights">
-            {sights.map((sight) => <Card modifier="condensed" {...sight}
+            {sights.sort((s1,s2)=> (s1.claims || 0 ) < s2.claims || 0 ? -1 : 1).map((sight) => <Card modifier="condensed" {...sight}
                 href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>
     ];
