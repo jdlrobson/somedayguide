@@ -1,1 +1,0 @@
-Nepal is 5 3/4 hours ahead of UTC. It is one of only two countries to have a time zone not equivalent to an hour.

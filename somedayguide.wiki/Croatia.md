@@ -1,3 +1,0 @@
-**Dubrovnik** gets a lot of attention, but thanks to the television show Game of Thrones, it contains a terrifying amount of tourists.
-
-Visiting **Plitvice Lakes National Park** is a no-brainer and **Zadar** with its old town and Venetian city walls (UNESCO World Heritage List) makes a good base to do that. I had to rent a car to make the journey, however I'm sure if you are willing to pay you can get a tour there.
