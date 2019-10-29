@@ -11,7 +11,7 @@
     "search-index": "npx @babel/node -r @babel/register scripts/generateIndex.js",
     "cli": "npx @babel/node -r @babel/register scripts/cli.js",
     "blogs": "npx @babel/node -r @babel/register scripts/fetchblogs.js",
-    "data": "npx @babel/node -r @babel/register scripts/initData.js && npm run blogs && npm run search-index",
+    "data": "git submodule foreach git pull origin master && npx @babel/node -r @babel/register scripts/initData.js && npm run blogs && npm run search-index",
     "watch": "npm start && sleep 2 && npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
