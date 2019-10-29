@@ -22,9 +22,8 @@ function getUserInput( msg, clean = true ) {
             process.stdin.setEncoding('utf8');
             process.stdin.once('data', function (text) {
                     resolve(
-                        clean ? util.inspect(text).replace(/_/g, ' ')
+                        clean ? util.inspect(text).replace(/\"/g, '').replace(/_/g, ' ')
                             .replace( /'([^\n]*)'/g, '$1' ).replace( '\\n', '' )
-                                .replace(/\\/, '').trim()
                         : text
                      );
             });
@@ -127,6 +126,8 @@ function removesightfromdestination(destination, sight) {
 function removesight(sight) {
     if ( !sights[sight] ) {
         console.log(`Unknown sight ${sight}`);
+    } else {
+        console.log(`Removed ${sight} from sights.json.`)
     }
     countrieswithsight(sight).forEach((key) => removesightfromcountry(key, sight));
     destinationwithsight(sight).forEach((key) => removesightfromdestination(key, sight));

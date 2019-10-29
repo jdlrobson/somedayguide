@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import destinations from './data/destinations.json';
 import next from './data/next.json';
 import sights_json from './data/sights.json';
@@ -7,7 +6,7 @@ import countrywb from './data/countrywb.json';
 import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
-import { nosightsnonext, unusedsights } from './stats';
+import { nosightsnonext } from './stats';
 import { getAllClaims,
     getThumbnail, getSummary,
     badthumbnail, getClaimValue,
@@ -35,38 +34,44 @@ function belongsToCountry(obj, countryName) {
     return objCountryName === undefined || objCountryName === false || objCountryName === countryName;
 }
 
+function resolvecountry(country) {
+    if(country !== false && !countries[country]) {
+        if ( redirects[country] ) {
+            return redirects[country];
+        } else {
+            throw new Error(`Unknown country ${country}`);
+        }
+    } else {
+        return country;
+    }
+}
 function updatecountry(obj) {
     return getAllClaims(obj.wb).then((claims) => {
         const countrywbid = claims[COUNTRY_PROPERTY];
         obj.claims = Object.keys(claims).length;
         if (countrywb[countrywbid]) {
             return countrywb[countrywbid];
-        } else {
-            return getClaimValue(countrywbid).then((country) => {
+        } else if (countrywbid.length === 1) {
+            return getClaimValue(countrywbid[0]).then((country) => {
                 countrywb[countrywbid] = country;
                 return country;
             }).then((country) => {
-                if(country !== false && !countries[country]) {
-                    if ( redirects[country] ) {
-                        return redirects[country];
-                    } else {
-                        console.log(`Unknown country ${country}. Please add to redirects.json`);
-                        throw 4;
-                    }
-                } else {
-                    return country;
+                try {
+                    return resolvecountry(country);
+                } catch(e) {
+                    console.log(`Unknown country ${country}. Please add to redirects.json for ${obj.wb}`);
                 }
             })
         }
     }).then((country) => {
         obj.country = country;
-        console.log(`set ${obj.title} country to ${country}`);
+        console.log(`set ${obj.title} (${obj.wb}) country to ${country}. Update wikidata entry then run "rm scripts/data/claims/${obj.wb}.json"`);
         return Promise.resolve();
     })
 }
 
 function updateWikibase(place, project='wikivoyage') {
-    if ( place.wb && place.country === undefined ) {
+    if ( place.wb && place.country === undefined && !place.nocountry && !place.multicountry ) {
         console.log(`${place.title} does not have a country associated. We can check its wikibase ${place.wb}.`)
         pending.push(
             updatecountry(place)
@@ -198,6 +203,13 @@ Object.keys(sights_json).forEach((sightName) => {
             })
         )
     }
+    if (sight.country && countries[sight.country]) {
+        const countrySights = countries[sight.country].sights || [];
+        if (!countrySights.includes(sight.title) && sight.title !== sight.country) {
+            console.log(`Push ${sight.title} to ${sight.country}`)
+            countrySights.push(sight.title);
+        }
+    }
 });
 
 Object.keys(destinations).forEach(( destinationTitle ) => {
@@ -297,7 +309,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
                     pending.push(
                         getSummary(sight)
                             .then((json) => {
-                                console.log('Add', sight);
+                                console.log('Add', sight, 'from', destinationTitle);
                                 sights_json[sight] = json;
                             })
                     )
@@ -359,7 +371,8 @@ nosightsnonext
             place.wbnp === undefined
         ) {
             pending.push(
-                getClaims(place.wb, 'P31').then((claims)=> {
+                getAllClaims(place.wb).then((allclaims)=> {
+                    const claims = allclaims['P31'] || [];
                     if ( claims.includes('Q6256') ) {
                         console.log(`${place.title} is a country.`);
                         place.wbcountry = true;
@@ -409,15 +422,18 @@ nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
 });
 
 // update any unused sights by associating it with a country
-unusedsights.forEach((title) => {
+Object.keys(sights_json).forEach((title) => {
     const sight = sights_json[title];
     updateWikibase(sight, 'wikipedia');
-    updateLatLn(sight, sight.title, 'wikipedia');
+    if (!sight.lat && !sight.nolat) {
+        console.log(`Update lat/lon for sight ${sight.title}`)
+        updateLatLn(sight, sight.title, 'wikipedia');
+    }
     if ( sight.country ) {
         const country = countries[sight.country];
-        // guaranteed to be unique as an unused sight
-        if ( country ) {
-            country.sights = country.sights || [];
+        const sights = country && country.sights || [];
+        if ( country && !sights.includes(title) ) {
+            country.sights = sights;
             country.sights.push(title);
             pending.push(Promise.resolve());
         } else {
@@ -425,8 +441,6 @@ unusedsights.forEach((title) => {
                 console.log(`Rename sight.country ${sight.country}`);
                 sight.country = redirects[sight.country];
                 pending.push(Promise.resolve());
-            } else {
-                console.log(`Country for ${title} is ${sight.country}`);
             }
         }
     }
