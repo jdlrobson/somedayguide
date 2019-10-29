@@ -7,6 +7,10 @@ import fs from 'fs';
 
 const renderer = new marked.Renderer();
 
+export function listwithout(list, title) {
+    return list.filter((t) => t !== title);
+}
+
 const getImageSource = (text) => {
     if (text.indexOf('flickr') > -1) {
         return 'flickr';

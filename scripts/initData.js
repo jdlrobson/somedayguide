@@ -8,7 +8,7 @@ import redirects from './data/redirections.json';
 import fs from 'fs';
 import { nosightsnonext } from './stats';
 import { getAllClaims,
-    getThumbnail, getSummary,
+    getThumbnail, getSummary, listwithout,
     badthumbnail, getClaimValue,
     getNearbyUntilHave, calculateDistance,
     isInstanceOfIsland, isInstanceOfNationalPark,
@@ -455,6 +455,7 @@ Object.keys(sights_json).filter((key) => destinations[key]).forEach((key) => {
 Object.keys(countries).forEach((countryName) => {
     const country = countries[countryName];
     country.sights.forEach((sightName) => {
+        let mindistance;
         const sight = sights_json[sightName];
         if ( !sight.lat && !sight.nolat ) {
             console.log(`No have lat for ${countryName}: ${sight.title}. If not location set nolat property.`)
@@ -463,6 +464,9 @@ Object.keys(countries).forEach((countryName) => {
             country.destinations.forEach((destName) => {
                 const dest = destinations[destName];
                 const distance = calculateDistance(dest, sight);
+                if ( distance > 0 && ( mindistance === undefined || distance < mindistance ) ) {
+                    mindistance = distance;
+                }
                 if ( distance > 0 && distance < 150 && !dest.sights.includes(sightName)) {
                     console.log(`${destName} is near ${sightName} ${distance}`);
                     dest.sights.push(sightName);
@@ -482,6 +486,13 @@ Object.keys(countries).forEach((countryName) => {
                     }
                 })
             });
+
+            // Avoid sights being allocated to wrong country
+            if ( mindistance && mindistance > 2000 && sight.nolat === undefined && !sight.remote) {
+                console.log(`Hmm... the sight ${sightName} is far from all places inside ${countryName} (${mindistance}) and has been removed.`)
+                country.sights = listwithout(country.sights, sight.title);
+                pending.push(Promise.resolve());
+            }
         }
     });
 });

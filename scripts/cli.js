@@ -4,6 +4,7 @@ import destinations from './data/destinations.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
 import fs from 'fs';
+import { listwithout } from './utils';
 
 function save() {
     fs.writeFileSync(`${__dirname}/data/countries.json`, JSON.stringify(countries));
@@ -68,10 +69,6 @@ function removeDestination() {
             return menu();
         }
     });
-}
-
-function listwithout(list, title) {
-    return list.filter((t) => t !== title);
 }
 
 function deleteplace(title) {
@@ -224,8 +221,10 @@ function updatefieldvalue(obj) {
 
 function menu() {
     const options = [
-            '0: Add place',
-            '1: Delete place',
+            '1: View place',
+            '1A: Add place',
+            '1B: Delete place',
+            '2: View sight',
             '2A: Add sight',
             '2B: Remove sight',
             '2C: Rename sight',
@@ -240,25 +239,41 @@ function menu() {
     getUserInput( '\n\n\n**********************\n' + options.join('\n') + '\n**********************' )
         .then( ( val ) => {
             switch ( val ) {
-                case '0':
+                case '1':
+                    return getUserInput('Which place?').then(( title ) => {
+                        const d = destinations[title] || {};
+                        Object.keys(d).forEach((key) => {
+                            console.log(`${key}: ${s[key]}`)
+                        });
+                        return menu();
+                    } );
+                case '1A':
                     getUserInput('Which place?').then(( title ) => {
                         if ( destinations[title] ) {
                             feedback('Already got that one.');
                         } else {
                             feedback(`Pushed "${title}"`);
-                            destinations[title] = { title };
+                            destinations[title] = { title, sights: [] };
                         }
                         save();
                         return menu();
                     })
                     break;
-                case '1':
+                case '1B':
                     getUserInput('Which place?').then(( title ) => {
                         deleteplace(title);
                         save();
                         return menu();
                     })
                     break;
+                case '2':
+                    return getUserInput('Which sight?').then(( title ) => {
+                        const s = sights[title] || {};
+                        Object.keys(s).forEach((key) => {
+                            console.log(`${key}: ${s[key]}`)
+                        });
+                        return menu();
+                    } );
                 case '2A':
                     return addSight();
                     break;
