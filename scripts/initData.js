@@ -7,7 +7,7 @@ import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
 import { nosightsnonext } from './stats';
-import { getAllClaims,
+import { getAllClaims, getGithubWikiData,
     getThumbnail, getSummary, listwithout,
     badthumbnail, getClaimValue,
     getNearbyUntilHave, calculateDistance,
@@ -454,6 +454,16 @@ Object.keys(sights_json).filter((key) => destinations[key]).forEach((key) => {
 // make sure country sights are allocated to cities (#12)
 Object.keys(countries).forEach((countryName) => {
     const country = countries[countryName];
+    const wikicountry = getGithubWikiData(countryName, {});
+    const wikisights = wikicountry.sights.filter((s) => !country.sights.includes(s));
+
+    // Fixes: #19
+    wikisights.forEach((s) => {
+        console.log(`Push sight ${s} from wiki to ${countryName}`);
+        country.sights.push(s);
+        sights_json[s] = { title: s };
+    });
+
     country.sights.forEach((sightName) => {
         let mindistance;
         const sight = sights_json[sightName];

@@ -3,11 +3,12 @@ import Page from '../Page';
 import Box from '../../components/Box';
 import Card from '../../components/Card';
 import Slideshow from '../../components/Slideshow';
-import CardGrid from '../../components/CardGrid';
+import InstagramEmbed from '../../components/InstagramEmbed';
 import Climate from '../../components/Climate';
 
 export default function ( props ) {
-    const { summary, climate, sights, links = [], country, blogs = [],
+    const { summary, climate, sights, links = [], country, blogs = [], personalNote,
+            instagram,
             title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
             slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
@@ -39,6 +40,11 @@ export default function ( props ) {
             parentLink={`/country/${country}`}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
+            {personalNote &&<div class="note">
+                <h4 class="note__heading">Personal note</h4>
+                <div dangerouslySetInnerHTML={ { __html: personalNote } } />
+            </div>}
+            {instagram && instagram.length > 0 && <InstagramEmbed id={instagram[0]} />}
             <div class="note note--private" id="local-edit">
                 <p contentEditable>What's on your mind?</p>
             </div>

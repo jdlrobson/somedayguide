@@ -2,11 +2,12 @@ import preact, { h } from 'preact';
 import Page from '../Page';
 import Box from '../../components/Box';
 import Card from '../../components/Card';
-import CardGrid from '../../components/CardGrid';
+import InstagramEmbed from '../../components/InstagramEmbed';
 import Slideshow from '../../components/Slideshow';
 
 export default function ( props ) {
     const { summary, airports = [], sights = [], links = [], personalNote, blogs = [],
+            instagram,
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
@@ -36,6 +37,7 @@ export default function ( props ) {
                 <h4 class="note__heading">Personal note</h4>
                 <div dangerouslySetInnerHTML={ { __html: personalNote } } />
             </div>}
+            {instagram && instagram.length > 0 && <InstagramEmbed id={instagram[0]} />}
             <div class="note note--private" id="local-edit">
                 <p contentEditable>What's on your mind?</p>
             </div>

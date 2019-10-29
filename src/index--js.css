@@ -1,3 +1,11 @@
+.note--magnet {
+    position: relative;
+}
+
+.note--magnet:after {
+    /* @todo: a nice pin!*/
+}
+
 .overlay {
     position: absolute;
     top: 0;

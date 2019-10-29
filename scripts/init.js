@@ -12,7 +12,7 @@ import regions_json from './data/regions.json';
 import sights_json from './data/sights.json';
 import blogs_json from './data/blogs.json';
 const mustache = require( 'mustache' );
-import { renderer, getPersonalNote, withDistance } from './utils';
+import { getGithubWikiData, withDistance } from './utils';
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
 const MODE = process.env.MODE;
 
@@ -36,7 +36,7 @@ function renderPage( filename, data ) {
 const destinations = Object.keys(places_json);
 console.log(`Generate ${destinations.length} destinations...`);
 destinations.forEach((title) => {
-    const place = places_json[title];
+    const place = getGithubWikiData(title, places_json[title]);
     const next = next_json[title] || [];
     const sights = (place.sights || []).map((sight) => sights_json[sight])
         .filter((sight) => sight)
@@ -62,7 +62,7 @@ destinations.forEach((title) => {
 const countries = Object.keys(countries_json);
 console.log(`Generate ${countries.length} countries...`);
 countries.forEach((title) => {
-    const country = countries_json[title];
+    const country = getGithubWikiData(title, countries_json[title]);
 
     // remove destinations without an image...
     const destinations = country.destinations
@@ -85,7 +85,6 @@ countries.forEach((title) => {
         view: render( <Country {...country}
             blogs={(country.blogs || []).map((id) => blogs_json[id])}
             destinations={destinations}
-            personalNote={getPersonalNote(title)}
             sights={sights}
         /> ),
         description: `Guide to ${title}`

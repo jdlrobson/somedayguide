@@ -45,16 +45,41 @@ renderer.image = function (href, title, text) {
     </div>`
 };
 
+let parseddata;
+function resetParsedData() {
+    parseddata = { links: [], ig: [], sights: [] };
+}
+renderer.link = function (href, _, text) {
+    const igmatch = href.match(/instagram\.com\/p\/([^\/]+)/)
+    const wikimatch = href.match(/\.wikipedia\.org\/wiki\/([^\/]+)/)
+    if (igmatch) {
+        parseddata.ig.push(igmatch[1]);
+    } else if (wikimatch) {
+        parseddata.sights.push(wikimatch[1].replace(/_/g, ' '));
+    } else {
+        parseddata.links.push({ href, text });
+    }
+    return '';
+}
 export { renderer };
 
-export function getPersonalNote(title) {
+export function getGithubWikiData(title, props) {
+    resetParsedData();
     let path = `${__dirname}/../somedayguide.wiki/${title}.md`;
     if ( !fs.existsSync(path) && title.indexOf(' ') > -1 ) {
         // try with '-' character.
         path = `${__dirname}/../somedayguide.wiki/${title.replace(/ /g, '-')}.md`;
     }
     const note = fs.existsSync(path) ? fs.readFileSync(path) : undefined;
-    return note && marked(note.toString(), { renderer });
+    const personalNote = note && marked(note.toString(), { renderer })
+        .replace(/\<p\>[ \n]*\<\/p\>/g,'').trim();
+
+    return Object.assign({}, props, {
+        links: (props.links || []).concat(parseddata.links),
+        sights: (props.sights || []).concat(parseddata.sights),
+        instagram: parseddata.ig,
+        personalNote: personalNote || undefined
+    });
 }
 
 export function extractCard(place, json) {
