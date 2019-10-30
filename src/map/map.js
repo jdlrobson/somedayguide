@@ -28,7 +28,7 @@ function onExplore(map, titleToLink, validDestinations) {
                             lat: coords.lat
                         };
                     }).filter((page) => {
-                        return validDestinations.map((obj) => obj.title).indexOf(page.title) > -1;
+                        return validDestinations.map((obj) => obj[0]).indexOf(page.title.toLowerCase()) > -1;
                     }).forEach((props) => {
                         addMarker(map, props, titleToLink);
                     });

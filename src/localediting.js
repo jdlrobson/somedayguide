@@ -8,7 +8,7 @@ function enableAdminMode() {
     a.textContent = 'Edit';
     const note = document.querySelectorAll('.note');
     // not home page
-    if (note) {
+    if (note.length > 0) {
         note[0].appendChild(a);
     }
 }
