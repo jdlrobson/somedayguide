@@ -43,7 +43,8 @@ destinations.forEach((title) => {
         .map(withDistance(place.lat, place.lon));
 
     if ( place.sights && sights.length !== place.sights.length ) {
-        console.log(`data integrity problem in sights for ${title}`);
+        const missing = place.sights.filter((s) => !sights.map(sobj=>sobj.title).includes(s));
+        console.log(`data integrity problem in sights for ${title}: ${missing.join(',')}`);
     }
 
     renderPage( `destination/${place.title}.html`, {
@@ -76,7 +77,8 @@ countries.forEach((title) => {
     const sights = country.sights.map((sight) => sights_json[sight])
         .filter((sight) => sight);
     if ( sights.length !== country.sights.length ) {
-        console.log(`data integrity problem in sights for ${title}`);
+        const missing = country.sights.filter((s) => !sights.map(sobj=>sobj.title).includes(s));
+        console.log(`data integrity problem in country sights for ${title}: ${missing.join(',')}`);
     }
     renderPage( `country/${title}.html`, {
         page_title: title,
