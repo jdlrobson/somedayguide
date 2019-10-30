@@ -65,10 +65,13 @@ export { renderer };
 
 export function getGithubWikiData(title, props) {
     resetParsedData();
-    let path = `${__dirname}/../somedayguide.wiki/${title}.md`;
+    let path = `${__dirname}/../somedayguide.wiki/${title.toLowerCase().replace(/ /g, '-')}.md`;
     if ( !fs.existsSync(path) && title.indexOf(' ') > -1 ) {
         // try with '-' character.
-        path = `${__dirname}/../somedayguide.wiki/${title.replace(/ /g, '-')}.md`;
+        path = `${__dirname}/../somedayguide.wiki/${title}.md`;
+    }
+    if ( title === 'Bohol' ) {
+        console.log(`DEBUG: ${path}, ${fs.existsSync(path)}`);
     }
     const note = fs.existsSync(path) ? fs.readFileSync(path) : undefined;
     const personalNote = note && marked(note.toString(), { renderer })
