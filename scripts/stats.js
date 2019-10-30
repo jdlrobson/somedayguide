@@ -3,10 +3,11 @@ import sights_json from './data/sights.json';
 import countries_json from './data/countries.json';
 import next from './data/next.json';
 const MIN_SIGHTS = 2;
-const MIN_GO_NEXT = 2;
+const MIN_GO_NEXT = 1;
 const MIN_SIGHTS_COUNTRY = 2;
 const MIN_SIGHT_USAGES_TO_BE_POPULAR = 2;
 const MIN_DESTINATIONS_COUNTRY = 4;
+const MIN_DESTINATIONS_CITYLIKE_COUNTRY = 1;
 
 const sightCount = {};
 
@@ -53,7 +54,11 @@ const countrylackingsights = countries.filter((title) => {
     return (countries_json[title].sights || []).length < MIN_SIGHTS_COUNTRY;
 });
 const countrylackingdestinations = countries.filter((title) => {
-    return (countries_json[title].destinations || []).length < MIN_DESTINATIONS_COUNTRY;
+    const country = countries_json[title];
+    const destinations = (country.destinations || []);
+    return country.citylike ?
+        destinations.length < MIN_DESTINATIONS_CITYLIKE_COUNTRY :
+        destinations.length < MIN_DESTINATIONS_COUNTRY;
 });
 const unpopularsights = Object.keys(sightCount).filter((sight) => sightCount[sight] < MIN_SIGHT_USAGES_TO_BE_POPULAR);
 console.log(`Do not have a climate widget: ${no_climate.length}/${destinations.length}`);

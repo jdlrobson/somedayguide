@@ -52,6 +52,32 @@ function gonext() {
         return nextplace(title);
     });
 }
+
+function addtocountry(country) {
+    return getUserInput('Which destination?').then(( dest ) => {
+        if ( !dest) {
+            return menu();
+        }
+        if ( country.destinations.filter((d) => d === dest).length === 0 ) {
+            console.log(`Pushed ${dest} to ${country.title}`);
+            country.destinations.push(dest);
+        }
+        save();
+        return addtocountry(country);
+    });
+}
+
+function addadestination() {
+    getUserInput('Which country?').then(( title ) => {
+        const country = countries[title];
+        if ( country ) {
+            addtocountry(country);
+        } else {
+            return menu();
+        }
+    });
+}
+
 function removeDestination() {
     getUserInput('Which country?').then(( title ) => {
         const country = countries[title];
@@ -228,6 +254,8 @@ function menu() {
             '2A: Add sight',
             '2B: Remove sight',
             '2C: Rename sight',
+            '3B: Remove country',
+            '3C: Add country destination',
             '3D: Remove country destination',
             '4: Go next',
             '4A: Add go next',
@@ -243,7 +271,7 @@ function menu() {
                     return getUserInput('Which place?').then(( title ) => {
                         const d = destinations[title] || {};
                         Object.keys(d).forEach((key) => {
-                            console.log(`${key}: ${s[key]}`)
+                            console.log(`${key}: ${d[key]}`)
                         });
                         return menu();
                     } );
@@ -281,9 +309,16 @@ function menu() {
                     return removesights();
                 case '2C':
                     return renamesight();
+                case '3B':
+                    return getUserInput('Which country to REMOVE?').then(( title ) => {
+                        delete countries[title];
+                        save();
+                        return menu();
+                    } );
+                case '3C':
+                    return addadestination();
                 case '3D':
                     return removeDestination();
-                    break;
                 case '4':
                     getUserInput('Which place does the journey begin?').then(( title ) => {
                         console.log(
@@ -311,12 +346,14 @@ function menu() {
                     } );
                     break;
                 case '6A':
-                    return getUserInput('Which place?').then(( title ) => {
-                        if ( !destinations[title] ) {
+                    return getUserInput('Which place or country?').then(( title ) => {
+                        if ( destinations[title] ) {
+                            return updatefieldvalue(destinations[title]);
+                        } else if ( countries[title] ) {
+                            return updatefieldvalue(countries[title]);
+                        } else {
                             console.log('no have');
                             return menu();
-                        } else {
-                            return updatefieldvalue(destinations[title]);
                         }
                     } );
                 case '6B':

@@ -51,7 +51,7 @@ function updatecountry(obj) {
         obj.claims = Object.keys(claims).length;
         if (countrywb[countrywbid]) {
             return countrywb[countrywbid];
-        } else if (countrywbid.length === 1) {
+        } else if (countrywbid && countrywbid.length === 1) {
             return getClaimValue(countrywbid[0]).then((country) => {
                 countrywb[countrywbid] = country;
                 return country;
