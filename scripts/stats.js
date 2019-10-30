@@ -39,7 +39,7 @@ const sightsnothumb = Object.keys(sights_json).filter((sight) => {
     return !sights_json[sight].thumbnail;
 });
 const sightsnolonglat = Object.keys(sights_json).filter((sight) => {
-    return !sights_json[sight].lat;
+    return !sights_json[sight].lat && !sights_json[sight].nolat;
 });
 const destinations = Object.keys(destinations_json);
 const destinationsnothumb = destinations.filter((t) => {

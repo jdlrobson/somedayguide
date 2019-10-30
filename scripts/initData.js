@@ -192,7 +192,6 @@ Object.keys(countries).forEach((countryName) => {
     country.destinations = country.destinations.filter((destination) => !sights_json[destination])
 });
 
-console.log('do not use SVGs for sights where possible.');
 Object.keys(sights_json).forEach((sightName) => {
     const sight = sights_json[sightName];
     const thumbnail = sight.thumbnail;
@@ -204,11 +203,31 @@ Object.keys(sights_json).forEach((sightName) => {
         )
     }
     if (sight.country && countries[sight.country]) {
+        const country = countries[sight.country];
         const countrySights = countries[sight.country].sights || [];
-        if (!countrySights.includes(sight.title) && sight.title !== sight.country) {
+        if ( country && !countrySights.includes(sightName) && sight.title !== sight.country) {
+            country.sights = countrySights;
             console.log(`Push ${sight.title} to ${sight.country}`)
-            countrySights.push(sight.title);
+            country.sights.push(sightName);
+            pending.push(Promise.resolve());
+        } else {
+            if ( redirects[sight.country] ) {
+                console.log(`Rename sight.country ${sight.country}`);
+                sight.country = redirects[sight.country];
+                pending.push(Promise.resolve());
+            }
         }
+    }
+    // update any unused sights by associating it with a country
+    updateWikibase(sight, 'wikipedia');
+    if (!sight.lat && !sight.nolat) {
+        console.log(`Update lat/lon for sight ${sightName}`)
+        updateLatLn(sight, sight.title, 'wikipedia');
+    }
+
+    // #17
+    if (destinations[sightName]) {
+        console.log( `${sightName} is a sight and a destination/country` );
     }
 });
 
@@ -419,36 +438,6 @@ nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
             pending.push(Promise.resolve());
         }
     }
-});
-
-// update any unused sights by associating it with a country
-Object.keys(sights_json).forEach((title) => {
-    const sight = sights_json[title];
-    updateWikibase(sight, 'wikipedia');
-    if (!sight.lat && !sight.nolat) {
-        console.log(`Update lat/lon for sight ${sight.title}`)
-        updateLatLn(sight, sight.title, 'wikipedia');
-    }
-    if ( sight.country ) {
-        const country = countries[sight.country];
-        const sights = country && country.sights || [];
-        if ( country && !sights.includes(title) ) {
-            country.sights = sights;
-            country.sights.push(title);
-            pending.push(Promise.resolve());
-        } else {
-            if ( redirects[sight.country] ) {
-                console.log(`Rename sight.country ${sight.country}`);
-                sight.country = redirects[sight.country];
-                pending.push(Promise.resolve());
-            }
-        }
-    }
-});
-
-// #17
-Object.keys(sights_json).filter((key) => destinations[key]).forEach((key) => {
-    console.log( `${key} is a sight and a destination/country` );
 });
 
 // make sure country sights are allocated to cities (#12)
