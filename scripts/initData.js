@@ -394,6 +394,7 @@ Object.keys(countries).forEach((countryName) => {
     country.sights.forEach((sightName) => {
         let mindistance;
         const sight = sights_json[sightName];
+        const sightdistances = {};
         if ( sight.lat && !sight.nolat ) {
             country.destinations.forEach((destName) => {
                 const dest = destinations[destName];
@@ -401,10 +402,34 @@ Object.keys(countries).forEach((countryName) => {
                 if ( distance > 0 && ( mindistance === undefined || distance < mindistance ) ) {
                     mindistance = distance;
                 }
-                if ( distance > 0 && distance < 150 && !dest.sights.includes(sightName)) {
-                    console.log(`${destName} is near ${sightName} ${distance}`);
-                    dest.sights.push(sightName);
-                    pending.push(Promise.resolve());
+                if ( distance > 0 && distance < 150) {
+                    if (!sightdistances[sightName]) {
+                        sightdistances[sightName] = { distance, destination: destName };
+                        if (!dest.sights.includes(sightName)) {
+                            dest.sights.push(sightName);
+                            pending.push(Promise.resolve());
+                        }
+                    } else if (sightdistances[sightName]) {
+                        // Fixes #28
+                        const otherdest = sightdistances[sightName];
+                        if (otherdest.distance > distance && distance < 30) {
+                            // remove from otherdest.
+                            const othersights = destinations[otherdest.destination].sights;
+                            destinations[otherdest.destination].sights = listwithout(othersights, sight.title);
+                            if (!dest.sights.includes(sightName)) {
+                                console.log(`${sightName} is closer to ${destName} (${distance}) than ${otherdest.destination} (${otherdest.distance})`);
+                                // add to this one.
+                                dest.sights.push(sightName);
+                            }
+                            pending.push(Promise.resolve());
+                        } else if ( otherdest.distance < distance && otherdest.distance < 30 ) {
+                            // remove it from the other one
+                            if (dest.sights.includes(sightName)) {
+                                console.log(`Remove ${sightName} from ${dest.title}`);
+                                dest.sights = listwithout(dest.sights, sightName);
+                            }
+                        }
+                    }
                 }
                 // push sight back to country
                 ((dest && dest.sights) || []).forEach((sightName) => {
