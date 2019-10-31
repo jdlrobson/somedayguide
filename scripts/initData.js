@@ -344,48 +344,40 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         console.log(`Sights for ${destinationTitle} should be list of strings`);
         pending.push(Promise.resolve());
     }
-});
 
-nosightsnonext
-    .forEach((destinationTitle) => {
-        const place = destinations[destinationTitle];
-        if ( !place ) {
-            // renamed during session
-            return;
-        } else if ( place.wbcountry ) {
-            if ( countries[place.title] ) {
-                console.log(`${place.title} is country`);
-                delete destinations[place.title];
-                pending.push(Promise.resolve());
-            }
-        } else if ( place.wbsight && place.country ) {
-            // Fixes: https://github.com/jdlrobson/somedayguide/issues/10
-            console.log(`Repurpose ${destinationTitle} as sight on ${place.country}`);
-            delete place.wbsight;
-            sights_json[destinationTitle] = place;
-            delete destinations[destinationTitle];
-            countries[place.country].sights.push(place.title);
+    if ( place.wbcountry ) {
+        if ( countries[place.title] ) {
+            console.log(`${place.title} is country`);
+            delete destinations[place.title];
             pending.push(Promise.resolve());
-        } else if ( place.wb === undefined ) {
-            console.log(`Destination ${destinationTitle} lacking wikibase id.`)
-            pending.push(
-                getSummary(place.title, 'wikivoyage').then((json) => {
-                    place.wb = json.wb || false;
-                }, () => {
-                    place.wb = false;
-                })
-            );
-        } else if (!place.remote) {
-            console.log(`Destination ${destinationTitle} is lacking sights and/or places to go next.`);
         }
-    })
+    } else if ( place.wbsight && place.country ) {
+        // Fixes: https://github.com/jdlrobson/somedayguide/issues/10
+        console.log(`Repurpose ${destinationTitle} as sight on ${place.country}`);
+        delete place.wbsight;
+        sights_json[destinationTitle] = place;
+        delete destinations[destinationTitle];
+        countries[place.country].sights.push(place.title);
+        pending.push(Promise.resolve());
+    } else if ( place.wb === undefined && !place.country ) {
+        console.log(`Destination ${destinationTitle} lacking wikibase id.`)
+        pending.push(
+            getSummary(place.title, 'wikivoyage').then((json) => {
+                place.wb = json.wb || false;
+            }, () => {
+                place.wb = false;
+            })
+        );
+    }
+    if ( !place.lat && !place.nolat ) {
+        console.log(`No have lat: ${place.title}`)
+        updateLatLn(place, place.title, 'wikivoyage');
+    }
+});
 
 nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
     place.wbcity || place.wbnp || place.wbisland).forEach((place) => {
-    if ( !place.lat ) {
-        console.log(`No have lat: ${place.title}`)
-        updateLatLn(place, place.title, 'wikivoyage');
-    } else {
+    if ( place.lat ) {
         const nearby = getNearbyUntilHave(place.title, Object.keys(destinations), 3, 160, MAX_NEARBY_DISTANCE);
         next[place.title] = next[place.title] || [];
         if (nearby.length && nearby.length !== next[place.title].length) {
