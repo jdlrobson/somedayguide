@@ -156,42 +156,6 @@ Object.keys(next).forEach((key) => {
     }
 });
 
-Object.keys(countries).forEach((countryName) => {
-    const country = countries[countryName];
-    const newSights = Array.from(
-        // #26
-        new Set(
-            country.sights.filter((sight) => !countries[sight] &&
-                // https://github.com/jdlrobson/somedayguide/issues/15
-                belongsToCountry(sights_json[sight], countryName)
-            )
-        )
-    );
-    if ( newSights.length !== country.sights.length ) {
-        console.log(`Country ${countryName} listed another country as a sight, or repeated a sight,
-            or listed a sight that belongs to another country.`);
-        countries[countryName].sights = newSights;
-        pending.push(Promise.resolve())
-    }
-    const destinationSet = new Set(country.destinations);
-    if(destinationSet.size !== country.destinations.length) {
-        console.log(`Removed duplicate destinations in ${countryName}`);
-        country.destinations = Array.from(destinationSet);
-        pending.push(Promise.resolve())
-    }
-    country.sights = country.sights.map((sight) => {
-        return typeof sight === 'string' ? sight : sight.title
-    } );
-    country.sights.forEach((sight) => {
-        if ( !sights_json[sight] ) {
-            console.log(`${sight} is not known.`)
-            sights_json[sight] = { title: sight };
-            pending.push(Promise.resolve())
-        }
-    });
-    country.destinations = country.destinations.filter((destination) => !sights_json[destination])
-});
-
 Object.keys(sights_json).forEach((sightName) => {
     const sight = sights_json[sightName];
     const thumbnail = sight.thumbnail;
@@ -494,6 +458,38 @@ Object.keys(countries).forEach((countryName) => {
             }
         }
     });
+    const newSights = Array.from(
+        // #26
+        new Set(
+            country.sights.filter((sight) => !countries[sight] &&
+                // https://github.com/jdlrobson/somedayguide/issues/15
+                belongsToCountry(sights_json[sight], countryName)
+            )
+        )
+    );
+    if ( newSights.length !== country.sights.length ) {
+        console.log(`Country ${countryName} listed another country as a sight, or repeated a sight,
+            or listed a sight that belongs to another country.`);
+        countries[countryName].sights = newSights;
+        pending.push(Promise.resolve())
+    }
+    const destinationSet = new Set(country.destinations);
+    if(destinationSet.size !== country.destinations.length) {
+        console.log(`Removed duplicate destinations in ${countryName}`);
+        country.destinations = Array.from(destinationSet);
+        pending.push(Promise.resolve())
+    }
+    country.sights = country.sights.map((sight) => {
+        return typeof sight === 'string' ? sight : sight.title
+    } );
+    country.sights.forEach((sight) => {
+        if ( !sights_json[sight] ) {
+            console.log(`${sight} is not known.`)
+            sights_json[sight] = { title: sight };
+            pending.push(Promise.resolve())
+        }
+    });
+    country.destinations = country.destinations.filter((destination) => !sights_json[destination])
 });
 
 if ( pending.length ) {
