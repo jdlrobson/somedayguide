@@ -73,6 +73,11 @@ function updatewbfields(obj, allclaims) {
     ) {
         console.log(`Place ${obj.title} confirmed as national park.`);
         obj.wbnp = true;
+    } else if (
+        // if taxon
+        claims.includes('Q16521')
+    ) {
+        obj.nolat = 1;
     } else {
        console.log('Unknown claims for destination/sight', obj.title, obj.wb, claims);
     }
@@ -103,7 +108,7 @@ function updatecountry(obj) {
 }
 
 function updateWikibase(place, project='wikivoyage') {
-    if ( place.wb && place.country === undefined && !place.nocountry && !place.multicountry ) {
+    if ( place.wb && place.country === undefined && !place.nocountry && !place.multicountry &!place.nolat ) {
         console.log(`${place.title} does not have a country associated. We can check its wikibase ${place.wb}.`)
         pending.push(
             updatecountry(place)
@@ -218,6 +223,18 @@ Object.keys(sights_json).forEach((sightName) => {
 
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
+    const wikiplace = getGithubWikiData(destinationTitle, {});
+    const wikisights = wikiplace.sights.filter((s) => !place.sights.includes(s));
+
+    // Fixes: #19
+    wikisights.forEach((s) => {
+        if (!place.sights.includes(s)) {
+            console.log(`Push sight ${s} from wiki to ${destinationTitle}`);
+            place.sights.push(s);
+        }
+        sights_json[s] = { title: s };
+    });
+
     if ( destinationTitle.indexOf('_') > -1 || destinationTitle.indexOf('%') > -1) {
         console.log(`Replacing _ characters in name ${destinationTitle}`);
         let newTitle = destinationTitle.replace(/_/g, ' ');
@@ -294,6 +311,10 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     // any sights that are actually destinations?
     const sightsNotCities = [];
     newSights.forEach((sight) => {
+        if (!sights_json[sight]) {
+            console.log('Push sight', sight);
+            sights_json[sight] = { title: sight };
+        }
         sight = redirects[sight] || sight;
 
         if (destinations[sight]) {
