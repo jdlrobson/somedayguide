@@ -48,7 +48,8 @@ function resolvecountry(country) {
     }
 }
 
-function updatewbfields(obj, claims) {
+function updatewbfields(obj, allclaims) {
+    const claims = allclaims['P31'] || [];
     obj.claims = Object.keys(claims).length;
     if ( claims.includes('Q6256') ) {
         console.log(`${obj.title} is a country.`);
