@@ -45,10 +45,39 @@ function resolvecountry(country) {
         return country;
     }
 }
+
+function updatewbfields(obj, claims) {
+    obj.claims = Object.keys(claims).length;
+    if ( claims.includes('Q6256') ) {
+        console.log(`${obj.title} is a country.`);
+        obj.wbcountry = true;
+    } else if ( isInstanceOfSight(claims) ) {
+        // it's a sight..
+        console.log(`${obj.title} (${obj.wb}) is actually sight.`);
+        obj.wbsight = true;
+    } else if (
+        isInstanceOfCity(claims)
+     ) {
+        console.log(`Place ${obj.title} confirmed as city.`);
+        obj.wbcity = true;
+    } else if (
+        isInstanceOfIsland(claims)
+    ) {
+        console.log(`Place ${obj.title} confirmed as island.`);
+        obj.wbisland = true;
+    } else if (
+        isInstanceOfNationalPark(claims)
+    ) {
+        console.log(`Place ${obj.title} confirmed as national park.`);
+        obj.wbnp = true;
+    } else {
+       console.log('Unknown claims for destination/sight', obj.title, obj.wb, claims);
+    }
+}
 function updatecountry(obj) {
     return getAllClaims(obj.wb).then((claims) => {
         const countrywbid = claims[COUNTRY_PROPERTY];
-        obj.claims = Object.keys(claims).length;
+        updatewbfields(obj, claims);
         if (countrywb[countrywbid]) {
             return countrywb[countrywbid];
         } else if (countrywbid && countrywbid.length === 1) {
@@ -344,43 +373,6 @@ nosightsnonext
                     place.wb = json.wb || false;
                 }, () => {
                     place.wb = false;
-                })
-            );
-        } else if (
-            place.wbsight === undefined &&
-            place.wbcity === undefined &&
-            place.wbisland === undefined &&
-            place.wbcountry === undefined &&
-            place.wbnp === undefined
-        ) {
-            pending.push(
-                getAllClaims(place.wb).then((allclaims)=> {
-                    const claims = allclaims['P31'] || [];
-                    if ( claims.includes('Q6256') ) {
-                        console.log(`${place.title} is a country.`);
-                        place.wbcountry = true;
-                    } else if ( isInstanceOfSight(claims) ) {
-                        // it's a sight..
-                        console.log(`${destinationTitle} (${place.wb}) is actually sight.`);
-                        place.wbsight = true;
-                    } else if (
-                        isInstanceOfCity(claims)
-                     ) {
-                        console.log(`Place ${destinationTitle} confirmed as city.`);
-                        place.wbcity = true;
-                    } else if (
-                        isInstanceOfIsland(claims)
-                    ) {
-                        console.log(`Place ${destinationTitle} confirmed as island.`);
-                        place.wbisland = true;
-                    } else if (
-                        isInstanceOfNationalPark(claims)
-                    ) {
-                        console.log(`Place ${destinationTitle} confirmed as national park.`);
-                        place.wbnp = true;
-                    } else {
-                       console.log('Unknown claims for destination', place.title, place.wb, claims);
-                    }
                 })
             );
         } else if (!place.remote) {
