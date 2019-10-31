@@ -158,9 +158,21 @@ function removesight(sight) {
 }
 
 function removesights() {
-    return getUserInput('Which sight?').then(( sight ) => {
-        if ( sight ) {
-            removesight(sight);
+    return getUserInput('Which sight, country, or place?').then(( sightOrPlace ) => {
+        if (countries[sightOrPlace]) {
+            return getUserInput('Which sight?').then(( sight) => {
+                removesightfromcountry(sightOrPlace, sight);
+                save();
+                return menu();
+            });
+        } else if (destinations[sightOrPlace]) {
+            return getUserInput('Which sight').then(( sight) => {
+                removesightfromdestination(sightOrPlace, sight);
+                save();
+                return menu();
+            });
+        } else if ( sightOrPlace ) {
+            removesight(sightOrPlace);
             save();
             return removesights();
         } else {
@@ -247,7 +259,7 @@ function updatefieldvalue(obj) {
 
 function menu() {
     const options = [
-            '1: View place',
+            '1: View place/country',
             '1A: Add place',
             '1B: Delete place',
             '2: View sight',
@@ -268,8 +280,8 @@ function menu() {
         .then( ( val ) => {
             switch ( val ) {
                 case '1':
-                    return getUserInput('Which place?').then(( title ) => {
-                        const d = destinations[title] || {};
+                    return getUserInput('Which place or country?').then(( title ) => {
+                        const d = countries[title] || destinations[title] || {};
                         Object.keys(d).forEach((key) => {
                             console.log(`${key}: ${d[key]}`)
                         });
