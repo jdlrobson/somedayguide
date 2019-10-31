@@ -20,11 +20,13 @@ const pending = [];
 const COUNTRY_PROPERTY = 'P17';
 const MAX_NEARBY_DISTANCE = 500;
 
-function updateLatLn(place, key, project) {
+function updatefields(place, key, project) {
     pending.push(
         getSummary(key, project).then((json) => {
-            place.lat = json.lat;
-            place.lon = json.lon;
+            Object.assign(place, json);
+        }, () => {
+            place.wb = false;
+            return Promise.resolve();
         })
     );
 }
@@ -108,13 +110,7 @@ function updateWikibase(place, project='wikivoyage') {
     } else if ( place.wb === undefined ) {
         console.log(`${place.title} lacking wikibase id.`)
         pending.push(
-            getSummary(place.title, project).then((json) => {
-                place.wb = json.wb || false;
-                return Promise.resolve();
-            }, () => {
-                place.wb = false;
-                return Promise.resolve();
-            })
+            updatefields(place, place.title, project)
         )
     }
 }
@@ -165,11 +161,6 @@ Object.keys(next).forEach((key) => {
                     pending.push(Promise.resolve());
                 }
             }
-        } else if (!place.country) {
-            console.warn(`\t${key} needs country.`);
-        } else if (!place.lat) {
-            console.warn(`\t${key} needs lat/lon.`);
-            updateLatLn(place, key);
         }
     }
     if (
@@ -215,7 +206,7 @@ Object.keys(sights_json).forEach((sightName) => {
     updateWikibase(sight, 'wikipedia');
     if (!sight.lat && !sight.nolat) {
         console.log(`Update lat/lon for sight ${sightName}`)
-        updateLatLn(sight, sight.title, 'wikipedia');
+        updatefields(sight, sight.title, 'wikipedia');
     }
 
     // #17
@@ -262,9 +253,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     if ( !place.summary || place.summary.indexOf('.mw-parser-output') > -1 ) {
         console.log(`Bad description in ${place.title}`);
         pending.push(
-            getSummary(place.title, 'wikivoyage').then((json) => {
-                place.summary = json.summary;
-            })
+            updatefields(place, place.title, 'wikivoyage')
         );
     }
     if ( !place.thumbnail ) {
@@ -362,16 +351,11 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     } else if ( place.wb === undefined && !place.country ) {
         console.log(`Destination ${destinationTitle} lacking wikibase id.`)
         pending.push(
-            getSummary(place.title, 'wikivoyage').then((json) => {
-                place.wb = json.wb || false;
-            }, () => {
-                place.wb = false;
-            })
+            updatefields(place, place.title, 'wikivoyage')
         );
-    }
-    if ( !place.lat && !place.nolat ) {
-        console.log(`No have lat: ${place.title}`)
-        updateLatLn(place, place.title, 'wikivoyage');
+    } else if ( !place.lat && !place.nolat ) {
+        console.log(`No have lat for destination: ${place.title}`)
+        updatefields(place, place.title, 'wikivoyage');
     }
 });
 
@@ -400,14 +384,17 @@ Object.keys(countries).forEach((countryName) => {
         country.sights.push(s);
         sights_json[s] = { title: s };
     });
+    if ( !country.summary || country.summary.indexOf('.mw-parser-output') > -1 ) {
+        console.log(`Bad description in ${country.title}`);
+        pending.push(
+            updatefields(country, country.title, 'wikivoyage')
+        );
+    }
 
     country.sights.forEach((sightName) => {
         let mindistance;
         const sight = sights_json[sightName];
-        if ( !sight.lat && !sight.nolat ) {
-            console.log(`No have lat for ${countryName}: ${sight.title}. If not location set nolat property.`)
-            updateLatLn(sight, sight.title, 'wikipedia');
-        } else {
+        if ( sight.lat && !sight.nolat ) {
             country.destinations.forEach((destName) => {
                 const dest = destinations[destName];
                 const distance = calculateDistance(dest, sight);

@@ -422,7 +422,7 @@ export function getSummary(title, project='wikipedia') {
         .then((json) => {
             return {
                 title,
-                wb: json.wikibase_item,
+                wb: json.wikibase_item || false,
                 lat: json.coordinates && json.coordinates.lat,
                 lon: json.coordinates && json.coordinates.lon,
                 description: json.description,
