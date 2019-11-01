@@ -1,0 +1,1 @@
+A local cache to avoid wikidata queries.

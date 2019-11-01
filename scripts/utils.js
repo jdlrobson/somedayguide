@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import destinations_json from './data/destinations.json';
 import countries_json from './data/countries.json';
 import sights_json from './data/sights.json';
+import countrywb_json from './data/countrywb.json';
 import marked from 'marked';
 import fs from 'fs';
 
@@ -112,6 +113,10 @@ export function getMissingKeys(obj, keys) {
 };
 
 export function getAllClaims(entity) {
+    const localpath = `${__dirname}/data/claims/${entity}.json`;
+    if (fs.existsSync(localpath)) {
+        return Promise.resolve(JSON.parse(fs.readFileSync(localpath).toString()));
+    }
     return fetch(`https://wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=${entity}&props=`)
         .then((resp) => resp.json())
         .then((json) => {
@@ -124,11 +129,15 @@ export function getAllClaims(entity) {
                     claim.mainsnak.datavalue.value &&
                     claim.mainsnak.datavalue.value.id);
             });
+            fs.writeFileSync(localpath, JSON.stringify(claims));
             return claims;
         });
 }
 
 export function getClaimValue(value) {
+    if (countrywb_json[value]) {
+        return Promise.resolve(countrywb_json[value]);
+    }
     return fetch(`https://wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${value}&sites=enwiki&titles=&props=descriptions%7Clabels&languages=en`)
         .then((resp) => resp.json())
         .then((json) => {
