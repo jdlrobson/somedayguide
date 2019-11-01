@@ -31,7 +31,7 @@ const analyticsHTML = MODE === 'production' ?
 console.log(`Mode is ${MODE}`);
 
 function renderPage( filename, data ) {
-    sitemap.push( { title: data.page_title, url: `/${filename}` } );
+    sitemap.push( { title: data.page_title, href: `/${filename}` } );
     data.analyticsHTML = analyticsHTML;
     fs.writeFileSync( `public/${filename}`, mustache.render( template, data ) );
 }
