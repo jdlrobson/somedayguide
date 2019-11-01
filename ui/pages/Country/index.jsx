@@ -19,12 +19,13 @@ export default function ( props ) {
             <ul>{links.map((link) =><li><a href={link.href}>{link.text}</a></li> )}</ul>
         </Box>
     ];
+    const claimSort = (s1,s2)=> (s1.claims || 0 ) > s2.claims || 0 ? -1 : 1;
     const childrenLeft = [
         <Box title="Destinations" id="destinations">
-            {destinations.map((place) => <Card modifier="condensed" {...place}/>)}
+            {destinations.sort(claimSort).map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>,
         <Box title="Sights" id="sights">
-            {sights.sort((s1,s2)=> (s1.claims || 0 ) < s2.claims || 0 ? -1 : 1).map((sight) => <Card modifier="condensed" {...sight}
+            {sights.sort(claimSort).map((sight) => <Card modifier="condensed" {...sight}
                 href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>
     ];
