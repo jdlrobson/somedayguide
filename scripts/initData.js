@@ -50,7 +50,7 @@ function resolvecountry(country) {
 
 function updatewbfields(obj, allclaims) {
     const claims = allclaims['P31'] || [];
-    obj.claims = Object.keys(claims).length;
+    obj.claims = Object.keys(allclaims).length;
     if ( claims.includes('Q6256') ) {
         console.log(`${obj.title} is a country.`);
         obj.wbcountry = true;
@@ -105,7 +105,10 @@ function updatecountry(obj) {
                 })
             ).then( (answers) => {
                 const valid = Array.from(new Set(answers.filter((answer) => answer)));
-                return valid.length === 0 ? valid[0] : undefined;
+                if ( valid.length > 1 ) {
+                    console.log(`Too many options for ${obj.wb}`, valid)
+                }
+                return valid.length === 1 ? valid[0] : undefined;
             });
         }
     }).then((country) => {
