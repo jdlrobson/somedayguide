@@ -160,6 +160,20 @@ export function getWikidata(entity, property) {
 
 export function isInstanceOfSight( claims ) {
     return [
+        // roman road
+        'Q194029',
+        // mansions
+        'Q1802963',
+        // palace
+        'Q16560',
+        // park
+        'Q22698',
+        // mosque
+        'Q32815', 'Q7405416',
+        // architectural structure
+        'Q811979',
+        // geopark
+        'Q1324355',
         // activity
         'Q1914636',
         // heritage
@@ -299,6 +313,8 @@ export function isInstanceOfCity(claims ) {
         'Q2590631',
         'Q2706302','Q104157',
         'Q15584664',
+        // metropopolis
+        'Q200250',
         // state
         'Q7275',
         // suburb
