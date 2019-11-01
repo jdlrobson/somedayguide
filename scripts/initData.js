@@ -41,7 +41,7 @@ function resolvecountry(country) {
         if ( redirects[country] ) {
             return redirects[country];
         } else {
-            throw new Error(`Unknown country ${country}`);
+            throw new Error(`Unknown country ${country}.`);
         }
     } else {
         return country;
@@ -82,23 +82,31 @@ function updatewbfields(obj, allclaims) {
        console.log('Unknown claims for destination/sight', obj.title, obj.wb, claims);
     }
 }
+
 function updatecountry(obj) {
     return getAllClaims(obj.wb).then((claims) => {
         const countrywbid = claims[COUNTRY_PROPERTY];
         updatewbfields(obj, claims);
         if (countrywb[countrywbid]) {
             return countrywb[countrywbid];
-        } else if (countrywbid && countrywbid.length === 1) {
-            return getClaimValue(countrywbid[0]).then((country) => {
-                countrywb[countrywbid] = country;
-                return country;
-            }).then((country) => {
-                try {
-                    return resolvecountry(country);
-                } catch(e) {
-                    console.log(`Unknown country ${country}. Please add to redirects.json for ${obj.wb}`);
-                }
-            })
+        } else if (countrywbid && countrywbid.length) {
+            return Promise.all(
+                countrywbid.map((qcode) => {
+                    return getClaimValue(qcode).then((country) => {
+                        countrywb[qcode] = country;
+                        return country;
+                    }).then((country) => {
+                        try {
+                            return resolvecountry(country);
+                        } catch(e) {
+                            console.log(`Unknown country ${country}. Please add to redirects.json for ${obj.wb}`);
+                        }
+                    });
+                })
+            ).then( (answers) => {
+                const valid = Array.from(new Set(answers.filter((answer) => answer)));
+                return valid.length === 0 ? valid[0] : undefined;
+            });
         }
     }).then((country) => {
         obj.country = country;
@@ -253,11 +261,11 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         updateWikibase(place);
     } else {
         if (place.country && !countries[place.country]) {
-            if ( redirects[place.country] ) {
-                place.country = redirects[place.country];
+            try {
+                place.country = resolvecountry(place.country);
                 pending.push(Promise.resolve());
-            } else {
-                console.log(`Unknown country ${place.country}`);
+            } catch (e) {
+                console.log(`Unknown country ${place.country}. Please add to redirects.json.`);
             }
         } else if ( place.country ) {
             if ( countries[place.country].destinations.indexOf(place.title) === -1 ) {
