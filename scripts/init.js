@@ -153,4 +153,4 @@ renderPage( 'sitemap.html', {
     description: 'Jon and Linz\'s guide to the world'
 } );
 
-fs.writeFileSync(`public/sitemap.txt`, sitemap.map((link) => link.href).join('\n'));
+fs.writeFileSync(`public/sitemap.txt`, sitemap.map((link) => `https://somedayguide.com/${link.href}`).join('\n'));
