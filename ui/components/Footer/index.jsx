@@ -7,6 +7,7 @@ export default function ( props ) {
         from <a href='https://en.wikipedia.org/'>Wikipedia</a> and <a href={`https://en.wikivoyage.org/wiki/${title}`}>Wikivoyage</a>.<br/>
         An open web is a happy web. If anything looks wrong click
         the <a href={`https://en.wikivoyage.org/wiki/${title}?action=edit`}>edit button</a> and/or 
-        let us known by submitting an issue on <a href="https://github.com/jdlrobson/somedayguide/issues">Github</a>.
+        let us known by submitting an issue on <a href="https://github.com/jdlrobson/somedayguide/issues">Github</a>. 
+        Curious what we've got here? Check out the <a href="/sitemap">sitemap</a>.
     </footer>;
 }

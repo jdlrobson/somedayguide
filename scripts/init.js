@@ -16,6 +16,8 @@ import { getGithubWikiData, withDistance } from './utils';
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
 const MODE = process.env.MODE;
 
+const sitemap = [];
+
 const analyticsHTML = MODE === 'production' ?
 `<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129740290-1"></script>
@@ -29,6 +31,7 @@ const analyticsHTML = MODE === 'production' ?
 console.log(`Mode is ${MODE}`);
 
 function renderPage( filename, data ) {
+    sitemap.push( { title: data.page_title, url: `/${filename}` } );
     data.analyticsHTML = analyticsHTML;
     fs.writeFileSync( `public/${filename}`, mustache.render( template, data ) );
 }
@@ -131,4 +134,20 @@ renderPage( 'index.html', {
 renderPage( '404.html', {
     page_title: '4 oh no 4',
     view: render( <NotFound /> )
+} );
+
+// render sitemap
+renderPage( 'sitemap.html', {
+    page_title: 'Someday guide',
+    url: 'https://somedayguide.com/',
+    img: 'https://somedayguide.com/images/someday-map.png',
+    view: render(
+        <div>
+        <h1>Sitemap</h1>
+        <p>Where do you want to go today?</p>
+        {sitemap.map((link) =>
+            <a href={link.href}>{link.title} </a>
+        )}</div>
+    ),
+    description: 'Jon and Linz\'s guide to the world'
 } );
