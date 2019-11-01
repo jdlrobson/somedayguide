@@ -2,6 +2,7 @@ import fs from 'fs';
 import render from 'preact-render-to-string';
 import preact, { h } from 'preact';
 import Home from '../ui/pages/Home';
+import Page from '../ui/pages/Page';
 import Destination from '../ui/pages/Destination';
 import Country from '../ui/pages/Country';
 import NotFound from '../ui/pages/NotFound';
@@ -51,7 +52,7 @@ destinations.forEach((title) => {
     }
 
     renderPage( `destination/${place.title}.html`, {
-        page_title: title,
+        page_title: `${title} - someday guide to the world`,
         url: `https://somedayguide.com/destination/${title}`,
         img: place.thumbnail,
         view: render( <Destination {...place}
@@ -84,7 +85,7 @@ countries.forEach((title) => {
         console.log(`data integrity problem in country sights for ${title}: ${missing.join(',')}`);
     }
     renderPage( `country/${title}.html`, {
-        page_title: title,
+        page_title: `${title} - someday guide to the world`,
         url: `https://somedayguide.com/country/${title}`,
         img: country.thumbnail,
         view: render( <Country {...country}
@@ -98,7 +99,7 @@ countries.forEach((title) => {
 
 console.log(`Generate country index.html`);
 renderPage( 'country/index.html', {
-    page_title: 'Someday guide',
+    page_title: 'Someday guide to all the countries in the world',
     url: 'https://somedayguide.com/',
     img: 'https://somedayguide.com/images/someday-map.png',
     view: render( <Home places={Object.keys(countries_json).map((key) => countries_json[key])} /> ),
@@ -108,7 +109,7 @@ renderPage( 'country/index.html', {
 console.log(`Generate regions`);
 Object.keys(regions_json).forEach((region) => {
     renderPage( `region/${region}.html`, {
-        page_title: 'Someday guide',
+        page_title: 'Someday guide to all the regions in the world',
         url: `https://somedayguide.com/region/${region}`,
         img: 'https://somedayguide.com/images/someday-map.png',
         view: render( <Home title={region} places={regions_json[region].countries.filter((key) => countries_json[key] !== undefined)
@@ -123,7 +124,7 @@ const randomPlaces = Object.keys(places_json).sort(()=>Math.random() < 0.5 ? -1 
 
 // Render home page.
 renderPage( 'index.html', {
-    page_title: 'Someday guide',
+    page_title: 'Someday guide to the world',
     url: 'https://somedayguide.com/',
     img: 'https://somedayguide.com/images/someday-map.png',
     view: render( <Home linkPrefix = '/destination/' places={randomPlaces} /> ),
@@ -138,16 +139,18 @@ renderPage( '404.html', {
 
 // render sitemap
 renderPage( 'sitemap.html', {
-    page_title: 'Someday guide',
+    page_title: 'Someday guide sitemap',
     url: 'https://somedayguide.com/',
     img: 'https://somedayguide.com/images/someday-map.png',
     view: render(
-        <div>
+        <Page>
         <h1>Sitemap</h1>
         <p>Where do you want to go today?</p>
         {sitemap.map((link) =>
             <a href={link.href}>{link.title} </a>
-        )}</div>
+        )}</Page>
     ),
     description: 'Jon and Linz\'s guide to the world'
 } );
+
+fs.writeFileSync(`public/sitemap.txt`, sitemap.map((link) => link.href).join('\n'));
