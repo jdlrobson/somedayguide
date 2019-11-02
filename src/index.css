@@ -139,7 +139,6 @@ li {
     width: 100%;
     max-width: 400px;
     height: auto;
-    margin-right: 30px;
     margin-top: 14px;
 }
 .map__overlay__heading {
@@ -511,6 +510,9 @@ footer {
     .page {
         grid-template-columns: 250px 500px 250px;
         width: 1000px; /* add grid template columns together*/
+    }
+    .map__overlay__logo {
+        margin-right: 30px;
     }
     .page__column--one {
         margin-top: 146px;
