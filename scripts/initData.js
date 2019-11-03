@@ -124,7 +124,7 @@ function updatecountry(obj) {
 }
 
 function updateWikibase(place, project='wikivoyage') {
-    if ( place.wb && place.country === undefined && !place.nocountry && !place.multicountry &!place.nolat ) {
+    if ( place.wb && place.country === undefined && !place.nocountry && !place.multicountry &!place.nolat && !place.claims ) {
         console.log(`${place.title} does not have a country associated. We can check its wikibase ${place.wb}.`)
         pending.push(
             updatecountry(place)
