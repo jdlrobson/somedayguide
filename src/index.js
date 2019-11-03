@@ -62,8 +62,7 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
     }
 });
 
-function setupSlideshow() {
-    const slideshow = document.querySelector('.slideshow');
+function setupSlideshow(slideshow) {
     const leftArrow = document.createElement('div');
     leftArrow.setAttribute('class', 'slideshow__arrow--left');
     const rightArrow = document.createElement('div');
@@ -81,4 +80,7 @@ function setupSlideshow() {
 
 localediting();
 
-setupSlideshow();
+const slideshow = document.querySelector('.slideshow');
+if ( slideshow ) {
+    setupSlideshow(slideshow);
+}

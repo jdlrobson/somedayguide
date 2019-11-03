@@ -20,7 +20,10 @@ if (localStorage.getItem('admin--flag')) {
 export default function setupLocalEditing() {
     const localNote = document.querySelector('#local-edit [contenteditable]'),
         note = localStorage.getItem(LOCAL_NOTE);
-    if (note && localNote) {
+    if (!localNote) {
+        return;
+    }
+    if (note) {
         localNote.textContent = note;
     }
     localNote.addEventListener('input', function (ev) {
