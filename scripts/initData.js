@@ -6,7 +6,6 @@ import countrywb from './data/countrywb.json';
 import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
-import { nosightsnonext } from './stats';
 import { getAllClaims, getGithubWikiData,
     getThumbnail, getSummary, listwithout,
     badthumbnail, getClaimValue,
@@ -394,19 +393,6 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     } else if ( !place.lat && !place.nolat ) {
         console.log(`No have lat for destination: ${place.title}`)
         updatefields(place, place.title, 'wikivoyage');
-    }
-});
-
-nosightsnonext.map((title)=>destinations[title] || {}).filter((place) =>
-    place.wbcity || place.wbnp || place.wbisland).forEach((place) => {
-    if ( place.lat ) {
-        const nearby = getNearbyUntilHave(place.title, Object.keys(destinations), 3, 160, MAX_NEARBY_DISTANCE);
-        next[place.title] = next[place.title] || [];
-        if (nearby.length && nearby.length !== next[place.title].length) {
-            console.log( `${place.title} is nearby: ${nearby.join(',')}`);
-            next[place.title] = nearby;
-            pending.push(Promise.resolve());
-        }
     }
 });
 
