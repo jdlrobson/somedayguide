@@ -197,13 +197,20 @@ Object.keys(next).forEach((key) => {
     }
 });
 
+const rewrites = [];
 Object.keys(sights_json).forEach((sightName) => {
     const sight = sights_json[sightName];
     const thumbnail = sight.thumbnail;
+    if (sight.wbcity && sight.claims > 60) {
+        rewrites.push(sightName);
+    }
     if (badthumbnail(thumbnail)) {
         pending.push(
             getThumbnail(sightName, sight.lastsync).then((thumbData) => {
-                Object.assign(sights_json[sightName], thumbData);
+                if (sights_json[sightName]) {
+                    // may have been deleted elsewhere.
+                    Object.assign(sights_json[sightName], thumbData);
+                }
             })
         )
     }
@@ -234,6 +241,22 @@ Object.keys(sights_json).forEach((sightName) => {
     if (destinations[sightName]) {
         console.log( `${sightName} is a sight and a destination/country` );
     }
+});
+
+// #31
+rewrites.forEach((sightName) => {
+    console.log(`Sight ${sightName} is notable enough to be upgraded to a destination.`);
+    const sight = sights_json[sightName];
+    destinations[sightName] = sights_json[sightName];
+    if (sight.country) {
+        if (!countries[sight.country]) {
+            throw new Error(`Sight ${sightName} is ${sight.country}`)
+        }
+        console.log(`Remove sight ${sightName} from ${sight.country}`);
+        countries[sight.country].sights = listwithout(countries[sight.country].sights, sightName);
+    }
+    destinations[sightName].sights = [];
+    delete sights_json[sightName];
 });
 
 Object.keys(destinations).forEach(( destinationTitle ) => {
@@ -419,6 +442,7 @@ Object.keys(countries).forEach((countryName) => {
         let mindistance;
         const sight = sights_json[sightName];
         const sightdistances = {};
+        if (!sight) return;
         if ( sight.lat && !sight.nolat ) {
             country.destinations.forEach((destName) => {
                 const dest = destinations[destName];
@@ -459,6 +483,7 @@ Object.keys(countries).forEach((countryName) => {
                 ((dest && dest.sights) || []).forEach((sightName) => {
                     if (!country.sights.includes(sightName)) {
                         const sight = sights_json[sightName];
+                        if (!sight) return;
                         // https://github.com/jdlrobson/somedayguide/issues/15
                         const distance = calculateDistance(dest, sight);
                         if (distance > 0 && distance < 20 && belongsToCountry(sight, countryName)) {
@@ -481,7 +506,8 @@ Object.keys(countries).forEach((countryName) => {
     const newSights = Array.from(
         // #26
         new Set(
-            country.sights.filter((sight) => !countries[sight] &&
+            // check the sight is not a country, is still a valid sight
+            country.sights.filter((sight) => !countries[sight] && sights_json[sight] &&
                 // https://github.com/jdlrobson/somedayguide/issues/15
                 belongsToCountry(sights_json[sight], countryName)
             )
