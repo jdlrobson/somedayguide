@@ -29,7 +29,7 @@ function onExplore(map, titleToLink, validDestinations) {
                             lat: coords.lat
                         };
                     }).filter((page) => {
-                        return validDestinations.map((obj) => obj[0]).indexOf(page.title.toLowerCase()) > -1;
+                        return validDestinations.indexOf(page.title.toLowerCase()) > -1;
                     }).forEach((props) => {
                         addMarker(map, props, titleToLink);
                     });
@@ -50,6 +50,12 @@ function addToMapFromMarkup(map, selector, titleToLink, iconProps) {
         }
     });
 }
+
+/**
+ * @param {object} props
+ * @param {Function} titleToLink
+ * @param {array} validDestinations
+ */
 window.initMap = function (props, titleToLink, validDestinations) {
     var marker,
         map = L.map('map').setView([props.lat, props.lon], props.zoom);

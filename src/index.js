@@ -53,7 +53,7 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
         togglemap();
         searchindex().then(function (index) {
             loadJS('/map.js', function () {
-                window.initMap(data, titleToLink, index.destinations);
+                window.initMap(data, titleToLink, index);
             });
             maploaded = true;
         });

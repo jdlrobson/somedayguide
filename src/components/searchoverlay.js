@@ -1,9 +1,19 @@
 
-import { hide, empty, accentFold, matches, titleToLink } from './utils';
+import { hide, empty, accentFold, titleToLink } from './utils';
 import cardlist from './cardlist.js';
-const IMG_PREFIX = '//upload.wikimedia.org/wikipedia/commons/';
 
-export default function searchoverlay(searchindex) {
+function isDestination(str) {
+    return str.indexOf(':') === -1;
+}
+
+function matches(str) {
+    return function (otherStr) {
+        const strToMatch = !isDestination(otherStr) ? otherStr.split(':')[1] : otherStr;
+        return accentFold(strToMatch).indexOf(str) === 0;
+    }
+}
+
+export default function searchoverlay(searchindex, ifNoResults) {
     const overlay = document.createElement('div');
     overlay.setAttribute('class', 'overlay overlay--search');
     overlay.innerHTML = `
@@ -21,29 +31,42 @@ export default function searchoverlay(searchindex) {
         empty(resultsNode);
         hide(overlay);
     });
-    input.addEventListener('input', (ev) => {
+    function doSearch(matchFn, tryAgain) {
         const
-            matchFn = matches(accentFold(ev.target.value.toLowerCase())),
-            results = searchindex.countries.filter(matchFn).map((obj) => {
-                    const t = decodeURIComponent(obj[0]).replace(/_/g, ' ');
+            results = searchindex.filter(matchFn).map((str) => {
+                    let prefix, title, url, tmp, thumbnail;
+                    if (isDestination(str)) {
+                        title = str;
+                        prefix = '/destination';
+                        url = titleToLink(title, prefix);
+                        thumbnail = `/thumbnails${prefix}/${title}`;
+                    } else if (str[0] === 'c') {
+                        title = str.slice(2);
+                        prefix = '/country';
+                        url = titleToLink(title, prefix);
+                        thumbnail = `/thumbnails${prefix}/${title}`;
+                    } else if (str[0] === 's') {
+                        tmp = str.split(':');
+                        title = `${tmp[1]} (${tmp[2]})`;
+                        prefix = '/destination';
+                        url = titleToLink(tmp[2], prefix);
+                        thumbnail = `/thumbnails${prefix}/${tmp[2]}`;
+                    }
                     return {
-                        title: t,
-                        thumbnail: `${IMG_PREFIX}${obj[1]}`,
-                        url: titleToLink(t, '/country')
+                        title, thumbnail, url
                     };
-                })
-                .concat(
-                    searchindex.destinations.filter(matchFn).map((obj) => {
-                        const t = decodeURIComponent(obj[0]).replace(/_/g, ' ');
-                        return {
-                            title: t,
-                            thumbnail: `${IMG_PREFIX}${obj[1]}`,
-                            url: titleToLink(t, '/destination')
-                        };
-                    })
-                ).slice(0, 10);
+                }).slice(0, 10);
+        if (results.length === 0 && !tryAgain) {
+            ifNoResults(searchindex).then(function () {
+                doSearch(matchFn, true);
+            });
+        }
         empty(resultsNode);
         resultsNode.appendChild(cardlist(results, '/country'));
+    }
+    input.addEventListener('input', (ev) => {
+        const matchFn = matches(accentFold(ev.target.value.toLowerCase()));
+        doSearch(matchFn);
     });
     hide(overlay);
     document.body.appendChild(overlay);

@@ -45,12 +45,6 @@ export function accentFold(str) {
         .replace(/[īìíǐ]/g, 'i' );
 }
 
-export function matches(str) {
-    return function ( obj ) {
-        return accentFold(obj[0]).indexOf(str) > -1;
-    }
-}
-
 export function titleToLink(title, root) {
     return `${root}/${encodeURIComponent(title)}`;
 }

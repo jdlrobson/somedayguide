@@ -41,7 +41,7 @@
   "bundlesize": [
     {
       "path": "public/index.css",
-      "maxSize": "5.2KB"
+      "maxSize": "5.3KB"
     },
     {
       "path": "public/index.js",
@@ -53,11 +53,15 @@
     },
     {
       "path": "public/search.js",
-      "maxSize": "1.0KB"
+      "maxSize": "1.1KB"
     },
     {
       "path": "public/index.json",
-      "maxSize": "68.4KB"
+      "maxSize": "13.9KB"
+    },
+    {
+      "path": "public/index--sights.json",
+      "maxSize": "83.8KB"
     }
   ]
 }
