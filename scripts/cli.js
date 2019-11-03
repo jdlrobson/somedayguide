@@ -191,6 +191,21 @@ function addsighttocountry(key, sight) {
     countries[key].sights.push(sight);
 }
 
+function renameplace() {
+    return getUserInput('Which place?').then(( original ) => {
+        return getUserInput('Rename to what?').then(( newName ) => {
+            if ( destinations[original] ) {
+                console.log(`Reassign ${original} to ${newName}`);
+                destinations[newName] = Object.assign({}, destinations[original], { title: newName });
+                delete destinations[original];
+            }
+        });
+    } ).then(() => {
+        save();
+        return menu();
+    })
+}
+
 function renamesight() {
     return getUserInput('Which sight?').then(( original ) => {
         return getUserInput('Rename to what?').then(( newName ) => {
@@ -262,6 +277,7 @@ function menu() {
             '1: View place/country',
             '1A: Add place',
             '1B: Delete place',
+            '1C: Rename place',
             '2: View sight',
             '2A: Add sight',
             '2B: Remove sight',
@@ -306,6 +322,8 @@ function menu() {
                         return menu();
                     })
                     break;
+                case '1C':
+                    return renameplace();
                 case '2':
                     return getUserInput('Which sight?').then(( title ) => {
                         const s = sights[title] || {};
