@@ -30,11 +30,11 @@ const getThumb = (thumbnail) => {
     }
 }
 const thumbs = Object.keys(countries).map(
-        (key) => [`/thumbnails/country/${key}`, getThumb(countries[key].thumbnail)]
+        (key) => [`/thumbnails/country/${key.toLowerCase()}`, getThumb(countries[key].thumbnail)]
     )
     .concat(
         Object.keys(destinations).map(
-            (key) => [`/thumbnails/destination/${key}`, getThumb(destinations[key].thumbnail)]
+            (key) => [`/thumbnails/destination/${key.toLowerCase()}`, getThumb(destinations[key].thumbnail)]
         )
     ).filter((redirectrule) => redirectrule[1] !== undefined);
 
