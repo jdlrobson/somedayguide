@@ -395,8 +395,8 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     }
 
     if ( place.wbcountry ) {
-        if ( countries[place.title] ) {
-            console.log(`${place.title} is country`);
+        if ( countries[place.title] && !countries[place.title].citylike ) {
+            console.log(`${place.title} is repurposed as a country`);
             delete destinations[place.title];
             pending.push(Promise.resolve());
         }

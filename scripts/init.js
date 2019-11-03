@@ -76,7 +76,9 @@ countries.forEach((title) => {
         // destinations should link to places that exist.
         .filter((d) => places_json[d.title])
         // destinations should not point to countries...
-        .filter((d) => countries_json[d.title] === undefined);
+        .filter((d) => countries_json[d.title] === undefined
+            // e.g. Singapore, Monaco etc..
+            || d.title === title);
 
     const sights = country.sights.map((sight) => sights_json[sight])
         .filter((sight) => sight);
