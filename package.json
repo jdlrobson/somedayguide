@@ -20,9 +20,10 @@
   "dependencies": {
     "@babel/cli": "7.6.4",
     "@babel/core": "7.6.4",
-    "@babel/register": "7.6.2",
     "@babel/plugin-transform-react-jsx": "7.3.0",
     "@babel/preset-env": "7.6.3",
+    "@babel/register": "7.6.2",
+    "bundlesize": "0.18.0",
     "fetch": "1.1.0",
     "fg-loadjs": "1.1.0",
     "leaflet": "1.5.1",
@@ -36,5 +37,27 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-postcss": "2.0.3",
     "rollup-plugin-terser": "5.1.2"
-  }
+  },
+  "bundlesize": [
+    {
+      "path": "public/index.css",
+      "maxSize": "5.2KB"
+    },
+    {
+      "path": "public/index.js",
+      "maxSize": "1.9KB"
+    },
+    {
+      "path": "public/map.js",
+      "maxSize": "43.9KB"
+    },
+    {
+      "path": "public/search.js",
+      "maxSize": "1.0KB"
+    },
+    {
+      "path": "public/index.json",
+      "maxSize": "68.4KB"
+    }
+  ]
 }
