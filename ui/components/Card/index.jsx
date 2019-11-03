@@ -14,7 +14,8 @@ function toFriendlyDistance(km) {
     }
 }
 
-export default function ( { title, distance, href, lat, lon, summary, thumbnail, modifier, description } ) {
+export default function ( { title, distance, href,
+        lat, lon, summary, thumbnail, modifier, description, children } ) {
     return (
         <div class={getClassName('card', modifier)}>
             <a class="card__link" href={href || `/destination/${title}.html`} aria-hidden="true"></a>
@@ -38,6 +39,7 @@ export default function ( { title, distance, href, lat, lon, summary, thumbnail,
 				    <span class='longitude'>{lon}</span>
                 </span>
             </div>
+            {children}
         </div>
     );
 };

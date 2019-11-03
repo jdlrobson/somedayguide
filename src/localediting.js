@@ -1,10 +1,11 @@
 const LOCAL_NOTE = window.location.pathname;
 
 function enableAdminMode() {
+    document.body.classList.add('body--admin-enabled');
     const path = window.location.pathname.split('/');
     const title = path[path.length-1];
     const a = document.createElement('a');
-    a.setAttribute('href', `https://github.com/jdlrobson/somedayguide/wiki/${title}`);
+    a.setAttribute('href', `https://github.com/jdlrobson/somedayguide/wiki/${title.toLowerCase()}`);
     a.textContent = 'Edit';
     const note = document.querySelectorAll('.note');
     // not home page

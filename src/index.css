@@ -281,6 +281,8 @@ li {
     transform: translateY(-50%);
 }
 
+.card__personal-note-flag,
+.card__blog-flag,
 .card__text__geodata {
     display: none;
 }

@@ -120,7 +120,7 @@ Object.keys(regions_json).forEach((region) => {
 
 console.log(`Generate index.html`);
 const randomPlaces = Object.keys(places_json).sort(()=>Math.random() < 0.5 ? -1 : 1)
-    .slice(0, 30).map((key) => places_json[key]);
+    .slice(0, 30).map((key) => getGithubWikiData(key, places_json[key]));
 
 // Render home page.
 renderPage( 'index.html', {

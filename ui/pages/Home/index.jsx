@@ -10,7 +10,10 @@ export default function ( { places, title, linkPrefix = '/country/' } ) {
             <CardGrid id="grid">
                 {places.map((place) =>
                     <Card {...place}
-                        href={`${linkPrefix}${place.title}`} />)}
+                        href={`${linkPrefix}${place.title}`}>
+                    {place.blogs && place.blogs.length > 0 && <span class="card__blog-flag">b</span>}
+                    {place.personalNote && <span class="card__personal-note-flag">p</span>}
+                    </Card>)}
             </CardGrid>
         </Page>
     )
