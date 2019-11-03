@@ -10,9 +10,9 @@ import { nosightsnonext } from './stats';
 import { getAllClaims, getGithubWikiData,
     getThumbnail, getSummary, listwithout,
     badthumbnail, getClaimValue,
-    getNearbyUntilHave, calculateDistance,
-    isInstanceOfIsland, isInstanceOfNationalPark,
-    isInstanceOfSight, isInstanceOfCity } from './utils';
+    getNearbyUntilHave, calculateDistance } from './utils';
+import { isInstanceOfIsland, isInstanceOfNationalPark, isInstanceOfCity,
+    isInstanceOfLocation,  isInstanceOfSight } from './wikidatautils';
 
 const SHOW_WARNINGS = true;
 const pending = [];
@@ -73,6 +73,11 @@ function updatewbfields(obj, allclaims) {
     ) {
         console.log(`Place ${obj.title} confirmed as national park.`);
         obj.wbnp = true;
+    } else if (
+        isInstanceOfLocation(claims)
+     ) {
+        console.log(`Place ${obj.title} is some kind of smaller destination.`);
+        obj.wbplace = true;
     } else if (
         // if taxon
         claims.includes('Q16521')
