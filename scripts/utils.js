@@ -71,9 +71,6 @@ export function getGithubWikiData(title, props) {
         // try with '-' character.
         path = `${__dirname}/../somedayguide.wiki/${title}.md`;
     }
-    if ( title === 'Bohol' ) {
-        console.log(`DEBUG: ${path}, ${fs.existsSync(path)}`);
-    }
     const note = fs.existsSync(path) ? fs.readFileSync(path) : undefined;
     const personalNote = note && marked(note.toString(), { renderer })
         .replace(/\<p\>[ \n]*\<\/p\>/g,'').trim();
