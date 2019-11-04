@@ -18,9 +18,36 @@ let lastKeys = [];
 if (localStorage.getItem('admin--flag')) {
     enableAdminMode();
 }
+
+function renderDashboard(notes) {
+    // render my notes
+    const dashboard = document.getElementById('dashboard');
+    if (dashboard) {
+        notes.forEach((uri) => {
+            const node = document.createElement('div');
+            node.setAttribute('class', 'note');
+            const split = uri.split('/');
+            const heading = document.createElement('a');
+            heading.setAttribute('href', uri);
+            heading.textContent = split[split.length-1];
+            const note = document.createElement('div');
+            note.textContent = localStorage.getItem(uri) || 'No note';
+            node.appendChild(heading);
+            node.appendChild(note);
+            dashboard.appendChild(node);
+        })
+    }
+}
 export default function setupLocalEditing() {
     const localNote = document.querySelector('#local-edit [contenteditable]'),
-        note = localStorage.getItem(LOCAL_NOTE);
+        note = localStorage.getItem(LOCAL_NOTE),
+        notes = Object.keys(localStorage).filter((key) => key.indexOf('--') === -1),
+        dashboardLink = document.querySelector('.menu__link--dashboard');
+
+    if (notes.length && dashboardLink) {
+        dashboardLink.style.display = '';
+    }
+    renderDashboard(notes);
     if (!localNote) {
         return;
     }

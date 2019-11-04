@@ -495,12 +495,6 @@ li {
     color: #aaa;
 }
 
-/* TODO: Features to implement */
-.menu__item:last-child {
-    /* TODO: Enable search */
-    visibility: hidden;
-}
-
 footer {
     padding: 8px 0;
     font-size: .8em;

@@ -155,4 +155,21 @@ renderPage( 'sitemap.html', {
     description: 'Jon and Linz\'s guide to the world'
 } );
 
+renderPage( 'dashboard.html', {
+    page_title: 'My dashboard',
+    url: 'https://somedayguide.com/',
+    img: 'https://somedayguide.com/images/someday-map.png',
+    view: render(
+        <Page>
+            <div class="note">
+                <h1>My Dashboard</h1>
+            </div>
+            <div id="dashboard">
+                <noscript>This page requires JavaScript</noscript>
+            </div>
+        </Page>
+    ),
+    description: 'Jon and Linz\'s guide to the world'
+} );
+
 fs.writeFileSync(`public/sitemap.txt`, sitemap.map((link) => `https://somedayguide.com/${link.href}`).join('\n'));
