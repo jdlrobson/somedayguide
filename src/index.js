@@ -84,3 +84,9 @@ const slideshow = document.querySelector('.slideshow');
 if ( slideshow ) {
     setupSlideshow(slideshow);
 }
+if('serviceWorker' in navigator) {
+    console.log('go');
+    navigator.serviceWorker
+             .register('/sw.js')
+             .then(function() { console.log("Service Worker Registered"); });
+}

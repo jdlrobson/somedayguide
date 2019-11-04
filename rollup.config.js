@@ -25,6 +25,14 @@ export default [
         }
     },
     {
+        input: 'src/sw.js',
+        plugins: pluginsjsonly,
+        output: {
+            format: 'iife',
+            dir: 'public/'
+        }
+    },
+    {
         input: 'src/map/map.js',
         plugins: pluginsjsonly,
         output: {

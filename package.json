@@ -56,6 +56,10 @@
       "maxSize": "1.1KB"
     },
     {
+      "path": "public/sw.js",
+      "maxSize": "1.0KB"
+    },
+    {
       "path": "public/index.json",
       "maxSize": "13.9KB"
     },
