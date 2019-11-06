@@ -67,7 +67,8 @@ destinations.forEach((title) => {
 const countries = Object.keys(countries_json);
 console.log(`Generate ${countries.length} countries...`);
 countries.forEach((title) => {
-    const country = getGithubWikiData(title, countries_json[title]);
+    const country = getGithubWikiData(title, countries_json[title]),
+        neighbors = country.neighbors ? country.neighbors.map((title) => countries_json[title]).filter((c) => c !== undefined) : undefined;
 
     // remove destinations without an image...
     const destinations = country.destinations
@@ -91,6 +92,7 @@ countries.forEach((title) => {
         url: `https://somedayguide.com/country/${title}`,
         img: country.thumbnail,
         view: render( <Country {...country}
+            neighbors={neighbors}
             blogs={(country.blogs || []).map((id) => blogs_json[id])}
             destinations={destinations}
             sights={sights}

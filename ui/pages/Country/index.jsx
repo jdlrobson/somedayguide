@@ -7,11 +7,14 @@ import Slideshow from '../../components/Slideshow';
 
 export default function ( props ) {
     const { summary, airports = [], sights = [], links = [], personalNote, blogs = [],
-            instagram,
+            instagram, neighbors,
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
         <Slideshow slides={[{ src: thumbnail, href: thumbnail__source } ]}></Slideshow>,
+        neighbors && <Box title="Nearby countries">
+            {neighbors.map((country) =><Card modifier="condensed" {...country}/> )}
+        </Box>,
         <Box title="Airports">
             <ul>{airports.map((code) => <li><a href={`https://www.rome2rio.com/map/${code}%20airport`}>{code}</a></li>)}</ul>
         </Box>,

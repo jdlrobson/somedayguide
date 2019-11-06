@@ -18,6 +18,7 @@ const pending = [];
 
 const COUNTRY_PROPERTY = 'P17';
 const MAX_NEARBY_DISTANCE = 500;
+const wikidataToCountry = {};
 
 function updatefields(place, key, project) {
     pending.push(
@@ -85,6 +86,17 @@ function updatewbfields(obj, allclaims) {
     } else {
        console.log('Unknown claims for destination/sight', obj.title, obj.wb, claims);
     }
+}
+
+function updateneighbouringcountries(obj) {
+    return getAllClaims(obj.wb).then((allclaims) => {
+        const neighbors = ( allclaims.P47 || [] ).map((wb) => {
+            return wikidataToCountry[wb]
+        });
+        if (neighbors.length) {
+            obj.neighbors = neighbors.filter((c)=>c);
+        }
+    });
 }
 
 function updatecountry(obj) {
@@ -419,6 +431,14 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     }
 });
 
+Object.keys(countrywb).forEach((key) => {
+    const country = countries[countrywb[key]];
+    if (country) {
+        country.wb = key;
+        wikidataToCountry[key] = countrywb[key];
+    }
+});
+
 // make sure country sights are allocated to cities (#12)
 Object.keys(countries).forEach((countryName) => {
     const country = countries[countryName];
@@ -535,6 +555,14 @@ Object.keys(countries).forEach((countryName) => {
             pending.push(Promise.resolve())
         }
     });
+    // #32 - update neighboring countries.
+    if ( country.wb ) {
+        if (!country.neighbors || !country.neighbors.length) {
+            pending.push(updateneighbouringcountries(country))
+        }
+    } else {
+        console.log(`No wb for ${countryName}`);
+    }
     country.destinations = country.destinations.filter((destination) => !sights_json[destination])
 });
 
