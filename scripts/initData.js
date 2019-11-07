@@ -299,7 +299,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     if ( !place.sights ) {
         place.sights = [];
     }
-    if ( place.country === undefined ) {
+    if ( !place.wb || place.country === undefined ) {
         updateWikibase(place);
     } else {
         if (place.country && !countries[place.country]) {
