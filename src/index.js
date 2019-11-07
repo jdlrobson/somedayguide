@@ -72,7 +72,7 @@ function setupSlideshow(slideshow) {
     const data = document.querySelector('.map__launch-icon').dataset;
     const handleCarousel = carouselClickhandler(
         document.querySelector('.slideshow__slide'),
-        data.lat, data.lon
+        data.lat, data.lon, slideshow.dataset.commons
     );
     leftArrow.addEventListener('click', handleCarousel);
     rightArrow.addEventListener('click', handleCarousel);

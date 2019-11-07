@@ -8,12 +8,12 @@ import Climate from '../../components/Climate';
 
 export default function ( props ) {
     const { summary, climate, sights, links = [], country, blogs = [], personalNote,
-            instagram, wb,
+            instagram, wb, commons,
             title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
             slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
     const childrenRight = [
-        <Slideshow slides={slides}></Slideshow>,
+        <Slideshow slides={slides} commons={commons}></Slideshow>,
         <Box title="Climate">
             <Climate data={climate && climate.length ? climate : undefined} />
         </Box>,

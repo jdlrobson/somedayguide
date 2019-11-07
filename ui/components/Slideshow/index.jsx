@@ -7,9 +7,9 @@ const getHref = (titleOrUrl) => {
         return titleOrUrl;
     }
 };
-export default function ( {slides} ) {
+export default function ( {slides, commons} ) {
     return (
-        <div class="slideshow">
+        <div class="slideshow" data-commons={commons}>
             {slides && slides.map(({src, href})=>{
                 return <div class="slideshow__slide"
                     style={{'background-image': `url(${src})`}}>
