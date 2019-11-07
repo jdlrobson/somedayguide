@@ -8,7 +8,7 @@ import Climate from '../../components/Climate';
 
 export default function ( props ) {
     const { summary, climate, sights, links = [], country, blogs = [], personalNote,
-            instagram,
+            instagram, wb,
             title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
             slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
@@ -36,7 +36,7 @@ export default function ( props ) {
     ];
 
     return (
-        <Page title={title} lat={lat} lon={lon} parent={country}
+        <Page title={title} lat={lat} lon={lon} parent={country} wikibase={wb}
             parentLink={`/country/${country}`}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />

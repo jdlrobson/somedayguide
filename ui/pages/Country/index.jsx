@@ -7,7 +7,7 @@ import Slideshow from '../../components/Slideshow';
 
 export default function ( props ) {
     const { summary, airports = [], sights = [], links = [], personalNote, blogs = [],
-            instagram, neighbors,
+            instagram, neighbors, wb,
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
@@ -34,7 +34,7 @@ export default function ( props ) {
     ];
 
     return (
-        <Page title={title} lat={lat} lon={lon} zoom={5}
+        <Page title={title} lat={lat} lon={lon} zoom={5} wikibase={wb}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
             {personalNote &&<div class="note">
