@@ -121,10 +121,13 @@ export function getAllClaims(entity) {
             const jsonClaims = json.claims || {};
 
             Object.keys(jsonClaims).forEach((key) => {
-                claims[key] = (jsonClaims[key] || []).map((claim) => claim.mainsnak &&
-                    claim.mainsnak.datavalue &&
-                    claim.mainsnak.datavalue.value &&
-                    claim.mainsnak.datavalue.value.id);
+                claims[key] = (jsonClaims[key] || []).map((claim) => {
+                    const snak = claim.mainsnak,
+                        dv = snak && snak.datavalue || {},
+                        value = dv.value || {};
+
+                    return value.id || value;
+                });
             });
             fs.writeFileSync(localpath, JSON.stringify(claims));
             return claims;
