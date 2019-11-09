@@ -1,12 +1,14 @@
 import util from 'util';
 import countries from './data/countries.json';
 import destinations from './data/destinations.json';
+import redirects from './data/redirections.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
 import fs from 'fs';
 import { listwithout } from './utils';
 
 function save() {
+    fs.writeFileSync(`${__dirname}/data/redirections.json`, JSON.stringify(redirects));
     fs.writeFileSync(`${__dirname}/data/countries.json`, JSON.stringify(countries));
     fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
     fs.writeFileSync(`${__dirname}/data/next.json`, JSON.stringify(next));
@@ -230,6 +232,24 @@ function renamesight() {
     })
 }
 
+function addredirect() {
+    return getUserInput('From?').then(( from ) => {
+        if (from) {
+            return getUserInput('To?').then(( to ) => {
+                if (to) {
+                    redirects[from] = to;
+                    save();
+                    return addredirect();
+                } else {
+                    return menu();
+                }
+            });
+        } else {
+            return menu();
+        }
+    });
+}
+
 function addSight() {
     function addSightTo(place) {
         return getUserInput('Which sight?').then(( sight ) => {
@@ -288,6 +308,7 @@ function menu() {
             '4: Go next',
             '4A: Add go next',
             '4B: Remove go next',
+            '5A: Add redirect',
             '6A: Set field',
             '6B: Set image',
             '7A: Set field on sight',
@@ -375,6 +396,8 @@ function menu() {
                         }
                     } );
                     break;
+                case '5A':
+                    return addredirect();
                 case '6A':
                     return getUserInput('Which place or country?').then(( title ) => {
                         if ( destinations[title] ) {
