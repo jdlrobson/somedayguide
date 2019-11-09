@@ -43,7 +43,7 @@ export default function ( props ) {
                 <h4 class="note__heading">Personal note</h4>
                 <div dangerouslySetInnerHTML={ { __html: personalNote } } />
             </div>}
-            {instagram && instagram.length > 0 && <InstagramEmbed id={instagram[0]} />}
+            {instagram && instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
             <div class="note note--private" id="local-edit">
                 <p contentEditable>What's on your mind?</p>
             </div>
