@@ -8,7 +8,7 @@ function cleanup(str) {
     return str.replace(/&#8211;/g, '–').replace('<p>', '').replace('</p>', '');
 }
 let updates = 0;
-fetch('https://public-api.wordpress.com/rest/v1.1/sites/somedaywewillseetheworld.wordpress.com/posts/')
+fetch('https://public-api.wordpress.com/rest/v1.1/sites/somedaywewillseetheworld.wordpress.com/posts/?order_by=modified')
     .then((resp)=>resp.json())
     .then((json) => {
         json.posts.forEach((post) => {
