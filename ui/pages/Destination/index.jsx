@@ -10,6 +10,9 @@ export default function ( props ) {
     const { summary, climate, sights, links = [], country, blogs = [], personalNote,
             instagram, wb, commons,
             title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
+            sightInstagrams = sights.map((sight) => sight.instagram).filter((ig) => ig)
+                // reduce into existing list
+                .reduce((a, b) => a.concat(b), [] ),
             slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
     const childrenRight = [
@@ -54,7 +57,12 @@ export default function ( props ) {
                     <Card modifier="note" {...blog}/>)
             }
             </div>
-            {instagram && instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
+            <div class="note">
+            {(instagram.length > 0 || sightInstagrams.length > 0) &&
+                <h4 class="note__heading">Our Instagrams</h4>}
+            {instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
+            {sightInstagrams.map((id) => <InstagramEmbed id={id} />)}
+            </div>
         </Page>
     );
 };

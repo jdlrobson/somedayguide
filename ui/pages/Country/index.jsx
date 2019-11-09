@@ -52,7 +52,11 @@ export default function ( props ) {
                 blogs.map((blog) =>
                     <Card modifier="note" {...blog}/>)
             }
-            {instagram && instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
+            </div>
+            <div class="note">
+            {(instagram.length > 0 || sightInstagrams.length > 0) &&
+                <h4 class="note__heading">Our Instagrams</h4>}
+                {instagram && instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
             </div>
         </Page>
     );

@@ -42,7 +42,7 @@ console.log(`Generate ${destinations.length} destinations...`);
 destinations.forEach((title) => {
     const place = getGithubWikiData(title, places_json[title]);
     const next = next_json[title] || [];
-    const sights = (place.sights || []).map((sight) => sights_json[sight])
+    const sights = (place.sights || []).map((sight) => getGithubWikiData(sight, sights_json[sight]))
         .filter((sight) => sight)
         .map(withDistance(place.lat, place.lon));
 

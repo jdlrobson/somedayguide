@@ -1,7 +1,7 @@
 import preact, { h } from 'preact';
 
 export default function ( { id } ) {
-    return <div class="note note--magnet">
+    return <div class="postit">
             <blockquote class="instagram-media"
             data-instgrm-captioned
             data-instgrm-permalink={`https://www.instagram.com/p/${id}/?utm_source=ig_embed&amp;utm_campaign=loading`}
