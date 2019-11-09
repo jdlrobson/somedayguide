@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "server": "http-server public/",
-    "assets": "rollup -c",
+    "assets": "export MODE=production && rollup -c",
     "html": "npx @babel/node -r @babel/register scripts/init.js",
     "start": "export MODE=production && npm run data && npm run html && npm run assets",
     "search-index": "npx @babel/node -r @babel/register scripts/generateIndex.js",
     "cli": "npx @babel/node -r @babel/register scripts/cli.js",
     "blogs": "npx @babel/node -r @babel/register scripts/fetchblogs.js",
     "data": "git submodule foreach git pull origin master && npx @babel/node -r @babel/register scripts/initData.js && npm run blogs && npm run search-index",
-    "watch": "npm start && sleep 2 && npm run watch",
+    "watch": "export MODE=dev && rollup -w -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
