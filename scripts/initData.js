@@ -282,8 +282,16 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         if (!place.sights.includes(s)) {
             console.log(`Push sight ${s} from wiki to ${destinationTitle}`);
             place.sights.push(s);
+            pending.push(Promise.resolve());
         }
-        sights_json[s] = { title: s };
+        if (place.country && !countries[place.country].sights.includes(s)) {
+            console.log(`Push sight from wiki to ${place.country}`);
+            countries[place.country].sights.push(s);
+        }
+        if(!sights_json[s]) {
+            sights_json[s] = { title: s };
+            pending.push(Promise.resolve());
+        }
     });
 
     if ( destinationTitle.indexOf('_') > -1 || destinationTitle.indexOf('%') > -1) {
