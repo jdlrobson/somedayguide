@@ -5,7 +5,7 @@ let loadedAdditionalSearch;
 window.initSearch = function (index) {
     const search = searchoverlay(index, function () {
         if (loadedAdditionalSearch) {
-            return;
+            return Promise.resolve();
         }
         loadedAdditionalSearch = true;
         return fetch('/index--sights.json').then((r) => r.json())
