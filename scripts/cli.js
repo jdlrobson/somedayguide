@@ -328,11 +328,11 @@ function menu() {
                     getUserInput('Which place?').then(( title ) => {
                         if ( destinations[title] ) {
                             feedback('Already got that one.');
-                        } else {
+                        } else if ( title ) {
                             feedback(`Pushed "${title}"`);
                             destinations[title] = { title, sights: [] };
+                            save();
                         }
-                        save();
                         return menu();
                     })
                     break;
