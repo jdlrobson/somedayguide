@@ -43,7 +43,7 @@ export default function ( props ) {
             {personalNote &&<div class="note">
                 <h4 class="note__heading">Personal note</h4>
                 <div dangerouslySetInnerHTML={ { __html: personalNote } } />
-            </div>}}
+            </div>}
             <div class="note note--private" id="local-edit">
                 <p contentEditable>What's on your mind?</p>
             </div>
@@ -53,8 +53,8 @@ export default function ( props ) {
                 blogs.map((blog) =>
                     <Card modifier="note" {...blog}/>)
             }
-            {instagram && instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)
             </div>
+            {instagram && instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
         </Page>
     );
 };
