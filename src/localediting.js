@@ -19,6 +19,14 @@ if (localStorage.getItem('admin--flag')) {
     enableAdminMode();
 }
 
+function deleteNote(uri) {
+    return (ev) => {
+        const parent = ev.target.parentNode;
+        localStorage.removeItem(uri);
+        parent.parentNode.removeChild(parent);
+    };
+}
+
 function renderDashboard(notes) {
     // render my notes
     const dashboard = document.getElementById('dashboard');
@@ -27,6 +35,8 @@ function renderDashboard(notes) {
             const node = document.createElement('div');
             node.setAttribute('class', 'note');
             const split = uri.split('/');
+            const del = document.createElement('button');
+            del.textContent = 'delete';
             const heading = document.createElement('a');
             heading.setAttribute('href', uri);
             heading.textContent = split[split.length-1];
@@ -34,6 +44,8 @@ function renderDashboard(notes) {
             note.textContent = localStorage.getItem(uri) || 'No note';
             node.appendChild(heading);
             node.appendChild(note);
+            node.appendChild(del);
+            del.addEventListener('click', deleteNote(uri));
             dashboard.appendChild(node);
         })
     }
