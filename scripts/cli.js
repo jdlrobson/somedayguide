@@ -5,7 +5,7 @@ import redirects from './data/redirections.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
 import fs from 'fs';
-import { listwithout } from './utils';
+import { listwithout, getSummary } from './utils';
 
 function save() {
     fs.writeFileSync(`${__dirname}/data/redirections.json`, JSON.stringify(redirects));
@@ -33,6 +33,16 @@ function getUserInput( msg, clean = true ) {
     })
 }
 
+function updatesummary(title, obj) {
+    return getSummary(title).then((json) => {
+        if ( json.thumbnail ) {
+            obj.thumbnail = json.thumbnail;
+            obj.thumbnail__source = json.thumbnail__source;
+            save();
+        }
+        return menu();
+    });
+}
 function gonext() {
     function nextplace( title ) {
         return getUserInput('Where can I go next?').then(( gonext ) => {
@@ -312,6 +322,7 @@ function menu() {
             '6A: Set field',
             '6B: Set image',
             '7A: Set field on sight',
+            '8: Refresh summary'
     ];
     getUserInput( '\n\n\n**********************\n' + options.join('\n') + '\n**********************' )
         .then( ( val ) => {
@@ -432,6 +443,14 @@ function menu() {
                         if ( !sights[title] ) {
                             console.log('no have');
                             return menu();
+                        } else {
+                            return updatefieldvalue(sights[title]);
+                        }
+                    } );
+                case '8':
+                    return getUserInput('Update summary for?').then(( title ) => {
+                        if ( destinations[title] ) {
+                            return updatesummary(title, destinations[title]);
                         } else {
                             return updatefieldvalue(sights[title]);
                         }
