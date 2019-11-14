@@ -171,11 +171,7 @@ function removesight(sight) {
 
 function removesights() {
     return getUserInput('Which sight, country, or place?').then(( sightOrPlace ) => {
-        if ( sightOrPlace ) {
-            removesight(sightOrPlace);
-            save();
-            return removesights();
-        } else if (countries[sightOrPlace]) {
+        if (countries[sightOrPlace]) {
             return getUserInput('Which sight?').then(( sight) => {
                 removesightfromcountry(sightOrPlace, sight);
                 save();
@@ -187,6 +183,10 @@ function removesights() {
                 save();
                 return menu();
             });
+        } else if ( sightOrPlace ) {
+            removesight(sightOrPlace);
+            save();
+            return removesights();
         } else {
             return menu();
         }
