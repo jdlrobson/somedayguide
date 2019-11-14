@@ -277,6 +277,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     const wikiplace = getGithubWikiData(destinationTitle, {});
     const wikisights = wikiplace.sights.filter((s) => !place.sights.includes(s));
 
+
     // Fixes: #19
     wikisights.forEach((s) => {
         if (!place.sights.includes(s)) {
@@ -351,17 +352,35 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
             pending.push(Promise.resolve())
         }
     })
+    // Make sure next is set.
+    next[destinationTitle] = next[destinationTitle] || [];
+    const belongsToCountry = (s, country) => {
+        const sight = sights_json[s] || {};
+        if (!sight.country || !country || sight.multicountry) {
+            // can't be sure.
+            return true;
+        } else {
+            if ( !countries[sight.country] || !countries[country] ) {
+                // can't be sure - one of the countries is wrong.
+                return true;
+            } else {
+                return sight.country === country;
+            }
+        }
+    };
+
     const newSights = Array.from(
         new Set(
             place.sights.filter((sight) =>
                 sight && !(next[place.title] || []).includes(sight) &&
+                belongsToCountry(sight, place.country) &&
                 (!countries[sight])
             )
         )
     );
     if ( newSights.length !== place.sights.length) {
-        console.log(`Removed sight that is go next/country/duplicate in ${place.title}`);
-        console.log(newSights, place.sights, next[place.title]);
+        console.log(`Updated sights in ${place.title}`);
+        console.log('Changed:', place.sights.filter((d) => !newSights.includes(d)));
         next[place.title] = next[place.title].filter((s) => !place.sights.includes(s));
         destinations[destinationTitle].sights = newSights;
         pending.push(Promise.resolve())
