@@ -238,6 +238,20 @@ export function calculateDistance( from, to ) {
     }
 }
 
+export function findNear(from, titles, radius) {
+    return titles.filter((k) => {
+        const d = destinations_json[k];
+        const dist = d && d.lat &&
+            calculateDistance(from, { lat: d.lat, lon: d.lon } );
+        return dist && dist > 0 && dist <  radius;
+    });
+}
+
+export function findClosest(lat, lon, radius = 200) {
+    const from = { lat, lon };
+    return findNear(from, Object.keys(destinations_json), radius);
+};
+
 export function getNearby(title, titles, radius) {
     const place = destinations_json[title],
         from = place && { lat: place.lat, lon: place.lon };
@@ -246,12 +260,7 @@ export function getNearby(title, titles, radius) {
         console.log(title, '!!');
         return [];
     } else {
-        return titles.filter((k) => {
-            const d = destinations_json[k];
-            const dist = d && d.lat &&
-                calculateDistance(from, { lat: d.lat, lon: d.lon } );
-            return dist && dist > 0 && dist <  radius;
-        });
+        return findNear(from, titles, radius);
     }
 }
 
