@@ -109,6 +109,39 @@ export function getMissingKeys(obj, keys) {
     return keys.filter((key) => placeKeys.indexOf(key) === - 1 );
 };
 
+/**
+ * @param {string} entity e.g. Q1
+ * @return {Promise}
+ */
+export function getEntityData(entity) {
+    const localpath = `${__dirname}/data/claims/ed_${entity}.json`;
+    if (fs.existsSync(localpath)) {
+        return Promise.resolve(JSON.parse(fs.readFileSync(localpath).toString()));
+    }
+    return fetch(`https://www.wikidata.org/wiki/Special:EntityData/${entity}.json`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            fs.writeFileSync(localpath, JSON.stringify(json));
+            return json;
+        });
+}
+
+/**
+ * Lookup a title across wikis using its wikibase id.
+ * @param {string} qcode e.g. Q1
+ * @param {string} sitecode e.g. enwiki
+ * @return {Promise} resolving with the title on sitecode wiki
+ */
+export function getSiteLink(qcode, sitecode) {
+    return getEntityData(qcode).then((entity) => {
+        try {
+            return entity.entities[qcode].sitelinks[sitecode].title;
+        } catch (e) {
+            return null;
+        }
+    })
+}
+
 export function getAllClaims(entity) {
     const localpath = `${__dirname}/data/claims/${entity}.json`;
     if (fs.existsSync(localpath)) {
