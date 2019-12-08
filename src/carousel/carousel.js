@@ -1,6 +1,16 @@
 const LIMIT = 50;
 // List of phrases we do not want to see in categories
 const CATEGORY_BLACKLIST = [
+    'universities and colleges',
+    'player',
+    'science',
+    'protests',
+    'demonstrations',
+    'for the common good',
+    'media of',
+    'to be categorised',
+    'svg ',
+    'zoology',
     'cars',
     'insects on ',
     'airport',
