@@ -164,14 +164,17 @@ export function climateExtraction(host, from) {
 			if ( !json || !json.sections) {
 				return null;
 			}
-			const climate = json.sections.filter( ( section ) => section.line && section.line.toLowerCase().indexOf( 'climate' ) > -1 );
+			const climate = json.sections.filter( ( section ) =>
+				section.line && section.line.toLowerCase().indexOf( 'climate' ) > -1
+			);
 			if ( climate.length ) {
-				const climateData = climateExtractionWikipedia( document, climate[ 0 ].text );
-				if ( climateData.length ) {
-					return climateData;
-				} else {
-					return null;
+				while ( climate.length ) {
+					const climateData = climateExtractionWikipedia( document, climate.pop().text );
+					if ( climateData.length ) {
+						return climateData;
+					}
 				}
+				return null;
 			}
 		} );
 }
