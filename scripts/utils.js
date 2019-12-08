@@ -168,6 +168,10 @@ export function getAllClaims(entity) {
 }
 
 export function getClaimValue(value) {
+    // may already have value
+    if ( typeof value === 'string' && !value.match(/Q[0-9]+/) ) {
+        return Promise.resolve(value);
+    }
     if (countrywb_json[value]) {
         return Promise.resolve(countrywb_json[value]);
     }
@@ -184,9 +188,20 @@ export function getClaimValue(value) {
         });
 };
 
-export function getWikidata(entity, property) {
+export function listToClaimValues(list) {
+    return Promise.all(
+        list.map((qcode) => getClaimValue(qcode))
+    );
+}
+
+export function getWikidataClaim(entity, property) {
     return getAllClaims(entity).then((claims) => {
-        const values = claims[property] || [];
+       return claims[property] || [];
+    });
+}
+
+export function getWikidata(entity, property) {
+    return getWikidataClaim(entity, property).then((values) => {
         return getClaimValue(values[0]);
     });
 }
