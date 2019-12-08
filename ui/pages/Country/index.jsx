@@ -7,7 +7,7 @@ import Slideshow from '../../components/Slideshow';
 
 export default function ( props ) {
     const { summary, airports = [], sights = [], links = [], personalNote, blogs = [],
-            instagram, neighbors, wb, commons,
+            instagram, neighbors, wb, commons, info,
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
@@ -16,6 +16,19 @@ export default function ( props ) {
             slides={[{ src: thumbnail, href: thumbnail__source } ]}></Slideshow>,
         neighbors && <Box title="Nearby countries">
             {neighbors.map((country) =><Card modifier="condensed" {...country}/> )}
+        </Box>,
+        // Electrical is ommitted as if you have a universal adapter it shouldn't matter..
+        <Box title="Good to know">
+            <div>{info && info.currency && <span>
+                <span>💰 </span>
+                <a href={`https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=${info.currency}`}>
+                    {info.currency}
+                </a></span>}
+            </div>
+            <div>{info && info.tel && <span>📞 {info.tel}</span>}</div>
+            <div>{info && info.languages && <span>🗣️ </span>}
+                {info && info.languages && info.languages.map((lang) => <span>{lang} </span>)}
+            </div>
         </Box>,
         <Box title="Airports">
             <ul>{airports.map((code) => <li><a href={`https://www.rome2rio.com/map/${code}%20airport`}>{code}</a></li>)}</ul>
