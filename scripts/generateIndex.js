@@ -40,5 +40,7 @@ const thumbs = Object.keys(countries).map(
 
 // redirects (in future why don't we download these?)
 fs.writeFileSync(`${__dirname}/../public/_redirects`,
-    thumbs.map((redirectrule) => redirectrule.join(' ')).join('\n')
+    thumbs.map((redirectrule) => redirectrule.join(' ')).concat( [
+        '/tools/climate/* /tools/climate.html'
+    ] ).join('\n')
 );

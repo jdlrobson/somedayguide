@@ -4,8 +4,14 @@ import destinations from './data/destinations.json';
 import redirects from './data/redirections.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
+import fetch from 'node-fetch';
+import { climateExtraction } from './../src/tools/climate';
+import domino from 'domino';
 import fs from 'fs';
 import { listwithout, getSummary } from './utils';
+
+global.fetch = fetch;
+global.document = domino.createWindow().document;
 
 function save() {
     fs.writeFileSync(`${__dirname}/data/redirections.json`, JSON.stringify(redirects));
@@ -87,6 +93,18 @@ function addadestination() {
         } else {
             return menu();
         }
+    });
+}
+
+function addClimateFromTo(to, from) {
+    const source = from || to;
+    return climateExtraction('en.wikipedia.org', source).then((climateData) => {
+        if ( climateData ) {
+            destinations[to].climate = climateData;
+            destinations[to].climate__source = `[[w:${source}#Climate|Wikipedia]]`
+            save();
+        }
+        return menu();
     });
 }
 
@@ -308,6 +326,7 @@ function menu() {
             '1A: Add place',
             '1B: Delete place',
             '1C: Rename place',
+            '1D: Add climate data to place',
             '2: View sight',
             '2A: Add sight',
             '2B: Remove sight',
@@ -343,6 +362,7 @@ function menu() {
                             feedback(`Pushed "${title}"`);
                             destinations[title] = { title, sights: [] };
                             save();
+                            return addClimateFromTo(title);
                         }
                         return menu();
                     })
@@ -356,6 +376,12 @@ function menu() {
                     break;
                 case '1C':
                     return renameplace();
+                case '1D':
+                    return getUserInput('Which place?').then(( title ) => {
+                        return getUserInput('Wikipedia page? (blank for same)').then(( wtitle ) => {
+                            return addClimateFromTo(title, wtitle);
+                        });
+                    })
                 case '2':
                     return getUserInput('Which sight?').then(( title ) => {
                         const s = sights[title] || {};

@@ -23,6 +23,14 @@ if (MODE === 'production') {
 
 export default [
     {
+        input: 'src/tools/tools.js',
+        plugins: pluginsindex,
+        output: {
+            format: 'iife',
+            dir: 'public/'
+        }
+    },
+    {
         input: 'src/index.js',
         plugins: pluginsindex,
         output: {

@@ -6,6 +6,11 @@ node_modules/
 public/*.js
 public/index--js.css
 public/index.css
+public/tools.css
 public/index.html
+public/sitemap*
+public/_redirects
+public/dashboard.html
 public/404.html
 public/index.json
+public/index--sights.json
