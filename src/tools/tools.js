@@ -17,7 +17,7 @@ function climate(tool) {
         pre.textContent = '';
         output.value = '';
        climateExtraction(host, from).then((climateData) => {
-           if ( climateData !== null ) {
+           if ( climateData ) {
                 output.value = climateToWikiText(
                     climateData,
                     from

@@ -79,35 +79,52 @@ function nodeWithHTML( document, text ) {
 	return node;
 }
 
+function extractFromTable(table) {
+	const rows = table.querySelectorAll( 'tr' );
+	let secondRow = rows[ 1 ];
+	if ( !secondRow ) {
+		return null;
+	}
+	const columns = secondRow.querySelectorAll('td');
+	// correction for ukranian wikipedia
+	if ( columns && columns[1] && columns[1].textContent === 'Л' ) {
+		secondRow = rows[2];
+	}
+	const data = Array.from( secondRow.querySelectorAll( 'td' ) ).map( ( col, i ) => {
+		const spans = col.querySelectorAll( 'span,small' );
+		const values = Array.from( spans ).map( ( span ) => span.textContent )
+			.filter( ( val ) => val.trim() !== '' )
+			// convert minus like characters to Math compatible.
+			.map((s) => s.replace(/[−]/, '-'));
+
+		return {
+			heading: MONTHS[ i ],
+			precipitation: parseFloat( values[ 0 ] ),
+			high: parseInt( values[ 1 ], 10 ),
+			low: parseInt( values[ 2 ], 10 )
+		};
+	} );
+	if ( data.length ) {
+		return checkImperial( data );
+	}
+}
 /**
  * 
  * @param {Element} element
  */
 export function climateExtractionNew( element ) {
-	const ext = extractElements( element, [
+	let ext = extractElements( element, [
 		'.climate-table table.infobox table.infobox',
 		// e.g. Taganga (Template:climate chart)
 		'table.infobox table.infobox'
 	].join( ',' ) );
 	if ( ext.extracted.length > 0 ) {
-		const firstTable = ext.extracted[ 0 ];
-		const secondRow = firstTable.querySelectorAll( 'tr' )[ 1 ];
-		const data = Array.from( secondRow.querySelectorAll( 'td' ) ).map( ( col, i ) => {
-			const spans = col.querySelectorAll( 'span' );
-			const values = Array.from( spans ).map( ( span ) => span.textContent )
-				.filter( ( val ) => val.trim() !== '' )
-				// convert minus like characters to Math compatible.
-				.map((s) => s.replace(/[−]/, '-'));
-
-			return {
-				heading: MONTHS[ i ],
-				precipitation: parseFloat( values[ 0 ] ),
-				high: parseInt( values[ 1 ], 10 ),
-				low: parseInt( values[ 2 ], 10 )
-			};
-		} );
-		if ( data.length ) {
-			return checkImperial( data );
+		return extractFromTable(ext.extracted[ 0 ]);
+	} else {
+		// last ditch effort e.g. ukranian wikipedia
+		ext = extractElements( element, 'table' );
+		if ( ext.extracted.length === 1 ) {
+			return extractFromTable(ext.extracted[ 0 ]);
 		}
 	}
 	return;
@@ -156,25 +173,35 @@ export function climateExtractionWikipedia( document, text ) {
 	return climate && climate.length ? climate : false;
 }
 
+export function isClimateSection(section) {
+	return [
+		'climate',
+		'клімат'
+	].filter((climateSection) => {
+		return section.line && section.line.toLowerCase().indexOf( climateSection ) > -1
+	}).length > 0;
+}
+
 export function climateExtraction(host, from) {
-	const url = `https://${host}/api/rest_v1/page/mobile-sections-remaining/${encodeURIComponent( from )}`;
+	const url = `https://${host}/api/rest_v1/page/mobile-sections/${encodeURIComponent( from )}`;
+
 	return fetch( url )
 		.then( ( resp ) => resp.json() )
 		.then( ( json ) => {
-			if ( !json || !json.sections) {
+			if ( !json || !json.remaining || !json.remaining.sections) {
 				return null;
 			}
-			const climate = json.sections.filter( ( section ) =>
-				section.line && section.line.toLowerCase().indexOf( 'climate' ) > -1
-			);
+			const climate = json.remaining.sections.filter(isClimateSection);
 			if ( climate.length ) {
 				while ( climate.length ) {
 					const climateData = climateExtractionWikipedia( document, climate.pop().text );
-					if ( climateData.length ) {
+					if ( climateData ) {
 						return climateData;
 					}
 				}
-				return null;
 			}
+
+			// try lead as last attempt e.g. ceb wikipedia
+			return climateExtractionWikipedia( document, json.lead.sections[0].text ) || null;
 		} );
 }
