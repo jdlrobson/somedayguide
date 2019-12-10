@@ -1,0 +1,1 @@
+The code that powers the static site Somedayguide.com
