@@ -5,6 +5,7 @@ import sights_json from './data/sights.json';
 import countrywb_json from './data/countrywb.json';
 import marked from 'marked';
 import fs from 'fs';
+import { climateExtraction } from '../src/tools/climate';
 
 const renderer = new marked.Renderer();
 
@@ -141,6 +142,7 @@ export function getSiteLink(qcode, sitecode) {
         }
     })
 }
+
 
 export function getAllClaims(entity) {
     const localpath = `${__dirname}/data/claims/${entity}.json`;
@@ -340,5 +342,44 @@ export function withDistance(lat, lon) {
                 });
             }
         }
+    }
+}
+
+/**
+ * Find climate data for a place.
+ * @param {Object} destination
+ * @param {string[]} wikis list of wikipedias to try.
+ * @return {Promise} resolving to true or false if one is found
+ */
+export function findClimate( destination, wikis = [ 'en', 'uk', 'ceb' ] ) {
+    const qcode = destination.wb;
+    const wikicode = wikis.pop();
+    const tryNextWiki = () => {
+        if ( wikis.length ) {
+            return findClimate(destination, wikis);
+        } else {
+            return false;
+        }
+    };
+    if ( qcode ) {
+        return getSiteLink(qcode, `${wikicode}wiki`).then((wtitle) => {
+            if ( wtitle ) {
+                return climateExtraction(`${wikicode}.wikipedia.org`, wtitle).then((climate) => {
+                    if ( climate ) {
+                        destination.climate = climate;
+                        destination.climate__source = wikicode;
+                        return true;
+                    } else {
+                        return tryNextWiki();
+                    }
+                }, function (e) {
+                    return tryNextWiki();
+                });
+            } else {
+                return tryNextWiki();
+            }
+        })
+    } else {
+        return Promise.resolve(false);
     }
 }

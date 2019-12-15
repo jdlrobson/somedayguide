@@ -5,10 +5,9 @@ import redirects from './data/redirections.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
 import fetch from 'node-fetch';
-import { climateExtraction } from './../src/tools/climate';
 import domino from 'domino';
 import fs from 'fs';
-import { listwithout, getSummary } from './utils';
+import { listwithout, getSummary, findClimate } from './utils';
 
 global.fetch = fetch;
 global.document = domino.createWindow().document;
@@ -96,13 +95,13 @@ function addadestination() {
     });
 }
 
-function addClimateFromTo(to, from) {
-    const source = from || to;
-    return climateExtraction('en.wikipedia.org', source).then((climateData) => {
-        if ( climateData ) {
-            destinations[to].climate = climateData;
-            destinations[to].climate__source = `[[w:${source}#Climate|Wikipedia]]`
+function addClimateTo(to) {
+    return findClimate(destinations[to]).then((result) => {
+        if ( result ) {
+            console.log(`Found and updated climate for ${to}`);
             save();
+        } else {
+            console.log('Could not find climate data.');
         }
         return menu();
     });
@@ -362,7 +361,7 @@ function menu() {
                             feedback(`Pushed "${title}"`);
                             destinations[title] = { title, sights: [] };
                             save();
-                            return addClimateFromTo(title);
+                            return addClimateTo(title);
                         }
                         return menu();
                     })
@@ -378,9 +377,7 @@ function menu() {
                     return renameplace();
                 case '1D':
                     return getUserInput('Which place?').then(( title ) => {
-                        return getUserInput('Wikipedia page? (blank for same)').then(( wtitle ) => {
-                            return addClimateFromTo(title, wtitle);
-                        });
+                        return addClimateTo(title);
                     })
                 case '2':
                     return getUserInput('Which sight?').then(( title ) => {
