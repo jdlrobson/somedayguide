@@ -45,12 +45,16 @@ const COMMONS_API = 'https://commons.wikimedia.org/w/api.php?action=query&origin
 function extractImages(data) {
     const imagePages = data && data.query && data.query.pages || [];
     allImages = allImages.concat(
-        imagePages.filter( ( page ) =>
+        imagePages.filter( ( page ) => { const r =
             !hasForbiddenCategory(
                     ( page.categories || [] ).map( cat => cat.title )
             )
             // Note: when using categorymembers - a member may be another category!
-            && page.thumbnail && page.title.toLowerCase().indexOf('fileicon-') === -1
+            && page.thumbnail
+            // avoid sounds - we only want photos
+            && page.title.toLowerCase().indexOf('.ogg') === -1;
+            return r;
+        }
         ).map( ( page ) => {
             const thumb = page.thumbnail;
             return {
@@ -71,7 +75,7 @@ function extractSubCategories(data) {
 }
 
 function loadImagesFromCategory(category) {
-    const url = `${COMMONS_API}&prop=pageimages&generator=categorymembers&piprop=thumbnail%7Cname&pithumbsize=320&pilimit=50&gcmtitle=${encodeURIComponent(category)}&gcmlimit=50`;
+    const url = `${COMMONS_API}&prop=pageimages%7Ccategories&cllimit=max&generator=categorymembers&piprop=thumbnail%7Cname&pithumbsize=320&pilimit=50&gcmtitle=${encodeURIComponent(category)}&gcmlimit=50`;
     return fetch(url)
         .then(( resp )=>resp.json())
         .then(extractImages)
