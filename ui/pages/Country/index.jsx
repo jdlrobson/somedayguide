@@ -39,10 +39,10 @@ export default function ( props ) {
     ];
     const claimSort = (s1,s2)=> (s1.claims || 0 ) > s2.claims || 0 ? -1 : 1;
     const childrenLeft = [
-        <Box title="Destinations" id="destinations">
+        <Box title={`Destinations (${destinations.length})`} id="destinations">
             {destinations.sort(claimSort).map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>,
-        <Box title="Sights" id="sights">
+        <Box title={`Sights (${sights.length})`} id="sights">
             {sights.sort(claimSort).map((sight) => <Card modifier="condensed" {...sight}
                 href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>

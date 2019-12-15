@@ -29,7 +29,7 @@ export default function ( props ) {
             {next.sort((p1, p2)=>p1.distance < p2.distance ? -1 : 1)
                 .map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>,
-        <Box title="Sights" id="sights">
+        <Box title={`Sights (${sights.length})`} id="sights">
             {sights.sort((s1, s2) => {
                     return s1.distance < s2.distance ? -1 : 1
                 }).map((sight) => <Card modifier="condensed" {...sight}
