@@ -1,6 +1,11 @@
 const LIMIT = 50;
 // List of phrases we do not want to see in categories
 const CATEGORY_BLACKLIST = [
+    'radio',
+    'with maps',
+    'scientist',
+    'sailor',
+    'maps of',
     'universities and colleges',
     'player',
     'science',
@@ -42,7 +47,7 @@ function extractImages(data) {
                     ( page.categories || [] ).map( cat => cat.title )
             )
             // Note: when using categorymembers - a member may be another category!
-            && page.thumbnail
+            && page.thumbnail && page.title.indexOf('fileicon-') === -1
         ).map( ( page ) => {
             const thumb = page.thumbnail;
             return {
