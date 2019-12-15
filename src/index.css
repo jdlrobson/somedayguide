@@ -1,7 +1,18 @@
 /* resets*/
 body, html {
-    height: 100%;
     color: #333;
+}
+
+html {
+    background-color: #00ab9f;
+    background-image: url(/craft_left.jpg);
+    background-repeat: repeat-y;
+}
+
+body {
+    background-image: url(/craft_right.jpg);
+    background-repeat: repeat-y;
+    background-position: right top;
 }
 
 h1, h2, h3, h4, h5, p, ul,
@@ -17,10 +28,6 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-body {
-    background-color: #00ab9f;
 }
 
 li {
@@ -43,7 +50,6 @@ li {
 .page__column {
     max-width: 500px;
     margin: auto;
-    height: 100%;
     width: 100%;
 }
 
@@ -53,6 +59,13 @@ li {
 }
 .page__column--one {
     grid-row: 3;
+}
+.page__column--two {
+    height: 100%;
+    background: #fff url(/images/grid.png);
+    background-repeat: repeat;
+    background-position: -20px -1px;
+    background-size: 40px 40px;
 }
 .page__column--three {
     grid-row: 2;
@@ -340,10 +353,6 @@ li {
 }
 
 .note {
-    background: #fff url(/images/grid.png);
-    background-repeat: repeat;
-    background-position: -20px -16px;
-    background-size: 40px 40px;
     padding: 1em 12px;
     line-height: 1.3;
     border: 1px solid transparent;
@@ -495,8 +504,10 @@ li {
     color: #aaa;
 }
 
-footer {
-    padding: 8px 0;
+footer.page__column--span {
+    background:white;
+    grid-column: 2/3;
+    padding: 8px;
     font-size: .8em;
     color: #444;
     border-top: 2px dotted #c1b094;
