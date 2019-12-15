@@ -3,6 +3,10 @@ const LIMIT = 50;
 const CATEGORY_BLACKLIST = [
     'radio',
     'with maps',
+    'insects',
+    'microscopic',
+    'specimens',
+    'arthropods',
     'scientist',
     'hotel rooms',
     'bathrooms',
