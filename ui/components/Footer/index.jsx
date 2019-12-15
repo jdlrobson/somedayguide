@@ -3,7 +3,7 @@ import preact, { h } from 'preact';
 export default function ( props ) {
     const { title, wikibase } = props;
     return <footer class={props.class}>
-        Someday guide is a <a href="https://jdlrobson.com">Jon Robson</a> and <a href="linzybearswings.wordpress.com">Linz Lim</a> production with data mashed together
+        Someday guide is a <a href="https://jdlrobson.com">Jon Robson</a> and <a href="https://linzybearswings.wordpress.com">Linz Lim</a> production with data mashed together
         from <a href='https://en.wikipedia.org/'>Wikipedia
         </a>{wikibase && <span>, <a href={`https://wikidata.org/wiki/${wikibase}`}>Wikidata</a></span>} and <a
         href={`https://en.wikivoyage.org/wiki/${title}`}>Wikivoyage</a>.<br/>
