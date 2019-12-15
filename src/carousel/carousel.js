@@ -4,12 +4,15 @@ const CATEGORY_BLACKLIST = [
     'radio',
     'with maps',
     'scientist',
+    'hotel rooms',
+    'bathrooms',
     'sailor',
     'maps of',
     'universities and colleges',
     'player',
     'science',
     'protests',
+    'elections in',
     'demonstrations',
     'for the common good',
     'media of',
@@ -47,7 +50,7 @@ function extractImages(data) {
                     ( page.categories || [] ).map( cat => cat.title )
             )
             // Note: when using categorymembers - a member may be another category!
-            && page.thumbnail && page.title.indexOf('fileicon-') === -1
+            && page.thumbnail && page.title.toLowerCase().indexOf('fileicon-') === -1
         ).map( ( page ) => {
             const thumb = page.thumbnail;
             return {
