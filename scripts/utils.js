@@ -351,7 +351,7 @@ export function withDistance(lat, lon) {
  * @param {string[]} wikis list of wikipedias to try.
  * @return {Promise} resolving to true or false if one is found
  */
-export function findClimate( destination, wikis = [ 'en', 'uk', 'ceb' ] ) {
+export function findClimate( destination, wikis = [ 'en', 'uk', 'ceb' ], project = 'wikipedia' ) {
     const qcode = destination.wb;
     const wikicode = wikis.pop();
     const tryNextWiki = () => {
@@ -361,25 +361,24 @@ export function findClimate( destination, wikis = [ 'en', 'uk', 'ceb' ] ) {
             return false;
         }
     };
-    if ( qcode ) {
-        return getSiteLink(qcode, `${wikicode}wiki`).then((wtitle) => {
-            if ( wtitle ) {
-                return climateExtraction(`${wikicode}.wikipedia.org`, wtitle).then((climate) => {
-                    if ( climate ) {
-                        destination.climate = climate;
-                        destination.climate__source = wikicode;
-                        return true;
-                    } else {
-                        return tryNextWiki();
-                    }
-                }, function (e) {
+    return (
+        project === 'wikipedia' && qcode ? getSiteLink(qcode, `${wikicode}wiki`) :
+        Promise.resolve(destination.title)
+    ).then((wtitle) => {
+        if ( wtitle ) {
+            return climateExtraction(`${wikicode}.${project}.org`, wtitle).then((climate) => {
+                if ( climate ) {
+                    destination.climate = climate;
+                    destination.climate__source = wikicode;
+                    return true;
+                } else {
                     return tryNextWiki();
-                });
-            } else {
+                }
+            }, function (e) {
                 return tryNextWiki();
-            }
-        })
-    } else {
-        return Promise.resolve(false);
-    }
+            });
+        } else {
+            return tryNextWiki();
+        }
+    })
 }

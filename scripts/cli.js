@@ -96,15 +96,23 @@ function addadestination() {
 }
 
 function addClimateTo(to) {
-    return findClimate(destinations[to]).then((result) => {
-        if ( result ) {
-            console.log(`Found and updated climate for ${to}`);
+    // try wikivoyage first...
+    return findClimate(destinations[to], ['en'], 'wikivoyage').then((r) => {
+        if (r) {
             save();
+            return menu();
         } else {
-            console.log('Could not find climate data.');
+            return findClimate(destinations[to]).then((result) => {
+                if ( result ) {
+                    console.log(`Found and updated climate for ${to}`);
+                    save();
+                } else {
+                    console.log('Could not find climate data.');
+                }
+                return menu();
+            });
         }
-        return menu();
-    });
+    })
 }
 
 function removeDestination() {
