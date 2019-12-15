@@ -153,16 +153,6 @@ function deleteplace(title) {
     }
 }
 
-function countrieswithsight(sight) {
-    return Object.keys(countries).filter((key) => {
-        if (!countries[key].sights) {
-            return false;
-        } else if (countries[key].sights.indexOf(sight) > -1) {
-            return true;
-        }
-    });
-}
-
 function destinationwithsight(sight) {
     return Object.keys(destinations).filter((key) => {
         if (!destinations[key].sights) {
@@ -171,11 +161,6 @@ function destinationwithsight(sight) {
             return true;
         }
     });
-}
-
-function removesightfromcountry(country, sight) {
-    console.log(`Remove reference to ${sight} in ${country}`);
-    countries[country].sights = listwithout(countries[country].sights, sight);
 }
 
 function removesightfromdestination(destination, sight) {
@@ -189,20 +174,13 @@ function removesight(sight) {
     } else {
         console.log(`Removed ${sight} from sights.json.`)
     }
-    countrieswithsight(sight).forEach((key) => removesightfromcountry(key, sight));
     destinationwithsight(sight).forEach((key) => removesightfromdestination(key, sight));
     delete sights[sight];
 }
 
 function removesights() {
-    return getUserInput('Which sight, country, or place?').then(( sightOrPlace ) => {
-        if (countries[sightOrPlace]) {
-            return getUserInput('Which sight?').then(( sight) => {
-                removesightfromcountry(sightOrPlace, sight);
-                save();
-                return menu();
-            });
-        } else if (destinations[sightOrPlace]) {
+    return getUserInput('Which sight or place?').then(( sightOrPlace ) => {
+        if (destinations[sightOrPlace]) {
             return getUserInput('Which sight').then(( sight) => {
                 removesightfromdestination(sightOrPlace, sight);
                 save();
@@ -218,16 +196,6 @@ function removesights() {
     });
 }
 
-function addsighttodestination(key, sight) {
-    console.log(`Add sight ${sight} to ${key}`);
-    destinations[key].sights.push(sight);
-}
-
-function addsighttocountry(key, sight) {
-    console.log(`Add sight ${sight} to ${key}`);
-    countries[key].sights.push(sight);
-}
-
 function renameplace() {
     return getUserInput('Which place?').then(( original ) => {
         return getUserInput('Rename to what?').then(( newName ) => {
@@ -236,30 +204,6 @@ function renameplace() {
                 destinations[newName] = Object.assign({}, destinations[original], { title: newName });
                 delete destinations[original];
             }
-        });
-    } ).then(() => {
-        save();
-        return menu();
-    })
-}
-
-function renamesight() {
-    return getUserInput('Which sight?').then(( original ) => {
-        return getUserInput('Rename to what?').then(( newName ) => {
-
-            if ( sights[original] ) {
-                console.log(`Reassign ${original} to ${newName}`);
-                sights[newName] = Object.assign({}, sights[original], { title: newName });
-                delete sights[original];
-            }
-            countrieswithsight(original).forEach((key) => {
-                removesightfromcountry(key, original);
-                addsighttocountry(key, newName);
-            });
-            destinationwithsight(original).forEach((key) => {
-                removesightfromdestination(key, original);
-                addsighttodestination(key, newName);
-            });
         });
     } ).then(() => {
         save();
@@ -287,7 +231,7 @@ function addredirect() {
 
 function addSight() {
     function addSightTo(place) {
-        return getUserInput('Which sight?').then(( sight ) => {
+        return getUserInput('Which sight (provide wikibase id)?').then(( sight ) => {
             if ( !sight ) {
                 save();
                 return menu();
@@ -337,7 +281,6 @@ function menu() {
             '2: View sight',
             '2A: Add sight',
             '2B: Remove sight',
-            '2C: Rename sight',
             '3B: Remove country',
             '3C: Add country destination',
             '3D: Remove country destination',
@@ -388,7 +331,7 @@ function menu() {
                         return addClimateTo(title);
                     })
                 case '2':
-                    return getUserInput('Which sight?').then(( title ) => {
+                    return getUserInput('Which sight (wikibase id)?').then(( title ) => {
                         const s = sights[title] || {};
                         Object.keys(s).forEach((key) => {
                             console.log(`${key}: ${s[key]}`)
@@ -400,8 +343,6 @@ function menu() {
                     break;
                 case '2B':
                     return removesights();
-                case '2C':
-                    return renamesight();
                 case '3B':
                     return getUserInput('Which country to REMOVE?').then(( title ) => {
                         delete countries[title];
@@ -470,7 +411,7 @@ function menu() {
                     });
                     break;
                 case '7A':
-                    return getUserInput('Which sight?').then(( title ) => {
+                    return getUserInput('Which sight (provide wikibase id)?').then(( title ) => {
                         if ( !sights[title] ) {
                             console.log('no have');
                             return menu();
@@ -482,8 +423,11 @@ function menu() {
                     return getUserInput('Update summary for?').then(( title ) => {
                         if ( destinations[title] ) {
                             return updatesummary(title, destinations[title]);
-                        } else {
+                        } else if ( sights[title] ) {
                             return updatefieldvalue(sights[title]);
+                        } else {
+                            console.log('no have');
+                            return menu();
                         }
                     } );
                 default:

@@ -53,7 +53,7 @@ function resetParsedData() {
 }
 renderer.link = function (href, _, text) {
     const igmatch = href.match(/instagram\.com\/p\/([^\/]+)/)
-    const wikimatch = href.match(/\.wikipedia\.org\/wiki\/([^\/]+)/)
+    const wikimatch = href.match(/\.wikidata\.org\/wiki\/([^\/]+)/)
     if (igmatch) {
         parseddata.ig.push(igmatch[1]);
     } else if (wikimatch) {

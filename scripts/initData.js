@@ -6,9 +6,10 @@ import countrywb from './data/countrywb.json';
 import { ignore } from './data/ignore.js'
 import redirects from './data/redirections.json';
 import fs from 'fs';
+import fetch from 'node-fetch';
 import { getAllClaims, getGithubWikiData,
     getThumbnail, getSummary, listwithout,
-    badthumbnail, getClaimValue,
+    badthumbnail, getClaimValue, getSiteLink, getEntityData,
     getNearbyUntilHave, calculateDistance } from './utils';
 import { isInstanceOfIsland, isInstanceOfNationalPark, isInstanceOfCity,
     isInstanceOfLocation,  isInstanceOfSight } from './wikidatautils';
@@ -156,7 +157,10 @@ Object.keys(next).forEach((key) => {
     const newSet = Array.from(
         new Set(next[key].map((place) => typeof place === 'string' ? place : place[0]))
     ).filter((toName) => {
-        const to = destinations[toName] || {};
+        const to = destinations[toName];
+        if ( !to ) {
+            return false;
+        }
         // https://github.com/jdlrobson/somedayguide/issues/8
         const d = calculateDistance(destinations[key], to);
         return key !== toName && ( to.remote || d === -1 || d < MAX_NEARBY_DISTANCE );
@@ -204,48 +208,95 @@ Object.keys(next).forEach((key) => {
         knownDestinations.length === 0 &&
         SHOW_WARNINGS && destinations[key] === undefined
     ) {
-        if ( !countries[key] && !sights_json[key] ) {
-            console.warn(`\t${key} is not a known destination.`);
-            destinations[key] = { title: key };
-        }
+        console.warn(`\t${key} is not a known destination.`);
         delete next[key];
         pending.push(Promise.resolve());
     }
 });
 
 const rewrites = [];
-Object.keys(sights_json).forEach((sightName) => {
-    const sight = sights_json[sightName];
+Object.keys(sights_json).forEach((sightKey) => {
+    const sight = sights_json[sightKey];
     const thumbnail = sight.thumbnail;
+    const sightName = sight.title;
     if (sight.wbcity && sight.claims > 60) {
-        rewrites.push(sightName);
-    }
-    if (badthumbnail(thumbnail)) {
-        pending.push(
-            getThumbnail(sightName, sight.lastsync).then((thumbData) => {
-                if (sights_json[sightName]) {
-                    // may have been deleted elsewhere.
-                    Object.assign(sights_json[sightName], thumbData);
-                }
-            })
-        )
+        rewrites.push(sightKey);
     }
     if (sight.country && countries[sight.country]) {
         const country = countries[sight.country];
         if ( country && !countrySights[sight.country].includes(sightName) && sight.title !== sight.country) {
-            countrySights[sight.country].push(sightName);
+            countrySights[sight.country].push(sightKey);
         }
     }
-    // update any unused sights by associating it with a country
-    updateWikibase(sight, 'wikipedia');
-    if (!sight.lat && !sight.nolat) {
-        console.log(`Update lat/lon for sight ${sightName}`)
-        updatefields(sight, sight.title, 'wikipedia');
+    // Is the title still set to the q code?
+    if ( sight.title === sightKey) {
+        pending.push(
+            getSiteLink(sightKey, 'enwiki').then((wikipedia) => {
+                if ( wikipedia ) {
+                    console.log(`Set title of ${sightKey} to ${wikipedia}`);
+                    sights_json[sightKey].title = wikipedia;
+                } else {
+                    sights_json[sightKey].nowikipedia = 1;
+                    return getEntityData(sightKey).then((entitydata) => {
+                        const e = entitydata.entities[sightKey];
+                        const label = e.labels.en || {};
+                        const description = e.descriptions.en || {};
+                        let pending;
+                        try {
+                            const thumb  = e.claims.P18[0].mainsnak.datavalue.value;
+                            sights_json[sightKey].thumbnail__source = thumb;
+                            pending = fetch(`https://commons.wikimedia.org/api/rest_v1/page/summary/File:${encodeURIComponent(thumb)}`)
+                                .then((r) => r.json())
+                                .then((json) => {
+                                    console.log(json.thumbnail.source);
+                                    sights_json[sightKey].thumbnail = json.thumbnail && json.thumbnail.source;
+                                });
+                        } catch (e) {
+                            // pass
+                            console.log(e);
+                        }
+                        try {
+                            const coords = e.claims.P625[0].mainsnak.datavalue.value;
+                            sights_json[sightKey].lat = coords.latitude;
+                            sights_json[sightKey].lon = coords.longitude;
+                        } catch (e) {
+                            // pass.
+                            sights_json[sightKey].nolat = 1;
+                        }
+                        sights_json[sightKey].title = label.value;
+                        sights_json[sightKey].description = description.value;
+                        return pending
+                    });
+                }
+            })
+        );
+    } else if (sights_json[sightKey].title === undefined) {
+        console.warn(`${sightKey} has no English title. Not notable until that happens.`);
+    } else {
+        sight.wb = sightKey
+        // update any unused sights by associating it with a country
+        updateWikibase(sight, 'wikipedia');
+        if (!sight.lat && !sight.nolat && !sight.nowikipedia) {
+            console.log(`Update lat/lon for sight ${sightKey} (${sight.title})`)
+            updatefields(sight, sight.title, 'wikipedia');
+        }
+        if (badthumbnail(thumbnail)) {
+            pending.push(
+                getThumbnail(sightName, sight.lastsync).then((thumbData) => {
+                    if (sights_json[sightKey]) {
+                        // may have been deleted elsewhere.
+                        Object.assign(sights_json[sightKey], thumbData);
+                    }
+                })
+            )
+        }
     }
 
     // #17
     if (destinations[sightName]) {
         console.log( `${sightName} is a sight and a destination/country` );
+        delete sights_json[sightKey];
+        pending.push(Promise.resolve());
     }
 });
 
@@ -262,21 +313,6 @@ rewrites.forEach((sightName) => {
 Object.keys(destinations).forEach(( destinationTitle ) => {
     const place = destinations[destinationTitle];
     const wikiplace = getGithubWikiData(destinationTitle, {});
-    const wikisights = wikiplace.sights.filter((s) => !place.sights.includes(s));
-
-
-    // Fixes: #19
-    wikisights.forEach((s) => {
-        if (!place.sights.includes(s)) {
-            console.log(`Push sight ${s} from wiki to ${destinationTitle}`);
-            place.sights.push(s);
-            pending.push(Promise.resolve());
-        }
-        if(!sights_json[s]) {
-            sights_json[s] = { title: s };
-            pending.push(Promise.resolve());
-        }
-    });
 
     if ( destinationTitle.indexOf('_') > -1 || destinationTitle.indexOf('%') > -1) {
         console.log(`Replacing _ characters in name ${destinationTitle}`);
@@ -354,11 +390,12 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
 
     const newSights = Array.from(
         new Set(
-            place.sights.filter((sight) =>
-                sight && !(next[place.title] || []).includes(sight) &&
+            place.sights.filter((wb) => {
+                const sight = sights_json[wb].title;
+                return sight && !(next[place.title] || []).includes(sight) &&
                 belongsToCountry(sight, place.country) &&
                 (!countries[sight])
-            )
+            } )
         )
     );
     if ( newSights.length !== place.sights.length) {
@@ -456,12 +493,6 @@ Object.keys(countrySights).forEach((countryName) => {
     const wikicountry = getGithubWikiData(countryName, {});
     const wikisights = wikicountry.sights.filter((s) => !countrySights[countryName].includes(s));
 
-    // Fixes: #19
-    wikisights.forEach((s) => {
-        console.log(`Push sight ${s} from wiki to ${countryName}`);
-        countrySights[countryName].push(s);
-        sights_json[s] = { title: s };
-    });
     if ( !country.summary || country.summary.indexOf('.mw-parser-output') > -1 ) {
         console.log(`Bad description in ${country.title}`);
         pending.push(
@@ -496,7 +527,7 @@ Object.keys(countrySights).forEach((countryName) => {
                             const othersights = destinations[otherdest.destination].sights;
                             destinations[otherdest.destination].sights = listwithout(othersights, sight.title);
                             if (!dest.sights.includes(sightName)) {
-                                console.log(`${sightName} is closer to ${destName} (${distance}) than ${otherdest.destination} (${otherdest.distance})`);
+                                console.log(`${sightName} (${sights_json[sightName].title}) is closer to ${destName} (${distance}) than ${otherdest.destination} (${otherdest.distance})`);
                                 // add to this one.
                                 dest.sights.push(sightName);
                             }

@@ -34,7 +34,8 @@ export default function ( props ) {
                     return s1.distance < s2.distance ? -1 : 1
                 }).map((sight) => <Card modifier="condensed" {...sight}
                 thumbnail={sight.thumbnail && sight.thumbnail.replace(/[0-9]+px/, '400px')}
-                href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
+                href={sight.nowikipedia ? `https://wikidata.org/wiki/${sight.wb}`
+                    : `https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>
     ];
 
