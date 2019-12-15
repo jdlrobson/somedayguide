@@ -69,5 +69,8 @@
       "path": "public/index--sights.json",
       "maxSize": "83.8KB"
     }
-  ]
+  ],
+  "devDependencies": {
+    "http-server": "^0.12.0"
+  }
 }
