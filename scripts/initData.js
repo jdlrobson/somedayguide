@@ -20,6 +20,9 @@ const COUNTRY_PROPERTY = 'P17';
 const MAX_NEARBY_DISTANCE = 500;
 const wikidataToCountry = {};
 
+const countrySights = {};
+Object.keys(countries).forEach((key) => countrySights[key] = [ /* sights */]);
+
 function updatefields(place, key, project) {
     pending.push(
         getSummary(key, project).then((json) => {
@@ -229,18 +232,8 @@ Object.keys(sights_json).forEach((sightName) => {
     }
     if (sight.country && countries[sight.country]) {
         const country = countries[sight.country];
-        const countrySights = countries[sight.country].sights || [];
-        if ( country && !countrySights.includes(sightName) && sight.title !== sight.country) {
-            country.sights = countrySights;
-            console.log(`Push ${sight.title} to ${sight.country}`)
-            country.sights.push(sightName);
-            pending.push(Promise.resolve());
-        } else {
-            if ( redirects[sight.country] ) {
-                console.log(`Rename sight.country ${sight.country}`);
-                sight.country = redirects[sight.country];
-                pending.push(Promise.resolve());
-            }
+        if ( country && !countrySights[sight.country].includes(sightName) && sight.title !== sight.country) {
+            countrySights[sight.country].push(sightName);
         }
     }
     // update any unused sights by associating it with a country
@@ -259,16 +252,10 @@ Object.keys(sights_json).forEach((sightName) => {
 // #31
 rewrites.forEach((sightName) => {
     console.log(`Sight ${sightName} is notable enough to be upgraded to a destination.`);
-    const sight = sights_json[sightName];
+    // add new destination
     destinations[sightName] = sights_json[sightName];
-    if (sight.country) {
-        if (!countries[sight.country]) {
-            throw new Error(`Sight ${sightName} is ${sight.country}`)
-        }
-        console.log(`Remove sight ${sightName} from ${sight.country}`);
-        countries[sight.country].sights = listwithout(countries[sight.country].sights, sightName);
-    }
     destinations[sightName].sights = [];
+    // delete sight
     delete sights_json[sightName];
 });
 
@@ -284,10 +271,6 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
             console.log(`Push sight ${s} from wiki to ${destinationTitle}`);
             place.sights.push(s);
             pending.push(Promise.resolve());
-        }
-        if (place.country && !countries[place.country].sights.includes(s)) {
-            console.log(`Push sight from wiki to ${place.country}`);
-            countries[place.country].sights.push(s);
         }
         if(!sights_json[s]) {
             sights_json[s] = { title: s };
@@ -442,11 +425,11 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         }
     } else if ( place.wbsight && place.country ) {
         // Fixes: https://github.com/jdlrobson/somedayguide/issues/10
-        console.log(`Repurpose ${destinationTitle} as sight on ${place.country}`);
         delete place.wbsight;
         sights_json[destinationTitle] = place;
         delete destinations[destinationTitle];
-        countries[place.country].sights.push(place.title);
+        // push it here so we can find a destination later..
+        countrySights[place.country].push(place.title);
         pending.push(Promise.resolve());
     } else if ( place.wb === undefined && !place.country ) {
         console.log(`Destination ${destinationTitle} lacking wikibase id.`)
@@ -468,15 +451,15 @@ Object.keys(countrywb).forEach((key) => {
 });
 
 // make sure country sights are allocated to cities (#12)
-Object.keys(countries).forEach((countryName) => {
+Object.keys(countrySights).forEach((countryName) => {
     const country = countries[countryName];
     const wikicountry = getGithubWikiData(countryName, {});
-    const wikisights = wikicountry.sights.filter((s) => !country.sights.includes(s));
+    const wikisights = wikicountry.sights.filter((s) => !countrySights[countryName].includes(s));
 
     // Fixes: #19
     wikisights.forEach((s) => {
         console.log(`Push sight ${s} from wiki to ${countryName}`);
-        country.sights.push(s);
+        countrySights[countryName].push(s);
         sights_json[s] = { title: s };
     });
     if ( !country.summary || country.summary.indexOf('.mw-parser-output') > -1 ) {
@@ -486,7 +469,7 @@ Object.keys(countries).forEach((countryName) => {
         );
     }
 
-    country.sights.forEach((sightName) => {
+    countrySights[country.title].forEach((sightName) => {
         let mindistance;
         const sight = sights_json[sightName];
         const sightdistances = {};
@@ -527,62 +510,15 @@ Object.keys(countries).forEach((countryName) => {
                         }
                     }
                 }
-                // push sight back to country
-                ((dest && dest.sights) || []).forEach((sightName) => {
-                    if (!country.sights.includes(sightName)) {
-                        const sight = sights_json[sightName];
-                        if (!sight) return;
-                        // https://github.com/jdlrobson/somedayguide/issues/15
-                        const distance = calculateDistance(dest, sight);
-                        if (distance > 0 && distance < 20 && belongsToCountry(sight, countryName)) {
-                            // #9
-                            console.log(`Pushing ${sightName} to ${country.title}`);
-                            country.sights.push(sightName);
-                        }
-                    }
-                })
             });
-
-            // Avoid sights being allocated to wrong country
-            if ( mindistance && mindistance > 2000 && sight.nolat === undefined && !sight.remote) {
-                console.log(`Hmm... the sight ${sightName} is far from all places inside ${countryName} (${mindistance}) and has been removed.`)
-                country.sights = listwithout(country.sights, sight.title);
-                pending.push(Promise.resolve());
-            }
         }
     });
-    const newSights = Array.from(
-        // #26
-        new Set(
-            // check the sight is not a country, is still a valid sight
-            country.sights.filter((sight) => !countries[sight] && sights_json[sight] &&
-                // https://github.com/jdlrobson/somedayguide/issues/15
-                belongsToCountry(sights_json[sight], countryName)
-            )
-        )
-    );
-    if ( newSights.length !== country.sights.length ) {
-        console.log(`Country ${countryName} listed another country as a sight, or repeated a sight,
-            or listed a sight that belongs to another country.`);
-        countries[countryName].sights = newSights;
-        pending.push(Promise.resolve())
-    }
     const destinationSet = new Set(country.destinations);
     if(destinationSet.size !== country.destinations.length) {
         console.log(`Removed duplicate destinations in ${countryName}`);
         country.destinations = Array.from(destinationSet);
         pending.push(Promise.resolve())
     }
-    country.sights = country.sights.map((sight) => {
-        return typeof sight === 'string' ? sight : sight.title
-    } );
-    country.sights.forEach((sight) => {
-        if ( !sights_json[sight] ) {
-            console.log(`${sight} is not known.`)
-            sights_json[sight] = { title: sight };
-            pending.push(Promise.resolve())
-        }
-    });
     // #32 - update neighboring countries.
     if ( country.wb ) {
         if (!country.neighbors || !country.neighbors.length) {

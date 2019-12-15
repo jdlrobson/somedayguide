@@ -81,12 +81,16 @@ countries.forEach((title) => {
             // e.g. Singapore, Monaco etc..
             || d.title === title);
 
-    const sights = country.sights.map((sight) => sights_json[sight])
-        .filter((sight) => sight);
-    if ( sights.length !== country.sights.length ) {
-        const missing = country.sights.filter((s) => !sights.map(sobj=>sobj.title).includes(s));
-        console.log(`data integrity problem in country sights for ${title}: ${missing.join(',')}`);
-    }
+    // a country's sights will be the concatenation of all its destinations...
+    const sights = destinations.reduce((previousValue, dest) => {
+        return previousValue.concat(dest.sights || []);
+    }, [])
+    // removing duplicates
+    .filter((s, i, arr) => arr.indexOf(s) === i )
+    .map((sightKey) => sights_json[sightKey])
+    // sorted by number of claims and limited to 150.
+    .sort((a, b) => a.claims < b.claims ? 1 : -1).slice(0, 150);
+
     renderPage( `country/${title}.html`, {
         page_title: `${title} - someday guide to the world`,
         url: `https://somedayguide.com/country/${title}`,
