@@ -1,12 +1,14 @@
 /* resets*/
 body, html {
     color: #333;
+    min-height: 100%;
 }
 
 html {
     background-color: #00ab9f;
     background-image: url(/craft_left.jpg);
-    background-repeat: repeat-y;
+    background-repeat: repeat;
+    height: 100%;
 }
 
 body {
@@ -59,6 +61,7 @@ li {
 }
 .page__column--one {
     grid-row: 3;
+    min-height: 100%;
 }
 .page__column--two {
     height: 100%;
