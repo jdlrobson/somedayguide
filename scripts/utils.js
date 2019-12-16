@@ -388,6 +388,7 @@ export function findSights(title) {
     return fetch(url).then((r)=>r.json()).then((data) => {
         let seeSection;
         let results = [];
+        let wikipedias = [];
         data.remaining.sections.forEach((section) => {
             if (section.toclevel === 1) {
                 seeSection = section.line.toLowerCase().match(/see|do/g);
@@ -397,12 +398,27 @@ export function findSights(title) {
                 node.innerHTML = section.text;
                 results = results.concat(
                     Array.from(node.querySelectorAll('.listing-sister-icons a')).map((node) => {
-                        const m = node.getAttribute('href').match(/^\/wiki\/D\:(Q.*)$/, '$1');
+                        const m = node.getAttribute('href').match(/\/wiki\/D\:(Q.*)$/, '$1');
+                        return m && m[1];
+                    }).filter((m) => m)
+                );
+                wikipedias = wikipedias.concat(
+                    Array.from(node.querySelectorAll('.listing-sister-icons a')).map((node) => {
+                        const m = node.getAttribute('href').match(/\/wiki\/W\:(.*)$/, '$1');
                         return m && m[1];
                     }).filter((m) => m)
                 );
             }
         })
-        return Array.from(new Set(results))
+        if (wikipedias.length) {
+            return Promise.all(
+                wikipedias.map((w) => getSummary(w).then((d) => d.wb))
+            ).then((wbases) => {
+                results = results.concat(wbases.filter((m) => m));
+                return Array.from(new Set(results));
+            });
+        } else {
+            return Array.from(new Set(results))
+        }
     })
 }

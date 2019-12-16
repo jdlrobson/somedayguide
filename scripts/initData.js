@@ -215,6 +215,7 @@ Object.keys(next).forEach((key) => {
 });
 
 const rewrites = [];
+
 Object.keys(sights_json).forEach((sightKey) => {
     const sight = sights_json[sightKey];
     const thumbnail = sight.thumbnail;
@@ -229,7 +230,7 @@ Object.keys(sights_json).forEach((sightKey) => {
         }
     }
     // Is the title still set to the q code?
-    if ( sight.title === sightKey) {
+    if (sight.title === sightKey) {
         pending.push(
             getSiteLink(sightKey, 'enwiki').then((wikipedia) => {
                 if ( wikipedia ) {
@@ -237,48 +238,64 @@ Object.keys(sights_json).forEach((sightKey) => {
                     sights_json[sightKey].title = wikipedia;
                 } else {
                     sights_json[sightKey].nowikipedia = 1;
-                    return getEntityData(sightKey).then((entitydata) => {
-                        const e = entitydata.entities[sightKey];
-                        const label = e.labels.en || {};
-                        const description = e.descriptions.en || {};
-                        let pending;
-                        try {
-                            const thumb  = e.claims.P18[0].mainsnak.datavalue.value;
-                            sights_json[sightKey].thumbnail__source = thumb;
-                            pending = fetch(`https://commons.wikimedia.org/api/rest_v1/page/summary/File:${encodeURIComponent(thumb)}`)
-                                .then((r) => r.json())
-                                .then((json) => {
-                                    console.log(json.thumbnail.source);
-                                    sights_json[sightKey].thumbnail = json.thumbnail && json.thumbnail.source;
-                                });
-                        } catch (e) {
-                            // pass
-                            console.log(e);
-                        }
-                        try {
-                            const coords = e.claims.P625[0].mainsnak.datavalue.value;
-                            sights_json[sightKey].lat = coords.latitude;
-                            sights_json[sightKey].lon = coords.longitude;
-                        } catch (e) {
-                            // pass.
+                }
+                return getEntityData(sightKey).then((entitydata) => {
+                    // deal with redirect
+                    const key = Object.keys(entitydata.entities)[0];
+                    const e = entitydata.entities[key] || { labels: {}, descriptions: {} };
+                    const label = e.labels.en || {};
+                    const description = e.descriptions.en || {};
+                    const claims = e.claims;
+                    let pending;
+                    try {
+                        const thumb  = claims.P18[0].mainsnak.datavalue.value;
+                        sights_json[sightKey].thumbnail__source = thumb;
+                        pending = fetch(`https://commons.wikimedia.org/api/rest_v1/page/summary/File:${encodeURIComponent(thumb)}`)
+                            .then((r) => r.json())
+                            .then((json) => {
+                                sights_json[sightKey].thumbnail = json.thumbnail && json.thumbnail.source;
+                            });
+                    } catch (e) {
+                        // pass
+                    }
+                    try {
+                        const coords = claims.P625[0].mainsnak.datavalue.value;
+                        sights_json[sightKey].lat = coords.latitude;
+                        sights_json[sightKey].lon = coords.longitude;
+                    } catch (e) {
+                        // pass.
+                        const instanceOf = claims['P31'] || [];
+                        if (!wikipedia) {
+                            sights_json[sightKey].nolat = 1;
+                        } else if (
+                            !isInstanceOfSight(instanceOf) && !isInstanceOfCity(instanceOf) && !isInstanceOfIsland(instanceOf)
+                            && !isInstanceOfNationalPark(instanceOf) && !isInstanceOfLocation(instanceOf)
+                        ) {
                             sights_json[sightKey].nolat = 1;
                         }
+                    }
+                    if (!wikipedia) {
                         sights_json[sightKey].title = label.value;
                         sights_json[sightKey].description = description.value;
-                        return pending
-                    });
-                }
+                    }
+                    return pending
+                });
             })
         );
     } else if (sights_json[sightKey].title === undefined) {
         console.warn(`${sightKey} has no English title. Not notable until that happens.`);
+        try {
+            fs.unlinkSync(`${__dirname}/data/claims/ed_${sightKey}.json`);
+        } catch(e) {}
     } else {
         sight.wb = sightKey
         // update any unused sights by associating it with a country
         updateWikibase(sight, 'wikipedia');
         if (!sight.lat && !sight.nolat && !sight.nowikipedia) {
             console.log(`Update lat/lon for sight ${sightKey} (${sight.title})`)
-            updatefields(sight, sight.title, 'wikipedia');
+            pending.push(
+                updatefields(sight, sight.title, 'wikipedia')
+            );
         }
         if (badthumbnail(thumbnail)) {
             pending.push(
@@ -299,7 +316,6 @@ Object.keys(sights_json).forEach((sightKey) => {
         pending.push(Promise.resolve());
     }
 });
-
 // #31
 rewrites.forEach((sightName) => {
     console.log(`Sight ${sightName} is notable enough to be upgraded to a destination.`);
@@ -391,10 +407,10 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     const newSights = Array.from(
         new Set(
             place.sights.filter((wb) => {
-                const sight = sights_json[wb].title;
+                const sight = sights_json[wb] && sights_json[wb].title;
                 return sight && !(next[place.title] || []).includes(sight) &&
-                belongsToCountry(sight, place.country) &&
-                (!countries[sight])
+                    belongsToCountry(sight, place.country) &&
+                    (!countries[sight])
             } )
         )
     );
