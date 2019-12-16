@@ -7,7 +7,7 @@ import next from './data/next.json';
 import fetch from 'node-fetch';
 import domino from 'domino';
 import fs from 'fs';
-import { listwithout, getSummary, findClimate } from './utils';
+import { listwithout, getSummary, findClimate, findSights } from './utils';
 
 global.fetch = fetch;
 global.document = domino.createWindow().document;
@@ -113,6 +113,25 @@ function addClimateTo(to) {
             });
         }
     })
+}
+
+function addSightsTo(title) {
+    return findSights(title).then((suggestedsights) => {
+        if ( suggestedsights.length ) {
+            const existingSights = destinations[title].sights;
+            destinations[title].sights = Array.from(new Set(existingSights.concat(suggestedsights)));
+            console.log(`Found and updated sights for ${title}`);
+            suggestedsights.forEach((s) => {
+                if (!sights[s]) {
+                    sights[s] = { title: s };
+                }
+            })
+            save();
+        } else {
+            console.log('Could not find sights data.');
+        }
+        return menu();
+    });
 }
 
 function removeDestination() {
@@ -278,6 +297,7 @@ function menu() {
             '1B: Delete place',
             '1C: Rename place',
             '1D: Add climate data to place',
+            '1E: Add sights to place',
             '2: View sight',
             '2A: Add sight',
             '2B: Remove sight',
@@ -329,6 +349,10 @@ function menu() {
                 case '1D':
                     return getUserInput('Which place?').then(( title ) => {
                         return addClimateTo(title);
+                    })
+                case '1E':
+                    return getUserInput('Which place?').then(( title ) => {
+                        return addSightsTo(title);
                     })
                 case '2':
                     return getUserInput('Which sight (wikibase id)?').then(( title ) => {

@@ -382,3 +382,27 @@ export function findClimate( destination, wikis = [ 'en', 'uk', 'ceb' ], project
         }
     })
 }
+
+export function findSights(title) {
+    const url = `https://en.wikivoyage.org/api/rest_v1/page/mobile-sections/${encodeURIComponent(title)}`;
+    return fetch(url).then((r)=>r.json()).then((data) => {
+        let seeSection;
+        let results = [];
+        data.remaining.sections.forEach((section) => {
+            if (section.toclevel === 1) {
+                seeSection = section.line.toLowerCase().match(/see|do/g);
+            }
+            if (seeSection) {
+                const node = document.createElement('div');
+                node.innerHTML = section.text;
+                results = results.concat(
+                    Array.from(node.querySelectorAll('.listing-sister-icons a')).map((node) => {
+                        const m = node.getAttribute('href').match(/^\/wiki\/D\:(Q.*)$/, '$1');
+                        return m && m[1];
+                    }).filter((m) => m)
+                );
+            }
+        })
+        return Array.from(new Set(results))
+    })
+}
