@@ -369,7 +369,7 @@ export function findClimate( destination, wikis = [ 'en', 'uk', 'ceb' ], project
             return climateExtraction(`${wikicode}.${project}.org`, wtitle).then((climate) => {
                 if ( climate ) {
                     destination.climate = climate;
-                    destination.climate__source = wikicode;
+                    destination.climate__source = wikicode + '.' + project;
                     return true;
                 } else {
                     return tryNextWiki();

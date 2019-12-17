@@ -4,26 +4,15 @@ import countries_json from './data/countries.json';
 import next from './data/next.json';
 const MIN_SIGHTS = 2;
 const MIN_GO_NEXT = 1;
-const MIN_SIGHTS_COUNTRY = 2;
 const MIN_SIGHT_USAGES_TO_BE_POPULAR = 2;
 const MIN_DESTINATIONS_COUNTRY = 4;
 const MIN_DESTINATIONS_CITYLIKE_COUNTRY = 1;
 
 const sightCount = {};
-
 const countries = Object.keys(countries_json)
-Object.keys(countries_json).map((country) => countries_json[country].sights).forEach((sights) => {
-    sights.forEach((sight)=> {
-        if ( !sightCount[sight] ) {
-            sightCount[sight] = 1;
-        } else {
-            sightCount[sight] = sightCount[sight] + 1;
-        }
-    });
-});
 
 Object.keys(destinations_json).map((place) => destinations_json[place].sights).forEach((sights) => {
-    sights.forEach((sight)=> {
+    (sights || []).forEach((sight)=> {
         if ( !sightCount[sight] ) {
             sightCount[sight] = 1;
         } else {
@@ -50,9 +39,6 @@ const lacking_sights = destinations.filter((key) => (destinations_json[key].sigh
 const lacking_gonext = destinations.filter((key) => !next[key] || next[key].length < MIN_GO_NEXT);
 const nosightsnonext = lacking_gonext.filter((title) =>
     no_climate.indexOf(title) > -1 && lacking_sights.indexOf(title) > -1);
-const countrylackingsights = countries.filter((title) => {
-    return (countries_json[title].sights || []).length < MIN_SIGHTS_COUNTRY;
-});
 const countrylackingdestinations = countries.filter((title) => {
     const country = countries_json[title];
     const destinations = (country.destinations || []);
@@ -64,7 +50,6 @@ const unpopularsights = Object.keys(sightCount).filter((sight) => sightCount[sig
 console.log(`Do not have a climate widget: ${no_climate.length}/${destinations.length}`);
 console.log(`Total sights: ${Object.keys(sights_json).length}`);
 console.log(`Destinations lacking sights: ${lacking_sights.length}/${destinations.length}`);
-console.log(`Countries lacking sights: ${countrylackingsights.length}`);
 console.log(`Countries lacking destinations: ${countrylackingdestinations.length}`);
 console.log(`Lacking next: ${lacking_gonext.length}/${destinations.length}`);
 console.log(`Lacking all: ${nosightsnonext.length}`);
@@ -76,8 +61,8 @@ console.log(`Destinations without thumbnail: ${destinationsnothumb.length}`);
 
 export {
     lacking_gonext,
+    no_climate,
     countrylackingdestinations,
-    countrylackingsights,
     unusedsights,
     nosightsnonext
 }

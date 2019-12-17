@@ -320,7 +320,7 @@ function menu() {
                     return getUserInput('Which place or country?').then(( title ) => {
                         const d = countries[title] || destinations[title] || {};
                         Object.keys(d).forEach((key) => {
-                            console.log(`${key}: ${d[key]}`)
+                            console.log(`${key}: ${JSON.stringify(d[key])}`)
                         });
                         return menu();
                     } );

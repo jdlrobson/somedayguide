@@ -170,7 +170,7 @@ export function climateExtractionWikipedia( document, text ) {
 		// try the other known format..
 		climate = climateExtractionNew( nodeWithHTML( document, text ) );
 	}
-	return climate && climate.length ? climate : false;
+	return climate && climate.length && climate[1] ? climate : false;
 }
 
 export function isClimateSection(section) {
@@ -195,7 +195,7 @@ export function climateExtraction(host, from) {
 			if ( climate.length ) {
 				while ( climate.length ) {
 					const climateData = climateExtractionWikipedia( document, climate.pop().text );
-					if ( climateData ) {
+					if ( climateData && climateData[1] ) {
 						return climateData;
 					}
 				}
