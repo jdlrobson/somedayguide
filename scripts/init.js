@@ -55,7 +55,7 @@ destinations.forEach((title) => {
     }
 
     renderPage( `destination/${place.title}.html`, {
-        page_title: `${title} - someday guide to the world`,
+        page_title: `${title} - World Travel Guide - someday you will see it all`,
         url: `https://somedayguide.com/destination/${title}`,
         img: place.thumbnail,
         view: render( <Destination {...place}
