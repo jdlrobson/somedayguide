@@ -14,6 +14,7 @@ import sights_json from './data/sights.json';
 import blogs_json from './data/blogs.json';
 const mustache = require( 'mustache' );
 import { getGithubWikiData, withDistance } from './utils';
+import { no_climate, lacking_sights, lacking_gonext } from './stats';
 const template = fs.readFileSync( __dirname + '/index.mustache' ).toString();
 const MODE = process.env.MODE;
 
@@ -174,6 +175,43 @@ renderPage( 'dashboard.html', {
             </div>
             <div id="dashboard">
                 <noscript>This page requires JavaScript</noscript>
+            </div>
+        </Page>
+    ),
+    description: 'Jon and Linz\'s guide to the world'
+} );
+
+const titleToItem = (t) => <li><a href={`/destination/${t}`}>{t}</a></li>;
+
+// tools
+renderPage( 'tools/summary.html', {
+    page_title: 'Summary',
+    url: 'https://somedayguide.com/',
+    img: 'https://somedayguide.com/images/someday-map.png',
+    view: render(
+        <Page>
+            <div class="note">
+                <h1>Summary</h1>
+            </div>
+            <div>
+                <div class="note">
+                    <h2>No climate data</h2>
+                    {
+                        <ul>{no_climate.map(titleToItem)}</ul>
+                    }
+                </div>
+                <div class="note">
+                    <h2>No sights</h2>
+                    {
+                        <ul>{lacking_sights.map(titleToItem)}</ul>
+                    }
+                </div>
+                <div class="note">
+                    <h2>No go next</h2>
+                    {
+                        <ul>{lacking_gonext.map(titleToItem)}</ul>
+                    }
+                </div>
             </div>
         </Page>
     ),

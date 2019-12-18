@@ -24,45 +24,15 @@ Object.keys(destinations_json).map((place) => destinations_json[place].sights).f
 const unusedsights = Object.keys(sights_json).filter((sight) => {
     return !sightCount[sight];
 });
-const sightsnothumb = Object.keys(sights_json).filter((sight) => {
-    return !sights_json[sight].thumbnail;
-});
-const sightsnolonglat = Object.keys(sights_json).filter((sight) => {
-    return !sights_json[sight].lat && !sights_json[sight].nolat;
-});
 const destinations = Object.keys(destinations_json);
-const destinationsnothumb = destinations.filter((t) => {
-    return !destinations_json[t].thumbnail;
-});
+
 const no_climate = destinations.filter((key) => !destinations_json[key].climate || destinations_json[key].climate.length === 0);
 const lacking_sights = destinations.filter((key) => (destinations_json[key].sights || []).length < MIN_SIGHTS);
 const lacking_gonext = destinations.filter((key) => !next[key] || next[key].length < MIN_GO_NEXT);
-const nosightsnonext = lacking_gonext.filter((title) =>
-    no_climate.indexOf(title) > -1 && lacking_sights.indexOf(title) > -1);
-const countrylackingdestinations = countries.filter((title) => {
-    const country = countries_json[title];
-    const destinations = (country.destinations || []);
-    return country.citylike ?
-        destinations.length < MIN_DESTINATIONS_CITYLIKE_COUNTRY :
-        destinations.length < MIN_DESTINATIONS_COUNTRY;
-});
-const unpopularsights = Object.keys(sightCount).filter((sight) => sightCount[sight] < MIN_SIGHT_USAGES_TO_BE_POPULAR);
-console.log(`Do not have a climate widget: ${no_climate.length}/${destinations.length}`);
-console.log(`Total sights: ${Object.keys(sights_json).length}`);
-console.log(`Destinations lacking sights: ${lacking_sights.length}/${destinations.length}`);
-console.log(`Countries lacking destinations: ${countrylackingdestinations.length}`);
-console.log(`Lacking next: ${lacking_gonext.length}/${destinations.length}`);
-console.log(`Lacking all: ${nosightsnonext.length}`);
-console.log(`Unused sights: ${unusedsights.length}`);
-console.log(`Unpopular sights: ${unpopularsights.length}`);
-console.log(`Sights without thumbnail: ${sightsnothumb.length}`);
-console.log(`Sights without lon/lat: ${sightsnolonglat.length}`);
-console.log(`Destinations without thumbnail: ${destinationsnothumb.length}`);
 
 export {
     lacking_gonext,
     no_climate,
-    countrylackingdestinations,
-    unusedsights,
-    nosightsnonext
+    lacking_sights,
+    unusedsights
 }
