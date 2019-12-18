@@ -61,7 +61,7 @@ function updatewbfields(obj, allclaims) {
         obj.wbcountry = true;
     } else if ( isInstanceOfSight(claims) ) {
         // it's a sight..
-        console.log(`${obj.title} (${obj.wb}) is actually sight.`);
+        console.log(`${obj.title} (${obj.wb}) is a sight.`);
         obj.wbsight = true;
     } else if (
         isInstanceOfCity(claims)
@@ -287,6 +287,7 @@ Object.keys(sights_json).forEach((sightKey) => {
         try {
             fs.unlinkSync(`${__dirname}/data/claims/ed_${sightKey}.json`);
         } catch(e) {}
+        sights_json[sightKey].title = sights_json[sightKey].title
     } else {
         sight.wb = sightKey
         // update any unused sights by associating it with a country
@@ -364,7 +365,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     }
     // https://github.com/jdlrobson/somedayguide/issues/1 #25
     if ( !place.summary || place.summary.indexOf('.mw-parser-output') > -1 ) {
-        console.log(`Bad description in ${place.title}`);
+        console.log(`Bad description in place ${place.title}`, destinationTitle);
         pending.push(
             updatefields(place, place.title, 'wikivoyage')
         );
