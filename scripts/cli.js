@@ -254,7 +254,8 @@ function addNearby(title) {
     const remote = destinations[title].remote;
     const candidates = Object.keys(destinations);
     const near = remote ? getNearbyUntilHave(title, candidates, 5) :
-        getNearby(title, candidates, 100);
+        getNearby(title, candidates, 120);
+
     console.log('Found', near, remote);
     next[title] = Array.from(new Set((next[title] || []).concat(near)));
 }
@@ -319,6 +320,7 @@ function menu() {
             '4A: Add go next',
             '4B: Remove go next',
             '4C: Find go next',
+            '4E: Find go next for all missing go next',
             '5A: Add redirect',
             '6A: Set field',
             '6B: Set image',
@@ -424,6 +426,12 @@ function menu() {
                         return menu();
                     } );
                     break;
+                case '4E':
+                    lacking_gonext.forEach((a) => {
+                        addNearby(a);
+                    })
+                    save();
+                    return menu();
                 case '5A':
                     return addredirect();
                 case '6A':
