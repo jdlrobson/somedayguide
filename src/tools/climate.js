@@ -13,7 +13,7 @@ function fix( num ) {
  * @param {number} val
  * @rturn {string}
  */
-function fromFahrenheitToCelcius( val ) {
+export function fromFahrenheitToCelcius( val ) {
 	return fix( ( val - 32 ) * 5 / 9 );
 }
 
@@ -21,7 +21,7 @@ function fromFahrenheitToCelcius( val ) {
  * @param {number} val
  * @rturn {string}
  */
-function fromInchesToMm( val ) {
+export function fromInchesToMm( val ) {
 	return fix( val / 0.0393700787402 );
 }
 
