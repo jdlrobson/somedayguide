@@ -7,7 +7,9 @@ import next from './data/next.json';
 import fetch from 'node-fetch';
 import domino from 'domino';
 import fs from 'fs';
-import { listwithout, getSummary, findClimate, findSights } from './utils';
+import { lacking_gonext } from './stats';
+import { listwithout, getSummary, findClimate, findSights, getNearby,
+    getNearbyUntilHave } from './utils';
 
 global.fetch = fetch;
 global.document = domino.createWindow().document;
@@ -248,6 +250,15 @@ function addredirect() {
     });
 }
 
+function addNearby(title) {
+    const remote = destinations[title].remote;
+    const candidates = Object.keys(destinations);
+    const near = remote ? getNearbyUntilHave(title, candidates, 5) :
+        getNearby(title, candidates, 100);
+    console.log('Found', near, remote);
+    next[title] = Array.from(new Set((next[title] || []).concat(near)));
+}
+
 function addSight() {
     function addSightTo(place) {
         return getUserInput('Which sight (provide wikibase id)?').then(( sight ) => {
@@ -307,6 +318,7 @@ function menu() {
             '4: Go next',
             '4A: Add go next',
             '4B: Remove go next',
+            '4C: Find go next',
             '5A: Add redirect',
             '6A: Set field',
             '6B: Set image',
@@ -331,6 +343,8 @@ function menu() {
                         } else if ( title ) {
                             feedback(`Pushed "${title}"`);
                             destinations[title] = { title, sights: [] };
+                            save();
+                            addNearby(title);
                             save();
                             return addClimateTo(title);
                         }
@@ -401,6 +415,13 @@ function menu() {
                                     return menu();
                                 });
                         }
+                    } );
+                    break;
+                case '4C':
+                    getUserInput('Which place?').then(( title ) => {
+                        addNearby(title);
+                        save();
+                        return menu();
                     } );
                     break;
                 case '5A':
