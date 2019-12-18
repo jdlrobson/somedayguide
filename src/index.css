@@ -509,7 +509,6 @@ li {
 
 footer.page__column--span {
     background:white;
-    grid-column: 2/3;
     padding: 8px;
     font-size: .8em;
     color: #444;
@@ -517,6 +516,9 @@ footer.page__column--span {
 }
 
 @media all and (min-width: 1000px) {
+    footer.page__column--span {
+        grid-column: 2/3;
+    }
     .page {
         grid-template-columns: 250px 500px 250px;
         width: 1000px; /* add grid template columns together*/
