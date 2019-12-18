@@ -231,6 +231,7 @@ Object.keys(sights_json).forEach((sightKey) => {
     }
     // Is the title still set to the q code?
     if (sight.title === sightKey) {
+        console.log('sight link', sightKey);
         pending.push(
             getSiteLink(sightKey, 'enwiki').then((wikipedia) => {
                 if ( wikipedia ) {
@@ -287,7 +288,7 @@ Object.keys(sights_json).forEach((sightKey) => {
         try {
             fs.unlinkSync(`${__dirname}/data/claims/ed_${sightKey}.json`);
         } catch(e) {}
-        sights_json[sightKey].title = sights_json[sightKey].title
+        sights_json[sightKey].title = sightKey;
     } else {
         sight.wb = sightKey
         // update any unused sights by associating it with a country
@@ -480,7 +481,7 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
     } else if ( place.wbsight && place.country ) {
         // Fixes: https://github.com/jdlrobson/somedayguide/issues/10
         delete place.wbsight;
-        sights_json[destinationTitle] = place;
+        sights_json[place.wb] = place;
         delete destinations[destinationTitle];
         // push it here so we can find a destination later..
         countrySights[place.country].push(place.title);
