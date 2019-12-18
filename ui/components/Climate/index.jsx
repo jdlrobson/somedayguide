@@ -1,4 +1,4 @@
-import preact from 'preact';
+import preact, { h } from 'preact';
 
 class Climate extends preact.Component {
 	renderInfo() {

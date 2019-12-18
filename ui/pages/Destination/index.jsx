@@ -36,6 +36,9 @@ export default function ( props ) {
                 thumbnail={sight.thumbnail && sight.thumbnail.replace(/[0-9]+px/, '400px')}
                 href={sight.nowikipedia ? `https://wikidata.org/wiki/${sight.wb}`
                     : `https://en.wikipedia.org/wiki/${sight.title}`}/>)}
+        </Box>,
+        <Box title={`Nature`} id="nature">
+        <button>Connect with nature</button>
         </Box>
     ];
 

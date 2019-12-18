@@ -84,6 +84,22 @@ const slideshow = document.querySelector('.slideshow');
 if ( slideshow ) {
     setupSlideshow(slideshow);
 }
+
+const nature = document.querySelector('#nature button');
+function setupNature(btn) {
+    btn.addEventListener('click', function () {
+        loadJS('/inat.js');
+    });
+    // load after 5s.
+    setTimeout(function () {
+        loadJS('/inat.js');
+    }, 5000);
+}
+
+if ( nature ) {
+    setupNature(nature);
+}
+
 if('serviceWorker' in navigator) {
     console.log('go');
     navigator.serviceWorker

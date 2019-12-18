@@ -35,6 +35,7 @@
     "preact": "10.0.0",
     "preact-render-to-string": "5.0.6",
     "rollup": "1.25.2",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-postcss": "2.0.3",
