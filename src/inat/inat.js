@@ -30,7 +30,6 @@ fetch(`https://api.inaturalist.org/v1/observations/?${qs}&per_page=100&out_of_ra
                 return a.community_taxon_id === res.community_taxon_id;
             }) === i;
         })
-        console.log(unique.length, json.results.length)
         const observations = unique.map((observation) => {
             try {
                 return {
@@ -47,6 +46,3 @@ fetch(`https://api.inaturalist.org/v1/observations/?${qs}&per_page=100&out_of_ra
                 <a target='_blank' href={url}><img src={src} alt={alt} title={alt}/></a>)}
         </ul>, container);
     })
-
-
-console.log(bb);
