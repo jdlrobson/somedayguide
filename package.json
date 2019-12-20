@@ -44,11 +44,11 @@
   "bundlesize": [
     {
       "path": "public/index.css",
-      "maxSize": "5.3KB"
+      "maxSize": "5.4KB"
     },
     {
       "path": "public/index.js",
-      "maxSize": "1.9KB"
+      "maxSize": "2.7KB"
     },
     {
       "path": "public/map.js",
@@ -56,7 +56,11 @@
     },
     {
       "path": "public/search.js",
-      "maxSize": "1.1KB"
+      "maxSize": "1.2KB"
+    },
+    {
+      "path": "public/inat.js",
+      "maxSize": "3.8KB"
     },
     {
       "path": "public/sw.js",
@@ -64,7 +68,7 @@
     },
     {
       "path": "public/index.json",
-      "maxSize": "13.9KB"
+      "maxSize": "14.3KB"
     },
     {
       "path": "public/index--sights.json",
