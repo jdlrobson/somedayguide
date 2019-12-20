@@ -62,28 +62,59 @@ document.querySelector('.map__launch-icon').addEventListener('click', function (
     }
 });
 
-function setupSlideshow(slideshow) {
+function setupSlideshow(slideshow, handleCarousel) {
+    const childNodes = Array.from(slideshow.childNodes);
+    childNodes.slice(1).forEach((node) => { node.style.display = 'none'; })
+    let range = childNodes.length;
+    let index = 0;
+    let lastIndex = 0;
+    const normalise = () => {
+        if (index > range - 1) {
+            index = 0;
+        }
+        if (index < 0) {
+            index = range - 1;
+        }
+    };
     const leftArrow = document.createElement('div');
     leftArrow.setAttribute('class', 'slideshow__arrow--left');
     const rightArrow = document.createElement('div');
     rightArrow.setAttribute('class', 'slideshow__arrow--right');
     slideshow.prepend(leftArrow);
     slideshow.appendChild(rightArrow);
-    const data = document.querySelector('.map__launch-icon').dataset;
-    const handleCarousel = carouselClickhandler(
-        document.querySelector('.slideshow__slide'),
-        data.lat, data.lon, slideshow.dataset.commons
-    );
-    leftArrow.addEventListener('click', handleCarousel);
-    rightArrow.addEventListener('click', handleCarousel);
+    leftArrow.addEventListener('click', (ev) => {
+        lastIndex = index;
+        index--;
+        normalise(index);
+        handleCarousel(ev, childNodes[lastIndex], childNodes[index]);
+    });
+    rightArrow.addEventListener('click', (ev) => {
+        lastIndex = index;
+        index++;
+        normalise(index);
+        handleCarousel(ev, childNodes[lastIndex], childNodes[index]);
+    });
+}
+
+function setupCommonsSlideshow(slideshow) {
+    if ( slideshow ) {
+        const data = document.querySelector('.map__launch-icon').dataset;
+        const handleCarousel = carouselClickhandler(
+            slideshow.querySelector('.slideshow__slide'),
+            data.lat, data.lon, slideshow.dataset.commons
+        );
+        setupSlideshow(slideshow, handleCarousel);
+    }
 }
 
 localediting();
-
-const slideshow = document.querySelector('.slideshow');
-if ( slideshow ) {
-    setupSlideshow(slideshow);
-}
+setupCommonsSlideshow(document.querySelector('.slideshow--commons'));
+document.querySelectorAll('.slideshow--ig').forEach((node) => {
+    setupSlideshow(node, function (ev, lastNode, node) {
+        lastNode.style.display = 'none';
+        node.style.display = 'block';
+    })
+})
 
 const nature = document.querySelector('#nature button');
 function setupNature(btn) {
@@ -101,7 +132,6 @@ if ( nature ) {
 }
 
 if('serviceWorker' in navigator) {
-    console.log('go');
     navigator.serviceWorker
              .register('/sw.js')
              .then(function() { console.log("Service Worker Registered"); });

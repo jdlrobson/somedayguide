@@ -4,6 +4,7 @@ import Box from '../../components/Box';
 import Card from '../../components/Card';
 import InstagramEmbed from '../../components/InstagramEmbed';
 import Slideshow from '../../components/Slideshow';
+import CommonsSlideshow from '../../components/Slideshow/CommonsSlideshow';
 
 export default function ( props ) {
     const { summary, airports = [], sights = [], links = [], personalNote, blogs = [],
@@ -11,9 +12,9 @@ export default function ( props ) {
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
-        <Slideshow
+        <CommonsSlideshow
             commons={commons}
-            slides={[{ src: thumbnail, href: thumbnail__source } ]}></Slideshow>,
+            slides={[{ src: thumbnail, href: thumbnail__source } ]}></CommonsSlideshow>,
         neighbors && <Box title="Nearby countries">
             {neighbors.map((country) =><Card modifier="condensed" {...country}/> )}
         </Box>,
@@ -66,11 +67,12 @@ export default function ( props ) {
                     <Card modifier="note" {...blog}/>)
             }
             </div>
-            <div class="note">
             {(instagram.length > 0) &&
                 <h4 class="note__heading">Our Instagrams</h4>}
-                {instagram && instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
-            </div>
+            {instagram.length > 0 &&
+                <Slideshow className="slideshow--ig">{
+                instagram.map((id) => <InstagramEmbed className="slideshow__slide"/>)
+            }</Slideshow>}
         </Page>
     );
 };

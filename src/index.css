@@ -428,6 +428,19 @@ li {
     height: 240px;
 }
 
+.slideshow--ig {
+    width: 100%;
+    max-width: 474px;
+    background: transparent;
+    margin: auto;
+    height: 800px;
+}
+
+.slideshow--ig .slideshow__arrow--left,
+.slideshow--ig .slideshow__arrow--right {
+    height: 30%;
+}
+
 .slideshow__slide {
     background-repeat: no-repeat;
     background-size: cover;
@@ -537,7 +550,6 @@ footer.page__column--span {
     .card-grid {
         grid-template-columns: repeat(2,1fr);
     }
-    .slideshow,
     .page__column--one,
     .page__column--three,
     .card__thumb--card-grid,

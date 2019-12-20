@@ -3,6 +3,7 @@ import Page from '../Page';
 import Box from '../../components/Box';
 import Card from '../../components/Card';
 import Slideshow from '../../components/Slideshow';
+import CommonsSlideshow from '../../components/Slideshow/CommonsSlideshow';
 import InstagramEmbed from '../../components/InstagramEmbed';
 import Climate from '../../components/Climate';
 
@@ -16,7 +17,7 @@ export default function ( props ) {
             slides = thumbnail ? [{ src: thumbnail, href: thumbnail__source } ] : [];
 
     const childrenRight = [
-        <Slideshow slides={slides} commons={commons}></Slideshow>,
+        <CommonsSlideshow slides={slides} commons={commons}></CommonsSlideshow>,
         <Box title="Climate">
             <Climate data={climate && climate.length ? climate : undefined} />
         </Box>,
@@ -61,12 +62,12 @@ export default function ( props ) {
                     <Card modifier="note" {...blog}/>)
             }
             </div>
-            <div class="note">
             {(instagram.length > 0 || sightInstagrams.length > 0) &&
                 <h4 class="note__heading">Our Instagrams</h4>}
-            {instagram.length > 0 && instagram.map((id) => <InstagramEmbed id={id} />)}
-            {sightInstagrams.map((id) => <InstagramEmbed id={id} />)}
-            </div>
+            {instagram.length > 0 &&
+                <Slideshow className="slideshow--ig">{
+                instagram.concat( sightInstagrams ).map((id) => <InstagramEmbed id={id} className="slideshow__slide"/>)
+            }</Slideshow>}
         </Page>
     );
 };
