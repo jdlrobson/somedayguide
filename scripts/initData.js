@@ -410,7 +410,10 @@ Object.keys(destinations).forEach(( destinationTitle ) => {
         new Set(
             place.sights.filter((wb) => {
                 const sight = sights_json[wb] && sights_json[wb].title;
+                const d = sight && calculateDistance(sights_json[wb], place);
                 return sight && !(next[place.title] || []).includes(sight) &&
+                    // don't use sights
+                    ( !d || d <  150 ) &&
                     belongsToCountry(sight, place.country) &&
                     (!countries[sight])
             } )
