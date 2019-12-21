@@ -311,9 +311,13 @@ li {
     margin: 2px 0 0;
     text-transform: initial;
     overflow: hidden;
-    line-height: 12px;
-    max-height: 71px;
+    line-height: 18px;
+    max-height: 80px;
     position: relative;
+}
+
+.card__text__summary--condensed {
+    max-height: 56px;
 }
 
 .card__text__heading {
