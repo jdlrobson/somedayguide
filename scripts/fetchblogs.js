@@ -5,7 +5,13 @@ import countries_json from './data/countries.json';
 import destinations_json from './data/destinations.json';
 
 function cleanup(str) {
-    return str.replace(/&#8211;/g, '–').replace('<p>', '').replace('</p>', '');
+    return str.replace(/&#8211;/g, '–').replace('<p>', '').replace('</p>', '')
+        .replace(/&nbsp;/g, '')
+        .replace(/&#8217;/g, '\'')
+        .replace(/&#8220;/g, '“')
+        .replace(/&#8221;/g, '”')
+        .replace(/&#8217;/,'\'')
+        .replace(/&#8230;/g, '…').replace('[&hellip;]', '');
 }
 let updates = 0;
 fetch('https://public-api.wordpress.com/rest/v1.1/sites/somedaywewillseetheworld.wordpress.com/posts/?order_by=modified')
