@@ -39,7 +39,7 @@ function fetchTitleSections(title) {
     return fetch(url).then((r)=>r.text()).then((text) => {
         const d = document.createElement('div');
         d.innerHTML = text;
-        removeNodes(d, '.mw-kartographer-maplink, figure, dl');
+        removeNodes(d, '.mw-kartographer-maplink, figure, dl, style');
         removeRelativeLinks(d);
         const sections = Array.from ( d.childNodes ).filter((n) => n.tagName === 'SECTION');
         return Array.from(sections);

@@ -1,7 +1,3 @@
-.note--magnet {
-    position: relative;
-}
-
 .body--admin-enabled .card__personal-note-flag,
 .body--admin-enabled .card__blog-flag {
     display: block;
@@ -22,10 +18,6 @@
     background: yellow;
     color: red;
     right: 40px;
-}
-
-.note--magnet:after {
-    /* @todo: a nice pin!*/
 }
 
 .overlay {
@@ -128,6 +120,14 @@
 .subsectiontabs__edit {
     margin-top: 10px;
     display: block;
+}
+
+.somedaynote ul {
+    margin-left: 20px;
+}
+
+.somedaynote ul li {
+    list-style: disc;
 }
 
 @media all and (min-width: 1000px) {

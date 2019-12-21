@@ -3,6 +3,7 @@ import Page from '../Page';
 import Box from '../../components/Box';
 import Card from '../../components/Card';
 import Slideshow from '../../components/Slideshow';
+import Note from '../../components/Note';
 import CommonsSlideshow from '../../components/Slideshow/CommonsSlideshow';
 import InstagramEmbed from '../../components/InstagramEmbed';
 import Climate from '../../components/Climate';
@@ -47,41 +48,41 @@ export default function ( props ) {
         <Page title={title} lat={lat} lon={lon} parent={country} wikibase={wb}
             parentLink={`/country/${country}`}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
-            <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
-            {personalNote &&<div class="note">
+            <Note><div dangerouslySetInnerHTML={ { __html: summary } } /></Note>
+            {personalNote && <Note>
                 <h4 class="note__heading">Personal note</h4>
                 <div dangerouslySetInnerHTML={ { __html: personalNote } } />
-            </div>}
-            <div class="note note--private" id="local-edit">
+            </Note>}
+            <Note isprivate={true} id="local-edit">
                 <p contentEditable>What's on your mind?</p>
-            </div>
-            <div class="note">
+            </Note>
+            <Note>
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
             {blogs.length > 0 &&
                 blogs.map((blog) =>
                     <Card modifier="note" {...blog}/>)
             }
-            </div>
+            </Note>
             {(instagram.length > 0 || sightInstagrams.length > 0) &&
                 <h4 class="note__heading">Our Instagrams</h4>}
             {instagram.length > 0 &&
                 <Slideshow className="slideshow--ig">{
                 instagram.concat( sightInstagrams ).map((id) => <InstagramEmbed id={id} className="slideshow__slide"/>)
             }</Slideshow>}
-            <div class="note">
+            <Note>
                 <h4 class="note__heading">Information for getting there</h4>
                 <div id="get-in">
                     <p>When someday comes you'll need to get in.</p>
                     <button class="note__button">View information</button>
                 </div>
-            </div>
-            <div class="note">
+            </Note>
+            <Note>
                 <h4 class="note__heading">Information for getting around</h4>
                 <div id="get-around">
                     <p>When someday comes you'll need to be able to get around.</p>
                     <button class="note__button">View information</button>
                 </div>
-            </div>
+            </Note>
         </Page>
     );
 };

@@ -4,6 +4,7 @@ import Box from '../../components/Box';
 import Card from '../../components/Card';
 import InstagramEmbed from '../../components/InstagramEmbed';
 import Slideshow from '../../components/Slideshow';
+import Note from '../../components/Note';
 import CommonsSlideshow from '../../components/Slideshow/CommonsSlideshow';
 
 export default function ( props ) {
@@ -52,21 +53,21 @@ export default function ( props ) {
     return (
         <Page title={title} lat={lat} lon={lon} zoom={5} wikibase={wb}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
-            <div class="note" dangerouslySetInnerHTML={ { __html: summary } } />
-            {personalNote &&<div class="note">
+            <Note><div dangerouslySetInnerHTML={ { __html: summary } } /></Note>
+            {personalNote && <Note>
                 <h4 class="note__heading">Personal note</h4>
                 <div dangerouslySetInnerHTML={ { __html: personalNote } } />
-            </div>}
-            <div class="note note--private" id="local-edit">
+            </Note>}
+            <Note isprivate={true} id="local-edit">
                 <p contentEditable>What's on your mind?</p>
-            </div>
-            <div class="note">
+            </Note>
+            <Note>
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
             {blogs.length > 0 &&
                 blogs.map((blog) =>
                     <Card modifier="note" {...blog}/>)
             }
-            </div>
+            </Note>
             {(instagram.length > 0) &&
                 <h4 class="note__heading">Our Instagrams</h4>}
             {instagram.length > 0 &&
