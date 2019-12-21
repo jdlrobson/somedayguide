@@ -256,7 +256,7 @@ function addNearby(title) {
     const near = remote ? getNearbyUntilHave(title, candidates, 5) :
         getNearby(title, candidates, 120);
 
-    console.log('Found', near, remote);
+    console.log('Found', title, near, remote);
     next[title] = Array.from(new Set((next[title] || []).concat(near)));
 }
 
@@ -332,7 +332,17 @@ function menu() {
             switch ( val ) {
                 case '1':
                     return getUserInput('Which place or country?').then(( title ) => {
-                        const d = countries[title] || destinations[title] || {};
+                        const c = countries[title] || {};
+                        const d = destinations[title] || {};
+                        if (c) {
+                            console.log('\n# Country:\n')
+                        }
+                        Object.keys(c).forEach((key) => {
+                            console.log(`${key}: ${JSON.stringify(c[key])}`)
+                        });
+                        if (d) {
+                            console.log('\n# Place:\n')
+                        }
                         Object.keys(d).forEach((key) => {
                             console.log(`${key}: ${JSON.stringify(d[key])}`)
                         });
