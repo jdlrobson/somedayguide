@@ -121,6 +121,15 @@
     transform: rotate(90deg);
 }
 
+.subsectiontabs__tabs {
+    margin-bottom: 20px;
+}
+
+.subsectiontabs__edit {
+    margin-top: 10px;
+    display: block;
+}
+
 @media all and (min-width: 1000px) {
     .overlay__content {
         width: 500px;

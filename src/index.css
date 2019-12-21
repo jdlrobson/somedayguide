@@ -397,6 +397,20 @@ li {
     margin: 0 0 10px;
 }
 
+.note__button {
+    background: linear-gradient(to bottom, #009b90 5%, #00ab9f 100%);
+    background-color: #00ab9f;
+    border-radius: 8px;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin: 3px 0;
+}
+
 .box__title {
     border-bottom: 1px solid #ccc;
     font-size: .8em;

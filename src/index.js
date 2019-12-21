@@ -5,9 +5,13 @@ import searchindex from './searchindex.js';
 import { show, hide, titleToLink } from './components/utils';
 import './index--js.css';
 import carouselClickhandler from './carousel/carousel.js';
+import { h, render } from 'preact';
+import inat from './inat/inat.js';
+import { loadWikivoyageSection } from './wikivoyage';
 
 let maploaded = false;
 let mapdisplayed = false;
+const title = document.querySelector('.map__overlay__page-title').textContent;
 
 // Setup climate
 document.querySelectorAll('.climate__select').forEach( function ( climate ) {
@@ -117,19 +121,22 @@ document.querySelectorAll('.slideshow--ig').forEach((node) => {
 })
 
 const nature = document.querySelector('#nature button');
-function setupNature(btn) {
-    btn.addEventListener('click', function () {
-        loadJS('/inat.js');
-    });
-    // load after 5s.
-    setTimeout(function () {
-        loadJS('/inat.js');
-    }, 5000);
-}
+const getin = document.querySelector('#get-in');
+const getaround = document.querySelector('#get-around');
 
 if ( nature ) {
-    setupNature(nature);
+    nature.addEventListener('click', function () {
+        inat();
+    });
 }
+
+getin.querySelector('button').addEventListener('click', () => {
+    loadWikivoyageSection(getin, title, /get in/);
+});
+
+getaround.querySelector('button').addEventListener('click', () => {
+    loadWikivoyageSection(getaround, title, /get around/);
+});
 
 if('serviceWorker' in navigator) {
     navigator.serviceWorker

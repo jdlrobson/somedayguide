@@ -39,7 +39,7 @@ export default function ( props ) {
                     : `https://en.wikipedia.org/wiki/${sight.title}`}/>)}
         </Box>,
         <Box title={`Nature`} id="nature">
-        <button>Connect with nature</button>
+        <button class="note__button">Connect with nature</button>
         </Box>
     ];
 
@@ -68,6 +68,20 @@ export default function ( props ) {
                 <Slideshow className="slideshow--ig">{
                 instagram.concat( sightInstagrams ).map((id) => <InstagramEmbed id={id} className="slideshow__slide"/>)
             }</Slideshow>}
+            <div class="note">
+                <h4 class="note__heading">Information for getting there</h4>
+                <div id="get-in">
+                    <p>When someday comes you'll need to get in.</p>
+                    <button class="note__button">View information</button>
+                </div>
+            </div>
+            <div class="note">
+                <h4 class="note__heading">Information for getting around</h4>
+                <div id="get-around">
+                    <p>When someday comes you'll need to be able to get around.</p>
+                    <button class="note__button">View information</button>
+                </div>
+            </div>
         </Page>
     );
 };

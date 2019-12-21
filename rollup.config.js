@@ -20,6 +20,7 @@ const pluginsjsonly = [
 
 const pluginsindex = [
     resolve(RESOLVEOPTIONS),
+    babel(),
     commonjs(),
     postcss({extract: true, minimize: true})
 ];
@@ -48,14 +49,6 @@ export default [
     },
     {
         input: 'src/sw.js',
-        plugins: pluginsjsonly,
-        output: {
-            format: 'iife',
-            dir: 'public/'
-        }
-    },
-    {
-        input: 'src/inat/inat.js',
         plugins: pluginsjsonly,
         output: {
             format: 'iife',

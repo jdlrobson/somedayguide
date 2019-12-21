@@ -44,11 +44,11 @@
   "bundlesize": [
     {
       "path": "public/index.css",
-      "maxSize": "5.4KB"
+      "maxSize": "5.5KB"
     },
     {
       "path": "public/index.js",
-      "maxSize": "2.7KB"
+      "maxSize": "6.8KB"
     },
     {
       "path": "public/map.js",
