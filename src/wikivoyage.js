@@ -1,4 +1,5 @@
 import { render, h } from 'preact';
+import searchindex from './searchindex';
 
 let wikivoyagesections;
 
@@ -10,12 +11,18 @@ function removeNodes(node, selector) {
     })
 }
 
-function removeRelativeLinks(node) {
+function removeRelativeLinks(node, index) {
     Array.from(node.querySelectorAll('a[rel="mw:WikiLink"]')).forEach((node) => {
         if (node.parentNode) {
-            const newNode = document.createElement('span');
-            newNode.innerHTML = node.innerHTML;
-            node.parentNode.replaceChild(newNode, node);
+            const href = node.getAttribute('href');
+            const title = href.split('./')[1];
+            if ( title && index.includes(title.toLowerCase()) ) {
+                node.setAttribute('href', `/destination/${title}`);
+            } else {
+                const newNode = document.createElement('span');
+                newNode.innerHTML = node.innerHTML;
+                node.parentNode.replaceChild(newNode, node);
+            }
         }
     })
 }
@@ -36,11 +43,11 @@ function fetchTitleSections(title) {
     if ( wikivoyagesections ) {
         return Promise.resolve( wikivoyagesections );
     }
-    return fetch(url).then((r)=>r.text()).then((text) => {
+    return Promise.all([fetch(url).then((r)=>r.text()), searchindex()]).then(([text, index]) => {
         const d = document.createElement('div');
         d.innerHTML = text;
         removeNodes(d, '.mw-kartographer-maplink, figure, dl, style');
-        removeRelativeLinks(d);
+        removeRelativeLinks(d, index);
         const sections = Array.from ( d.childNodes ).filter((n) => n.tagName === 'SECTION');
         return Array.from(sections);
     }).then((sections) => {
