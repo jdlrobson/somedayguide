@@ -293,8 +293,6 @@ li {
 .card__text--note,
 .card__text--condensed {
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .card__personal-note-flag,
@@ -314,13 +312,28 @@ li {
     text-transform: initial;
 }
 
-.card__text__summary,
 .card__text__heading {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.card__text__summary {
+    overflow: hidden;
+    line-height: 1.2;
+    max-height: 71px;
+    position: relative;
+}
+
+.card__text__summary:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 84px;
+    height: 15px;
+    background-image: linear-gradient(to right,rgba(255,255,255,0), rgb(255, 255, 255));
+}
 
 .card__text__summary--note,
 .card__text__summary--condensed {
@@ -349,7 +362,7 @@ li {
     box-sizing: border-box;
     flex: 1 0 auto;
     margin: 0;
-    height: 80px;
+    height: 140px;
     position: relative;
     width: 100%;
     border: 1px solid rgba(0,0,0,.2);
