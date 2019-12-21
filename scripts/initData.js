@@ -167,7 +167,7 @@ Object.keys(next).forEach((key) => {
     });
     const knownDestinations = newSet.filter((place) => destinations[place] !== undefined);
     const place = destinations[key];
-    if ( place && !place.remote && newSet.length !== next[key].length) {
+    if ( place && !place.remote && newSet.length !== next[key].length && newSet.length) {
         next[key] = newSet;
         pending.push(Promise.resolve());
         console.log(`Remove duplicates and far away places in go next for ${key}`);
