@@ -1,6 +1,10 @@
 import { render, h } from 'preact';
 import searchindex from './searchindex';
 
+const SELECTOR_OF_NODES_TO_DELETE = [
+    '.mw-kartographer-maplink', 'figure', 'dl', 'style',
+    '.mw-kartographer-container',
+].join(',');
 let wikivoyagesections;
 
 function removeNodes(node, selector) {
@@ -15,8 +19,8 @@ function removeRelativeLinks(node, index) {
     Array.from(node.querySelectorAll('a[rel="mw:WikiLink"]')).forEach((node) => {
         if (node.parentNode) {
             const href = node.getAttribute('href');
-            const title = href.split('./')[1];
-            if ( title && index.includes(title.toLowerCase()) ) {
+            const title = (href.split('./')[1] || '').replace(/_/g, ' ').toLowerCase();
+            if ( title && index.includes(title) ) {
                 node.setAttribute('href', `/destination/${title}`);
             } else {
                 const newNode = document.createElement('span');
@@ -46,7 +50,7 @@ function fetchTitleSections(title) {
     return Promise.all([fetch(url).then((r)=>r.text()), searchindex()]).then(([text, index]) => {
         const d = document.createElement('div');
         d.innerHTML = text;
-        removeNodes(d, '.mw-kartographer-maplink, figure, dl, style');
+        removeNodes(d, SELECTOR_OF_NODES_TO_DELETE);
         removeRelativeLinks(d, index);
         const sections = Array.from ( d.childNodes ).filter((n) => n.tagName === 'SECTION');
         return Array.from(sections);
@@ -76,14 +80,20 @@ function fetchTitleSections(title) {
     });
 }
 
-function renderSection(node, section, subsection) {
+function editLink(title, id) {
+    const url  =`https://en.wikivoyage.org/wiki/${title}?action=edit${id ? `&section=${id}` : ''}`;
+    return <a class="subsectiontabs__edit"
+        href={url}>Edit on Wikivoyage</a>;
+}
+
+function renderSection(node, title, section, subsection) {
     let view;
     const html = section.html;
     const subsections = section.subsections;
     const loadedSubSection = subsections.filter((s)=>s.title === subsection)[0];
-    const btnClick = (title) => {
+    const btnClick = (sectiontitle) => {
         return () => {
-            renderSection(node, section, title)
+            renderSection(node, title, section, sectiontitle)
         };
     };
 
@@ -97,13 +107,17 @@ function renderSection(node, section, subsection) {
                 <div>
                     {!loadedSubSection && <p>Click a tab to view information.</p>}
                     {loadedSubSection && <div dangerouslySetInnerHTML={{__html: loadedSubSection.html}} />}
-                    {loadedSubSection && <a class="subsectiontabs__edit"
-                        href={`https://en.wikivoyage.org/wiki/Barcelona?action=edit&section=${loadedSubSection.id}`}>Edit on Wikivoyage</a>}
+                    {loadedSubSection && editLink(title, loadedSubSection.id)}
                 </div>
             </div>
         );;
     } else {
-        view = <div dangerouslySetInnerHTML={{__html: html}} />;
+        view = (
+            <div>
+                <div dangerouslySetInnerHTML={{__html: html}} />
+                {editLink(title, section.id)}
+            </div>
+        );
     }
     render(view, node)
 }
@@ -114,7 +128,7 @@ export function loadWikivoyageSection(node, title, regex) {
     fetchTitleSections(title).then((sections) => {
         const getinsections = sections.filter((s) => s.title && s.title.toLowerCase().match(regex));
         if (getinsections[0]) {
-            renderSection(node, getinsections[0]);
+            renderSection(node, title, getinsections[0]);
         }
     });
 }
