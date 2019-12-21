@@ -310,6 +310,10 @@ li {
     padding-right: .2em;
     margin: 2px 0 0;
     text-transform: initial;
+    overflow: hidden;
+    line-height: 12px;
+    max-height: 71px;
+    position: relative;
 }
 
 .card__text__heading {
@@ -318,11 +322,10 @@ li {
     text-overflow: ellipsis;
 }
 
-.card__text__summary {
+.card--card-grid .card__text__summary {
+    max-height: auto;
+    white-space: nowrap;
     overflow: hidden;
-    line-height: 1.2;
-    max-height: 71px;
-    position: relative;
 }
 
 .card__text__summary:before {
@@ -333,6 +336,10 @@ li {
     width: 84px;
     height: 15px;
     background-image: linear-gradient(to right,rgba(255,255,255,0), rgb(255, 255, 255));
+}
+
+.card--card-grid .card__text__summary:before {
+    background-image: linear-gradient(to right,rgba(255,255,255,0), #00ab9f);
 }
 
 .card__text__summary--note,
