@@ -68,8 +68,10 @@ export default function ( props ) {
                     <Card modifier="note" {...blog}/>)
             }
             </Note>
+            <Note>
             {(instagram.length > 0) &&
                 <h4 class="note__heading">Our Instagrams</h4>}
+            </Note>
             {instagram.length > 0 &&
                 <Slideshow className="slideshow--ig">{
                 instagram.map((id) => <InstagramEmbed className="slideshow__slide"/>)
