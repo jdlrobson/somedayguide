@@ -40,6 +40,7 @@ export function empty(node) {
 export function accentFold(str) {
     return str.replace(/[éēěè]/g, 'e' )
         .replace(/[àāǎáã]/g, 'a' )
+        .replace(/ñ/g, 'n')
         .replace(/[ǒóōòô]/g, 'o' )
         .replace(/[ūǚúùǔ]/g, 'u' )
         .replace(/[īìíǐ]/g, 'i' );
