@@ -130,13 +130,17 @@ if ( nature ) {
     });
 }
 
-getin.querySelector('button').addEventListener('click', () => {
-    loadWikivoyageSection(getin, title, /get in/);
-});
+if (getin) {
+    getin.querySelector('button').addEventListener('click', () => {
+        loadWikivoyageSection(getin, title, /get in/);
+    });
+}
 
-getaround.querySelector('button').addEventListener('click', () => {
-    loadWikivoyageSection(getaround, title, /get around/);
-});
+if (getaround) {
+    getaround.querySelector('button').addEventListener('click', () => {
+        loadWikivoyageSection(getaround, title, /get around/);
+    });
+}
 
 if('serviceWorker' in navigator) {
     navigator.serviceWorker
