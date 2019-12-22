@@ -64,7 +64,7 @@ export default function ( props ) {
             }
             </Note>
             {(instagram.length > 0 || sightInstagrams.length > 0) &&
-                <h4 class="note__heading">Our Instagrams</h4>}
+                <Note><h4 class="note__heading">Our Instagrams</h4></Note>}
             {instagram.length > 0 &&
                 <Slideshow className="slideshow--ig">{
                 instagram.concat( sightInstagrams ).map((id) => <InstagramEmbed id={id} className="slideshow__slide"/>)
