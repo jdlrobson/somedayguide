@@ -28,6 +28,7 @@
     bottom: 0;
     z-index: 2;
 }
+
 .overlay__mask {
     opacity: .2;
     background: black;
@@ -128,6 +129,13 @@
 
 .somedaynote ul li {
     list-style: disc;
+}
+
+@media all and (min-width: 500px) {
+    .overlay--search {
+        width: 500px;
+        margin: auto;
+    }
 }
 
 @media all and (min-width: 1000px) {
