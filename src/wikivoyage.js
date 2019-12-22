@@ -31,15 +31,15 @@ function removeRelativeLinks(node, index) {
     })
 }
 function getSubSections(sectionNode) {
-    const subsections = Array.from (sectionNode.querySelectorAll('section'));
+    const subsections = Array.from(sectionNode.querySelectorAll('section'));
     return subsections.map((s) => {
-        const heading = s.querySelector('h3,h4,h5,h6');
+        const heading = s.querySelector('h3');
         return {
             title: heading && heading.textContent,
             id: s.getAttribute( 'data-mw-section-id' ),
             html: s.innerHTML
         };
-    });
+    }).filter((t)=>t.title);
 }
 
 function fetchTitleSections(title) {
