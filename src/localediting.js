@@ -33,7 +33,7 @@ function renderDashboard(notes) {
     if (dashboard) {
         notes.forEach((uri) => {
             const node = document.createElement('div');
-            node.setAttribute('class', 'note');
+            node.setAttribute('class', 'somedaynote');
             const split = uri.split('/');
             const del = document.createElement('button');
             del.textContent = 'delete';
