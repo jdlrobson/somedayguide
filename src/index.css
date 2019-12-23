@@ -198,6 +198,10 @@ li {
     left: 20px;
 }
 
+.offline .map__launch-icon {
+    display: none;
+}
+
 .map__search {
     color: #00ab9f;
     font-family: sans-serif;

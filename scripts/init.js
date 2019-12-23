@@ -6,6 +6,7 @@ import Page from '../ui/pages/Page';
 import Destination from '../ui/pages/Destination';
 import SummaryPage from '../ui/pages/SummaryPage';
 import DashboardPage from '../ui/pages/DashboardPage';
+import OfflinePage from '../ui/pages/OfflinePage';
 import Country from '../ui/pages/Country';
 import NotFound from '../ui/pages/NotFound';
 import places_json from './data/destinations.json';
@@ -184,6 +185,16 @@ renderPage( 'tools/summary.html', {
     img: 'https://somedayguide.com/images/someday-map.png',
     view: render(
         <SummaryPage {...{ no_climate, lacking_sights, lacking_gonext }} />
+    ),
+    description: 'Jon and Linz\'s guide to the world'
+} );
+
+renderPage( 'offline.html', {
+    page_title: 'Offline',
+    url: 'https://somedayguide.com/',
+    img: 'https://somedayguide.com/images/someday-map.png',
+    view: render(
+        <OfflinePage />
     ),
     description: 'Jon and Linz\'s guide to the world'
 } );

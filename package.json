@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "http-server public/",
-    "assets": "export MODE=production && rollup -c",
+    "assets": "export MODE=production && export CACHE_KEY=$(git rev-parse HEAD) && rollup -c",
     "html": "npx @babel/node -r @babel/register scripts/init.js",
     "start": "export MODE=production && npm run data && npm run html && npm run assets",
     "search-index": "npx @babel/node -r @babel/register scripts/generateIndex.js",
@@ -23,6 +23,7 @@
     "@babel/plugin-transform-react-jsx": "7.3.0",
     "@babel/preset-env": "7.6.3",
     "@babel/register": "7.6.2",
+    "babel-plugin-transform-define": "2.0.0",
     "bundlesize": "0.18.0",
     "domino": "2.1.3",
     "fetch": "1.1.0",

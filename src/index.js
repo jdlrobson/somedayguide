@@ -9,6 +9,7 @@ import { h, render } from 'preact';
 import inat from './inat/inat.js';
 import { loadWikivoyageSection } from './wikivoyage';
 
+const onLine = navigator.onLine;
 let maploaded = false;
 let mapdisplayed = false;
 const title = document.querySelector('.map__overlay__page-title').textContent;
@@ -142,8 +143,16 @@ if (getaround) {
     });
 }
 
+if ( !onLine ) {
+    document.body.classList.add('offline');
+}
 if('serviceWorker' in navigator) {
-    navigator.serviceWorker
-             .register('/sw.js')
-             .then(function() { console.log("Service Worker Registered"); });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then(function() { console.log("Service Worker Registered!"); })
+            .catch(err => {
+              console.error('Registration failed:', err);
+            });
+    });
 }
