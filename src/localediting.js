@@ -39,7 +39,7 @@ function renderDashboard(notes) {
             del.textContent = 'delete';
             const heading = document.createElement('a');
             heading.setAttribute('href', uri);
-            heading.textContent = split[split.length-1];
+            heading.textContent = decodeURIComponent(split[split.length-1]);
             const note = document.createElement('div');
             note.textContent = localStorage.getItem(uri) || 'No note';
             node.appendChild(heading);
