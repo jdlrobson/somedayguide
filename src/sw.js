@@ -40,11 +40,11 @@ function isCacheable(request) {
 
 // Cache all fetches and serve them when offline.
 self.addEventListener('fetch', event => {
-  if (event.request.method != 'GET') {
+  if (event.request.method !== 'GET') {
     return;
   }
 
-  if (!caches.match(STATIC[0]) || !isCacheable(event.request)) {
+  if (!isCacheable(event.request)) {
     // nothing cached yet or not something we want to cache.
     return;
   }
