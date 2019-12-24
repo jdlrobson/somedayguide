@@ -478,9 +478,10 @@ li {
     height: 500px;
 }
 
-.slideshow--ig .slideshow__arrow--left,
-.slideshow--ig .slideshow__arrow--right {
-    height: 30%;
+.slideshow--ig img {
+    object-fit: cover;
+    width: 500px;
+    height: 500px;
 }
 
 .slideshow__slide {
