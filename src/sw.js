@@ -8,11 +8,11 @@ self.addEventListener('install', event => {
   event.waitUntil(
       caches.open(CACHE_KEY).then(function(cache) {
         return cache.addAll([
-          '/dashboard.html',
+          '/dashboard',
           '/index.json',
           '/index.css',
           '/index.js',
-          '/offline.html',
+          '/offline',
           '/craft_left.jpg',
           '/craft_right.jpg',
           '/images/someday-map.png',
