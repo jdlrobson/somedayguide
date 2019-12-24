@@ -8,6 +8,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
       caches.open(CACHE_KEY).then(function(cache) {
         return cache.addAll([
+          '/',
           '/dashboard',
           '/index.json',
           '/index.css',
