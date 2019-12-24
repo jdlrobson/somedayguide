@@ -1,5 +1,6 @@
 const OFFLINE_URL = '/dashboard';
 const CACHE_KEY = process.env.CACHE_KEY;
+const ARTICLE_CACHE_KEY = `${CACHE_KEY}-articles`;
 const ONLINE = navigator.onLine;
 
 self.skipWaiting();
@@ -33,10 +34,20 @@ function isResource(request) {
 
 // Cache all fetches and serve them when offline.
 self.addEventListener('fetch', event => {
+  if (event.request.method != 'GET') {
+    return;
+  }
+
+  if (!caches.match('/offline.html') || !isPage(event.request)) {
+    // nothing cached yet or not something we want to cache.
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(function(response) {
       // if the user is online, send the cached version
-      if (response !== undefined && !ONLINE) {
+      //  && !ONLINE
+      if (response !== undefined) {
         return response;
       } else {
         // otherwise update cache
@@ -46,22 +57,16 @@ self.addEventListener('fetch', event => {
           // and serve second one
           let responseClone = response.clone();
 
-          if (isPage(event.request) || isResource(event.request)) {
-            return caches.open(CACHE_KEY).then(function (cache) {
+          if (isPage(event.request)) {
+            return caches.open(ARTICLE_CACHE_KEY).then(function (cache) {
               cache.put(event.request, responseClone);
               return response;
             });
           } else {
             return response;
           }
-        }).catch((e) => {
-          if (
-            isPage(event.request)
-          ) {
-            return caches.match('/offline.html');
-          } else {
-            return e;
-          }
+        }).catch(() => {
+          return caches.match('/offline.html');
         });
       }
     })
@@ -69,5 +74,16 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
-  console.log('Service worker activating...');
+  // clear old caches
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames
+          .filter((cacheName) => cacheName !== CACHE_KEY && cacheName !== ARTICLE_CACHE_KEY)
+          .map(function(cacheName) {
+            return caches.delete(cacheName);
+          })
+      );
+    })
+  );
 });
