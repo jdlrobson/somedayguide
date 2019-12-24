@@ -2,7 +2,7 @@ const OFFLINE_URL = '/dashboard';
 const CACHE_KEY = process.env.CACHE_KEY;
 const ARTICLE_CACHE_KEY = `${CACHE_KEY}-articles`;
 const ONLINE = navigator.onLine;
-const host = location.host;
+const ORIGIN = self.location.origin;
 
 const STATIC = [
   '/',
@@ -17,13 +17,11 @@ const STATIC = [
   '/images/grid.png'
 ];
 
-self.skipWaiting();
-
 self.addEventListener('install', event => {
   event.waitUntil(
       caches.open(CACHE_KEY).then(function(cache) {
         return cache.addAll(STATIC);
-      })
+      }).then(self.skipWaiting())
     );
 });
 
@@ -32,9 +30,7 @@ function isPage(request) {
 }
 
 function getPath(url) {
-  return url.replace(
-    `${location.protocol}//${location.host}`
-  );
+  return url.replace(ORIGIN, '');
 }
 
 function isCacheable(request) {
@@ -61,15 +57,12 @@ self.addEventListener('fetch', event => {
       } else {
         // otherwise update cache
         return fetch(event.request).then(function (response) {
-          // response may be used only once
-          // we need to save clone to put one copy in cache
-          // and serve second one
-          let responseClone = response.clone();
 
           if (isPage(event.request)) {
             return caches.open(ARTICLE_CACHE_KEY).then(function (cache) {
-              cache.put(event.request, responseClone);
-              return response;
+              return cache.put(event.request, response.clone()).then(() => {
+                return response;
+              })
             });
           } else {
             return response;
@@ -93,6 +86,6 @@ self.addEventListener('activate', event => {
             return caches.delete(cacheName);
           })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
