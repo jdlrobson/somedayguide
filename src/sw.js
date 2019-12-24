@@ -1,7 +1,6 @@
 const OFFLINE_URL = '/dashboard';
 const CACHE_KEY = process.env.CACHE_KEY;
 const ARTICLE_CACHE_KEY = `${CACHE_KEY}-articles`;
-const ONLINE = navigator.onLine;
 const ORIGIN = self.location.origin;
 
 const STATIC = [
@@ -10,9 +9,11 @@ const STATIC = [
   '/index.json',
   '/index.css',
   '/index.js',
+  '/search.js',
   '/offline',
   '/craft_left.jpg',
   '/craft_right.jpg',
+  '/images/home-icon.png',
   '/images/someday-map.png',
   '/images/grid.png'
 ];
@@ -52,7 +53,7 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(function(response) {
       // if the user is online, send the cached version
-      if (response !== undefined && !ONLINE) {
+      if (response !== undefined && !navigator.onLine) {
         return response;
       } else {
         // otherwise update cache
