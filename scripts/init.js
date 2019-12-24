@@ -26,11 +26,13 @@ const sitemap = [];
 const analyticsHTML = MODE === 'production' ?
 `<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129740290-1"></script>
-		<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', 'UA-129740290-1');
+        <script>
+        if (!localStorage.getItem('admin--flag')) {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-129740290-1');
+        }
 		</script>` : '';
 
 console.log(`Mode is ${MODE}`);
