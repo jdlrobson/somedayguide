@@ -148,8 +148,9 @@ if ( !onLine ) {
 }
 if('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
+        const path = '/sw.js';
         navigator.serviceWorker
-            .register('/sw.js')
+            .register(path, { scope: '/' })
             .then(function() { console.log("Service Worker Registered!"); })
             .catch(err => {
               console.error('Registration failed:', err);

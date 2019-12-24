@@ -22,6 +22,13 @@ self.addEventListener('install', event => {
     );
 });
 
+function isPage(request) {
+  return request.url.match(/\/destination\//) || request.url.match(/\/country\//);
+}
+
+function isResource(request) {
+  return request.url.slice(-2) === 'js';
+}
 
 // Cache all fetches and serve them when offline.
 self.addEventListener('fetch', event => {
@@ -38,16 +45,21 @@ self.addEventListener('fetch', event => {
           // and serve second one
           let responseClone = response.clone();
 
-          caches.open(CACHE_KEY).then(function (cache) {
-            cache.put(event.request, responseClone);
-          });
-          return response;
+          if (isPage(event.request) || isResource(event.request)) {
+            return caches.open(CACHE_KEY).then(function (cache) {
+              cache.put(event.request, responseClone);
+              return response;
+            });
+          } else {
+            return response;
+          }
         }).catch((e) => {
           if (
-            event.request.url.match(/\/destination\//) ||
-            event.request.url.match(/\/country\//)
+            isPage(event.request)
           ) {
             return caches.match('/offline.html');
+          } else {
+            return e;
           }
         });
       }
