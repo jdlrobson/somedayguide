@@ -7,6 +7,429 @@ const document = domino.createWindow().document;
 
 it('climateExtractionWikipedia', () => {
     [
+        // Memphis
+        [
+            `<table class="wikitable collapsible collapsed mw-collapsible mw-made-collapsible" style="width:100%; text-align:center; line-height: 1.2em; margin:auto;">
+
+            <tbody><tr>
+            <th colspan="14"><span class="mw-collapsible-toggle mw-collapsible-toggle-default mw-collapsible-toggle-expanded" role="button" tabindex="0" aria-expanded="true"><a class="mw-collapsible-text">hide</a></span>Climate data for Memphis (<a href="/wiki/Memphis_International_Airport" title="Memphis International Airport">Memphis Int'l</a>), 1981−2010 normals,<sup id="cite_ref-52" class="reference"><a href="#cite_note-52">[52]</a></sup> extremes 1872−present<sup id="cite_ref-53" class="reference"><a href="#cite_note-53">[53]</a></sup>
+            </th></tr>
+            <tr style="">
+            <th scope="row">Month
+            </th>
+            <th scope="col">Jan
+            </th>
+            <th scope="col">Feb
+            </th>
+            <th scope="col">Mar
+            </th>
+            <th scope="col">Apr
+            </th>
+            <th scope="col">May
+            </th>
+            <th scope="col">Jun
+            </th>
+            <th scope="col">Jul
+            </th>
+            <th scope="col">Aug
+            </th>
+            <th scope="col">Sep
+            </th>
+            <th scope="col">Oct
+            </th>
+            <th scope="col">Nov
+            </th>
+            <th scope="col">Dec
+            </th>
+            <th scope="col" style="border-left-width:medium">Year
+            </th></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Record high °F (°C)
+            </th>
+            <td style="background: #FF6A00; color:#000000;">79<br>(26)
+            </td>
+            <td style="background: #FF6300; color:#000000;">81<br>(27)
+            </td>
+            <td style="background: #FF4800; color:#000000;">87<br>(31)
+            </td>
+            <td style="background: #FF3300; color:#000000;">94<br>(34)
+            </td>
+            <td style="background: #FF1F00; color:#000000;">99<br>(37)
+            </td>
+            <td style="background: #FF0A00; color:#FFFFFF;">104<br>(40)
+            </td>
+            <td style="background: #F80000; color:#FFFFFF;">108<br>(42)
+            </td>
+            <td style="background: #F80000; color:#FFFFFF;">107<br>(42)
+            </td>
+            <td style="background: #FF1100; color:#FFFFFF;">103<br>(39)
+            </td>
+            <td style="background: #FF1F00; color:#000000;">98<br>(37)
+            </td>
+            <td style="background: #FF4F00; color:#000000;">86<br>(30)
+            </td>
+            <td style="background: #FF6300; color:#000000;">81<br>(27)
+            </td>
+            <td style="background: #F80000; color:#FFFFFF; border-left-width:medium">108<br>(42)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Mean maximum °F (°C)
+            </th>
+            <td style="background: #FF8C1A; color:#000000;">70.0<br>(21.1)
+            </td>
+            <td style="background: #FF7D00; color:#000000;">74.0<br>(23.3)
+            </td>
+            <td style="background: #FF6300; color:#000000;">80.6<br>(27.0)
+            </td>
+            <td style="background: #FF4F00; color:#000000;">85.9<br>(29.9)
+            </td>
+            <td style="background: #FF3E00; color:#000000;">90.5<br>(32.5)
+            </td>
+            <td style="background: #FF2A00; color:#000000;">95.8<br>(35.4)
+            </td>
+            <td style="background: #FF2100; color:#000000;">98.0<br>(36.7)
+            </td>
+            <td style="background: #FF1F00; color:#000000;">98.4<br>(36.9)
+            </td>
+            <td style="background: #FF2E00; color:#000000;">94.6<br>(34.8)
+            </td>
+            <td style="background: #FF4900; color:#000000;">87.7<br>(30.9)
+            </td>
+            <td style="background: #FF6800; color:#000000;">79.4<br>(26.3)
+            </td>
+            <td style="background: #FF8914; color:#000000;">70.7<br>(21.5)
+            </td>
+            <td style="background: #FF1A00; color:#000000; border-left-width:medium">99.7<br>(37.6)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Average high °F (°C)
+            </th>
+            <td style="background: #FFD9B4; color:#000000;">49.8<br>(9.9)
+            </td>
+            <td style="background: #FFC78F; color:#000000;">54.7<br>(12.6)
+            </td>
+            <td style="background: #FFA449; color:#000000;">63.9<br>(17.7)
+            </td>
+            <td style="background: #FF8002; color:#000000;">73.0<br>(22.8)
+            </td>
+            <td style="background: #FF6100; color:#000000;">81.2<br>(27.3)
+            </td>
+            <td style="background: #FF4400; color:#000000;">88.9<br>(31.6)
+            </td>
+            <td style="background: #FF3900; color:#000000;">91.6<br>(33.1)
+            </td>
+            <td style="background: #FF3B00; color:#000000;">91.3<br>(32.9)
+            </td>
+            <td style="background: #FF5200; color:#000000;">85.1<br>(29.5)
+            </td>
+            <td style="background: #FF7B00; color:#000000;">74.4<br>(23.6)
+            </td>
+            <td style="background: #FFA852; color:#000000;">62.6<br>(17.0)
+            </td>
+            <td style="background: #FFD0A2; color:#000000;">52.1<br>(11.2)
+            </td>
+            <td style="background: #FF8206; color:#000000; border-left-width:medium">72.5<br>(22.5)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Average low °F (°C)
+            </th>
+            <td style="background: #E8E8FF; color:#000000;">32.6<br>(0.3)
+            </td>
+            <td style="background: #F3F3FF; color:#000000;">36.3<br>(2.4)
+            </td>
+            <td style="background: #FFEFE0; color:#000000;">44.1<br>(6.7)
+            </td>
+            <td style="background: #FFCE9D; color:#000000;">52.9<br>(11.6)
+            </td>
+            <td style="background: #FFAA55; color:#000000;">62.2<br>(16.8)
+            </td>
+            <td style="background: #FF8B17; color:#000000;">70.3<br>(21.3)
+            </td>
+            <td style="background: #FF7E00; color:#000000;">73.8<br>(23.2)
+            </td>
+            <td style="background: #FF8205; color:#000000;">72.7<br>(22.6)
+            </td>
+            <td style="background: #FF9F3F; color:#000000;">65.2<br>(18.4)
+            </td>
+            <td style="background: #FFCA96; color:#000000;">53.8<br>(12.1)
+            </td>
+            <td style="background: #FFF1E3; color:#000000;">43.7<br>(6.5)
+            </td>
+            <td style="background: #EFEFFF; color:#000000;">35.1<br>(1.7)
+            </td>
+            <td style="background: #FFCB97; color:#000000; border-left-width:medium">53.6<br>(12.0)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Mean minimum °F (°C)
+            </th>
+            <td style="background: #B3B3FF; color:#000000;">15.0<br>(−9.4)
+            </td>
+            <td style="background: #C1C1FF; color:#000000;">19.5<br>(−6.9)
+            </td>
+            <td style="background: #D7D7FF; color:#000000;">27.0<br>(−2.8)
+            </td>
+            <td style="background: #F3F3FF; color:#000000;">36.1<br>(2.3)
+            </td>
+            <td style="background: #FFDDBB; color:#000000;">49.0<br>(9.4)
+            </td>
+            <td style="background: #FFB46A; color:#000000;">59.6<br>(15.3)
+            </td>
+            <td style="background: #FF9B37; color:#000000;">66.2<br>(19.0)
+            </td>
+            <td style="background: #FFA347; color:#000000;">64.1<br>(17.8)
+            </td>
+            <td style="background: #FFD9B3; color:#000000;">50.0<br>(10.0)
+            </td>
+            <td style="background: #F8F8FF; color:#000000;">37.9<br>(3.3)
+            </td>
+            <td style="background: #DADAFF; color:#000000;">28.0<br>(−2.2)
+            </td>
+            <td style="background: #BDBDFF; color:#000000;">18.3<br>(−7.6)
+            </td>
+            <td style="background: #A7A7FF; color:#000000; border-left-width:medium">10.8<br>(−11.8)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Record low °F (°C)
+            </th>
+            <td style="background: #6F6FFF; color:#000000;">−8<br>(−22)
+            </td>
+            <td style="background: #6565FF; color:#FFFFFF;">−11<br>(−24)
+            </td>
+            <td style="background: #ABABFF; color:#000000;">12<br>(−11)
+            </td>
+            <td style="background: #D6D6FF; color:#000000;">27<br>(−3)
+            </td>
+            <td style="background: #F1F1FF; color:#000000;">36<br>(2)
+            </td>
+            <td style="background: #FFDFC0; color:#000000;">48<br>(9)
+            </td>
+            <td style="background: #FFD2A5; color:#000000;">52<br>(11)
+            </td>
+            <td style="background: #FFDFC0; color:#000000;">48<br>(9)
+            </td>
+            <td style="background: #F1F1FF; color:#000000;">36<br>(2)
+            </td>
+            <td style="background: #D1D1FF; color:#000000;">25<br>(−4)
+            </td>
+            <td style="background: #A0A0FF; color:#000000;">9<br>(−13)
+            </td>
+            <td style="background: #5F5FFF; color:#FFFFFF;">−13<br>(−25)
+            </td>
+            <td style="background: #5F5FFF; color:#FFFFFF; border-left-width:medium">−13<br>(−25)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Average <a href="/wiki/Precipitation" title="Precipitation">precipitation</a> inches (mm)
+            </th>
+            <td style="background: #68FF68; color:#000000;">3.98<br>(101)
+            </td>
+            <td style="background: #47FF47; color:#000000;">4.39<br>(112)
+            </td>
+            <td style="background: #3BFF3B; color:#000000;">5.16<br>(131)
+            </td>
+            <td style="background: #27FF27; color:#000000;">5.50<br>(140)
+            </td>
+            <td style="background: #38FF38; color:#000000;">5.25<br>(133)
+            </td>
+            <td style="background: #71FF71; color:#000000;">3.63<br>(92)
+            </td>
+            <td style="background: #50FF50; color:#000000;">4.59<br>(117)
+            </td>
+            <td style="background: #92FF92; color:#000000;">2.88<br>(73)
+            </td>
+            <td style="background: #86FF86; color:#000000;">3.09<br>(78)
+            </td>
+            <td style="background: #68FF68; color:#000000;">3.98<br>(101)
+            </td>
+            <td style="background: #28FF28; color:#000000;">5.49<br>(139)
+            </td>
+            <td style="background: #25FF25; color:#000000;">5.74<br>(146)
+            </td>
+            <td style="background: #52FF52; color:#000000; border-left-width:medium">53.68<br>(1,363)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Average snowfall inches (cm)
+            </th>
+            <td style="background: #B7B7FF; color:#000000;">1.9<br>(4.8)
+            </td>
+            <td style="background: #C9C9FF; color:#000000;">1.3<br>(3.3)
+            </td>
+            <td style="background: #F0F0FF; color:#000000;">0.4<br>(1.0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0<br>(0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0<br>(0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0<br>(0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0<br>(0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0<br>(0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0<br>(0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0<br>(0)
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">trace
+            </td>
+            <td style="background: #F7F7FF; color:#000000;">0.2<br>(0.51)
+            </td>
+            <td style="background: #F2F2FF; color:#000000; border-left-width:medium">3.8<br>(9.7)
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Average precipitation days <span style="font-size:90%;" class="nowrap">(≥ 0.01 in)</span>
+            </th>
+            <td style="background: #8989FF; color:#000000;">9.5
+            </td>
+            <td style="background: #8282FF; color:#000000;">9.2
+            </td>
+            <td style="background: #7D7DFF; color:#000000;">10.5
+            </td>
+            <td style="background: #8484FF; color:#000000;">9.6
+            </td>
+            <td style="background: #7F7FFF; color:#000000;">10.3
+            </td>
+            <td style="background: #8C8CFF; color:#000000;">9.0
+            </td>
+            <td style="background: #9292FF; color:#000000;">8.8
+            </td>
+            <td style="background: #ABABFF; color:#000000;">6.8
+            </td>
+            <td style="background: #A1A1FF; color:#000000;">7.3
+            </td>
+            <td style="background: #A2A2FF; color:#000000;">7.5
+            </td>
+            <td style="background: #8585FF; color:#000000;">9.5
+            </td>
+            <td style="background: #8787FF; color:#000000;">9.7
+            </td>
+            <td style="background: #8E8EFF; color:#000000; border-left-width:medium">107.7
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Average snowy days <span style="font-size:90%;" class="nowrap">(≥ 0.1 in)</span>
+            </th>
+            <td style="background: #F0F0FF; color:#000000;">1.2
+            </td>
+            <td style="background: #F4F4FF; color:#000000;">0.8
+            </td>
+            <td style="background: #FAFAFF; color:#000000;">0.4
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FFFFFF; color:#000000;">0
+            </td>
+            <td style="background: #FAFAFF; color:#000000;">0.4
+            </td>
+            <td style="background: #FCFCFF; color:#000000; border-left-width:medium">2.8
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Average <a href="/wiki/Relative_humidity" title="Relative humidity">relative humidity</a> (%)
+            </th>
+            <td style="background: #0000F9; color:#FFFFFF;">68.2
+            </td>
+            <td style="background: #0101FF; color:#FFFFFF;">66.4
+            </td>
+            <td style="background: #0D0DFF; color:#FFFFFF;">63.2
+            </td>
+            <td style="background: #0F0FFF; color:#FFFFFF;">62.5
+            </td>
+            <td style="background: #0101FF; color:#FFFFFF;">66.4
+            </td>
+            <td style="background: #0000FE; color:#FFFFFF;">66.8
+            </td>
+            <td style="background: #0000F5; color:#FFFFFF;">69.1
+            </td>
+            <td style="background: #0000F3; color:#FFFFFF;">69.6
+            </td>
+            <td style="background: #0000ED; color:#FFFFFF;">71.3
+            </td>
+            <td style="background: #0101FF; color:#FFFFFF;">66.2
+            </td>
+            <td style="background: #0000FB; color:#FFFFFF;">67.7
+            </td>
+            <td style="background: #0000F6; color:#FFFFFF;">68.8
+            </td>
+            <td style="background: #0000FC; color:#FFFFFF; border-left-width:medium">67.2
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Mean monthly <a href="/wiki/Sunshine_duration" title="Sunshine duration">sunshine hours</a>
+            </th>
+            <td style="background: #CBCB00; color:#000000;">166.6
+            </td>
+            <td style="background: #D5D500; color:#000000;">173.8
+            </td>
+            <td style="background: #DBDB00; color:#000000;">215.3
+            </td>
+            <td style="background: #E6E600; color:#000000;">254.6
+            </td>
+            <td style="background: #EEEE0C; color:#000000;">301.5
+            </td>
+            <td style="background: #F5F51C; color:#000000;">320.6
+            </td>
+            <td style="background: #F4F41A; color:#000000;">326.9
+            </td>
+            <td style="background: #F0F00F; color:#000000;">307.0
+            </td>
+            <td style="background: #E5E500; color:#000000;">251.2
+            </td>
+            <td style="background: #E2E200; color:#000000;">245.9
+            </td>
+            <td style="background: #D1D100; color:#000000;">173.0
+            </td>
+            <td style="background: #C4C408; color:#000000;">151.9
+            </td>
+            <td style="background: #E2E200; color:#000000; border-left-width:medium">2,888.3
+            </td></tr>
+            <tr style="text-align: center;">
+            <th scope="row" style="height: 16px;">Percent <a href="/wiki/Sunshine_duration" title="Sunshine duration">possible sunshine</a>
+            </th>
+            <td style="background: #FFFF3F; color:#000000;">53
+            </td>
+            <td style="background: #FFFF4F; color:#000000;">57
+            </td>
+            <td style="background: #FFFF53; color:#000000;">58
+            </td>
+            <td style="background: #FFFF70; color:#000000;">65
+            </td>
+            <td style="background: #FFFF80; color:#000000;">69
+            </td>
+            <td style="background: #FFFF94; color:#000000;">74
+            </td>
+            <td style="background: #FFFF94; color:#000000;">74
+            </td>
+            <td style="background: #FFFF94; color:#000000;">74
+            </td>
+            <td style="background: #FFFF7C; color:#000000;">68
+            </td>
+            <td style="background: #FFFF84; color:#000000;">70
+            </td>
+            <td style="background: #FFFF4B; color:#000000;">56
+            </td>
+            <td style="background: #FFFF33; color:#000000;">50
+            </td>
+            <td style="background: #FFFF70; color:#000000; border-left-width:medium">65
+            </td></tr>
+            <tr style="">
+            <td colspan="14" style="text-align:center;font-size:95%;">Source: NOAA (relative humidity 1961−1990, sun 1961−1987)<sup id="cite_ref-NOWData_54-0" class="reference"><a href="#cite_note-NOWData-54">[54]</a></sup><sup id="cite_ref-NOAA_55-0" class="reference"><a href="#cite_note-NOAA-55">[55]</a></sup><sup id="cite_ref-NOAA_txt_56-0" class="reference"><a href="#cite_note-NOAA_txt-56">[56]</a></sup><sup id="cite_ref-noaasun_57-0" class="reference"><a href="#cite_note-noaasun-57">[57]</a></sup><sup id="cite_ref-Percent_Sunshine_58-0" class="reference"><a href="#cite_note-Percent_Sunshine-58">[58]</a></sup>
+            </td></tr></tbody></table>`,
+            {
+                heading: 'Jan',
+                high: 9.9,
+                low: 0.3,
+                precipitation: 101.1
+            }
+        ],
         [
             `\n<p>Дангрига знаходиться у зоні тропічного <a href=\"/wiki/Мусонний_клімат\" title=\"Мусонний клімат\">мусонного клімату</a>. Середньорічна температура становить +24 °C. Найспекотніший місяць квітень, коли середня температура становить +26 °C. Найхолодніший місяць січень, з середньою температурою +21 °С. Середньорічна кількість опадів становить 3261 міліметрів. Найбільше опадів випадає у жовтні, в середньому 404 мм. опадів, самий сухий квітень, з 46 мм опадів.</p>\n\n<table style=\"font-size: 90%; margin:0.5em; float:left; clear:left; text-align:center; border:solid 1px silver\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#f9f9f9\">\n<tbody><tr><th colspan=\"12\" style=\"padding:2px;\"><a href=\"/wiki/Клімат\" title=\"Клімат\">Кліматограма</a>   Дангрига\n</th></tr>\n<tr>\n<td>С</td><td>Л</td><td>Б</td><td>К</td><td>Т</td><td>Ч</td><td>Л</td><td>С</td><td>В</td><td>Ж</td><td>Л</td><td>Г</td>\n</tr><tr>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:4.66em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 233\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12em;height:0.4em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:12.4em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 22</small></div>\n<div style=\"color:red;position:absolute;bottom:10.5em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 20</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:3.6em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 180\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12em;height:1em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 25</small></div>\n<div style=\"color:red;position:absolute;bottom:10.5em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 20</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:1.98em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 99\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.4em;height:1.2em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13.6em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 28</small></div>\n<div style=\"color:red;position:absolute;bottom:10.9em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 22</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:0.92em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 46\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.6em;height:1.2em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13.8em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 29</small></div>\n<div style=\"color:red;position:absolute;bottom:11.1em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 23</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:5.7em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 285\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.4em;height:1.6em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:14em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 30</small></div>\n<div style=\"color:red;position:absolute;bottom:10.9em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 22</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:8.06em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 403\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.6em;height:0.6em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13.2em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 26</small></div>\n<div style=\"color:red;position:absolute;bottom:11.1em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 23</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:6.1em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 305\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.4em;height:1em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13.4em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 27</small></div>\n<div style=\"color:red;position:absolute;bottom:10.9em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 22</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:6.04em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 302\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.8em;height:0.8em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13.6em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 28</small></div>\n<div style=\"color:red;position:absolute;bottom:11.3em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 24</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:7.1em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 355\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.4em;height:1.2em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13.6em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 28</small></div>\n<div style=\"color:red;position:absolute;bottom:10.9em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 22</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:8.08em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 404\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.6em;height:0.4em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 25</small></div>\n<div style=\"color:red;position:absolute;bottom:11.1em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 23</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:7.66em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 383\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.6em;height:0.4em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 25</small></div>\n<div style=\"color:red;position:absolute;bottom:11.1em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 23</small></div>\n</div></td>\n<td><div style=\"width:2em;height:18em;position:relative;z-index:100;padding:0;margin:0\">\n<div style=\"height:5.95em;bottom:1.92em;width:1.5em;position:absolute;left:0.33em;border-top:dotted 1px #cba;border-bottom:dotted 1px #abc;z-index:3;padding:0;margin:0\"><span>&nbsp;</span></div>\n<div style=\"background:#ace;position:absolute;bottom:2em;left:0.52em;width:1.2em;height:5.3em;z-index:3;overflow:hidden\"><span>&nbsp;</span></div>\n<div style=\"color:blue;position:absolute;bottom:.5em;left:0.34em;width:1.5em;height:1.5em;text-align:center\"><small> 265\n</small></div>\n<div style=\"overflow:hidden;background:#e44;position:absolute;left:0.65em;width:0.9em;z-index:4;bottom:12.4em;height:0.6em;\"><span>&nbsp;</span></div>\n<div style=\"color:red;position:absolute;bottom:13em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 25</small></div>\n<div style=\"color:red;position:absolute;bottom:10.9em; left:0.34em;width:1.5em;height:1.5em;text-align:center;z-index:4\"><small> 22</small></div>\n</div></td>\n</tr>\n<tr><td colspan=\"12\" style=\"padding:2px;text-align:center;font-size:100%;line-height:120%\"><span style=\"color:red\">Температура в °C</span> • <span style=\"color:blue\">Сума опадів у мм</span><br><i><span style=\"color:black\">Джерело:<span> </span><span class=\"mw-ref\" id=\"cite_ref-nasa_4-0\"><a href=\"#cite_note-nasa-4\" style=\"counter-reset: mw-Ref 4;\"><span class=\"mw-reflink-text\">[4]</span></a></span></span></i></td></tr>\n</tbody></table><span>\n</span>\n<p>\n<br></p>\n`,
             {

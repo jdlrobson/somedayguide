@@ -22,7 +22,7 @@ export function fromFahrenheitToCelcius( val ) {
  * @rturn {string}
  */
 export function fromInchesToMm( val ) {
-	return fix( val / 0.0393700787402 );
+	return val ? fix( val / 0.0393700787402 ) : undefined;
 }
 
 /**
@@ -115,6 +115,7 @@ function extractFromTable(table) {
 export function climateExtractionNew( element ) {
 	let ext = extractElements( element, [
 		'.climate-table table.infobox table.infobox',
+		'.wikitable',
 		// e.g. Taganga (Template:climate chart)
 		'table.infobox table.infobox'
 	].join( ',' ) );
@@ -141,7 +142,7 @@ export function climateExtractionWikipedia( document, text ) {
 		const th = Array.from( tr.querySelectorAll( 'th' ) );
 		const td = Array.from( tr.querySelectorAll( 'td' ) );
 		if ( climate.length === 0 && th.length === 14 ) {
-			climate = th.map( ( th ) => ( { heading: th.textContent } ) ).slice( 1, 13 );
+			climate = th.map( ( th ) => ( { heading: th.textContent.trim() } ) ).slice( 1, 13 );
 		} else if ( th.length === 1 ) {
 			const legend = th[ 0 ].textContent.toLowerCase();
 			const vals = td.slice( 0, 12 );
@@ -152,7 +153,8 @@ export function climateExtractionWikipedia( document, text ) {
 				key = 'low';
 			} else if (
 				legend.indexOf( 'rainfall' ) > -1 ||
-				legend.indexOf( 'average precipitation mm ' ) > -1
+				legend.indexOf( 'average precipitation mm ' ) > -1 ||
+				legend.indexOf( 'average precipitation inches' ) > -1
 			) {
 				key = 'precipitation';
 			}
@@ -170,7 +172,7 @@ export function climateExtractionWikipedia( document, text ) {
 		// try the other known format..
 		climate = climateExtractionNew( nodeWithHTML( document, text ) );
 	}
-	return climate && climate.length && climate[1] ? climate : false;
+	return climate && climate.length && climate[1] ? checkImperial(climate) : false;
 }
 
 export function isClimateSection(section) {
