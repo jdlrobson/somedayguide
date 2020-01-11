@@ -6,6 +6,7 @@ import countrywb_json from './data/countrywb.json';
 import marked from 'marked';
 import fs from 'fs';
 import { climateExtraction } from '../src/tools/climate';
+import { fetchSection, toDocumentNode } from './rest-utils';
 
 const renderer = new marked.Renderer();
 
@@ -260,6 +261,23 @@ export function getSummary(title, project='wikipedia') {
             console.log(`${err} while trying to get ${title}`)
             return Promise.resolve({});
         })
+}
+
+
+export function getLeadParagraphOfSection(title, sectionName, options) {
+    return fetchSection(title, sectionName, options).then((section) => {
+        if (!section) {
+            return;
+        }
+        const ps = Array.from(toDocumentNode(section.html).querySelectorAll('p'));
+        let i = 0;
+        while ( ps[i] && !ps[i].textContent) {
+            i++;
+        }
+        if ( ps[i] ) {
+            return ps[i].textContent;
+        }
+    });
 }
 
 export function calculateDistance( from, to ) {
