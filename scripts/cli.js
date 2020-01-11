@@ -1,6 +1,7 @@
 import util from 'util';
 import countries from './data/countries.json';
 import destinations from './data/destinations.json';
+import destbody from './data/destination-body.json';
 import redirects from './data/redirections.json';
 import sights from './data/sights.json';
 import next from './data/next.json';
@@ -9,7 +10,7 @@ import domino from 'domino';
 import fs from 'fs';
 import { lacking_gonext } from './stats';
 import { listwithout, getSummary, findClimate, findSights, getNearby,
-    getNearbyUntilHave } from './utils';
+    getNearbyUntilHave, getSiteLink, makeBodyForDestination } from './utils';
 
 global.fetch = fetch;
 global.document = domino.createWindow().document;
@@ -20,6 +21,7 @@ function save() {
     fs.writeFileSync(`${__dirname}/data/destinations.json`, JSON.stringify(destinations));
     fs.writeFileSync(`${__dirname}/data/next.json`, JSON.stringify(next));
     fs.writeFileSync(`${__dirname}/data/sights.json`, JSON.stringify(sights));
+    fs.writeFileSync(`${__dirname}/data/destination-body.json`, JSON.stringify(destbody));
 }
 
 function feedback( msg ) {
@@ -94,6 +96,31 @@ function addadestination() {
         } else {
             return menu();
         }
+    });
+}
+
+function addBodyFor(title) {
+    const obj = destinations[title];
+    return getSummary(title).then((json) => {
+        if ( json.thumbnail ) {
+            obj.thumbnail = json.thumbnail;
+            obj.thumbnail__source = json.thumbnail__source;
+        }
+        obj.wb = json.wb;
+        obj.lat = json.lat;
+        obj.lon = json.lon;
+        return getSiteLink(json.wb, 'enwiki').then((wikipediatitle) => {
+            if ( wikipediatitle ) {
+                destinations[title].wikipedia = wikipediatitle;
+                return makeBodyForDestination(title).then((body) => {
+                    if (body) {
+                        destbody[title] = body
+                    } else {
+                        console.log(`Cannot make rest for ${title}`);
+                    }
+                })
+            }
+        });
     });
 }
 
@@ -358,7 +385,9 @@ function menu() {
                             save();
                             addNearby(title);
                             save();
-                            return addClimateTo(title);
+                            return addBodyFor(title).then(() => {
+                                return addClimateTo(title);
+                            })
                         }
                         return menu();
                     })

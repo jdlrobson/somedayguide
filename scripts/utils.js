@@ -6,7 +6,7 @@ import countrywb_json from './data/countrywb.json';
 import marked from 'marked';
 import fs from 'fs';
 import { climateExtraction } from '../src/tools/climate';
-import { fetchSection, toDocumentNode } from './rest-utils';
+import { fetchTitleSections, toDocumentNode, filterForSection, removeNodes } from './rest-utils';
 
 const renderer = new marked.Renderer();
 
@@ -264,20 +264,85 @@ export function getSummary(title, project='wikipedia') {
 }
 
 
+export function extractLeadParagraphFromSection(section) {
+    if (!section) {
+        return;
+    }
+    const ps = Array.from(toDocumentNode(section.html).querySelectorAll('p'));
+    let i = 0;
+    while ( ps[i] && !ps[i].textContent) {
+        i++;
+    }
+    if ( ps[i] ) {
+        let node = ps[i];
+        let html = '';
+        removeNodes(node, 'sup,h2');
+        while (node) {
+            if ( node.tagName ) {
+                if (!html && node.tagName === 'P') {
+                    html += node.outerHTML;
+                } else if (['UL'].includes(node.tagName)){
+                    html += node.outerHTML;
+                }
+            } else {
+                html += node.outerHTML;
+            }
+            node = node.nextSibling;
+        }
+        return html;
+    }
+}
+
 export function getLeadParagraphOfSection(title, sectionName, options) {
-    return fetchSection(title, sectionName, options).then((section) => {
-        if (!section) {
-            return;
-        }
-        const ps = Array.from(toDocumentNode(section.html).querySelectorAll('p'));
-        let i = 0;
-        while ( ps[i] && !ps[i].textContent) {
-            i++;
-        }
-        if ( ps[i] ) {
-            return ps[i].textContent;
-        }
+    return fetchSection(title, sectionName, options).then(extractLeadParagraphFromSection);
+}
+
+export function getLeadParagraphOfSections(title, sections, options) {
+    return fetchTitleSections(title, options).then((allSections) => {
+        return sections.map((s) => {
+            return extractLeadParagraphFromSection(
+                filterForSection(s, options.fuzzy)(allSections)
+            )
+        });
     });
+}
+
+export function makeBodyForDestination(title) {
+    const options = { host: 'https://en.wikipedia.org', fuzzy: true };
+    return getLeadParagraphOfSections(title, [
+        // priority list - top 3 will be used.
+        'Culture',
+        'Tourism',
+        'Sights',
+        'Landmarks',
+        'Attractions',
+        'Architecture',
+        'Historic sites',
+        'architectural heritage',
+        'Monuments',
+        'Site description',
+        'Formation, geology, and climate',
+        'Park management',
+        'Flora',
+        'statues',
+        'City layout',
+        'Wilderness areas',
+        'Visitation',
+        'Maya archaeological sites',
+        'Main sights',
+        'Zona Hotelera',
+        'National Parks',
+        'Local architecture',
+        'Castles',
+        'Characteristics',
+        'Condition',
+        'Overview',
+        'Geography',
+        'History',
+        'Economy'
+    ], options).then((s) => {
+        return s.filter(d=>d).slice(0, 2).join('\n');
+    })
 }
 
 export function calculateDistance( from, to ) {

@@ -13,6 +13,7 @@ import NotFound from '../ui/pages/NotFound';
 import places_json from './data/destinations.json';
 import next_json from './data/next.json';
 import countries_json from './data/countries.json';
+import destinationbody_json from './data/destination-body.json';
 import regions_json from './data/regions.json';
 import sights_json from './data/sights.json';
 import blogs_json from './data/blogs.json';
@@ -66,6 +67,7 @@ destinations.forEach((title) => {
         img: place.thumbnail,
         view: render( <Destination {...place}
             sights={sights}
+            body={destinationbody_json[title]}
             blogs={(place.blogs || []).map((id) => blogs_json[id])}
             next={next.filter((title) => !!places_json[title]).map((title) => places_json[title])
                 .map(withDistance(place.lat, place.lon))} /> ),

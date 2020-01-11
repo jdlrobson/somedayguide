@@ -2,9 +2,8 @@ const SELECTOR_OF_NODES_TO_DELETE = [
     '.mw-kartographer-maplink', 'figure', 'dl', 'style',
     '.mw-kartographer-container',
 ].join(',');
-let wikivoyagesections;
 
-function removeNodes(node, selector) {
+export function removeNodes(node, selector) {
     Array.from(node.querySelectorAll(selector)).forEach((node) => {
         if (node.parentNode) {
             node.parentNode.removeChild(node);
@@ -43,9 +42,7 @@ export function fetchTitleSections(title, options = {}) {
     const host = options.host ||  'https://en.wikivoyage.org';
     const searchindex = options.searchindex || ( () => Promise.resolve([]) );
     const url = `${host}/api/rest_v1/page/html/${encodeURIComponent(title)}`;
-    if ( wikivoyagesections ) {
-        return Promise.resolve( wikivoyagesections );
-    }
+    console.log(url);
     return Promise.all([fetch(url).then((r)=>r.text()), searchindex()]).then(([text, index]) => {
         const d = document.createElement('div');
         d.innerHTML = text;
@@ -74,7 +71,6 @@ export function fetchTitleSections(title, options = {}) {
                 id: node.getAttribute( 'data-mw-section-id' ),
                 html, subsections: getSubSections(node) })
         });
-        wikivoyagesections = topsections;
         return topsections;
     });
 }
@@ -85,9 +81,14 @@ export function toDocumentNode(html) {
     return d;
 }
 
-export function fetchSection(title, section, options) {
+export function filterForSection(section, fuzzy) {
     const lsection = section.toLowerCase();
-    return fetchTitleSections(title, options).then((sections) => {
-        return sections.filter((s) => s.title.toLowerCase() === lsection)[0];
-    });
+    return (sections) => {
+        return sections.filter((s) => fuzzy ? s.title.toLowerCase().indexOf(lsection) > -1
+            : s.title.toLowerCase() === lsection)[0];
+    };
+}
+
+export function fetchSection(title, section, options) {
+    return fetchTitleSections(title, options).then(filterForSection(section));
 }
