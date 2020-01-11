@@ -46,7 +46,7 @@ export default function ( props ) {
         </Box>,
         <Box title={`Sights (${sights.length})`} id="sights">
             {sights.sort(claimSort).map((sight) => <Card modifier="condensed" {...sight}
-                href={`https://en.wikipedia.org/wiki/${sight.title}`}/>)}
+                href={`/sights/${sight.wb}`}/>)}
         </Box>
     ];
 

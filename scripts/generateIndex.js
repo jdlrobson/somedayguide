@@ -1,9 +1,11 @@
 import fs from 'fs';
 import destinations from './data/destinations.json';
 import countries from './data/countries.json';
+import sights from './data/sights.json';
 
 const index = [];
-const indexSights = {};
+const indexSights = [];
+const sightsRedirects = [];
 
 Object.keys(destinations).forEach((d) => {
     const dkey = d.toLowerCase();
@@ -12,10 +14,19 @@ Object.keys(destinations).forEach((d) => {
         const skey = s.toLowerCase();
         indexSights[skey] = indexSights[skey] || [];
         indexSights[skey].push(dkey);
+
+        // add redirect
+        sightsRedirects.push([
+            `/destination/${d.replace(/ /, '%20')}/sight/${sights[s].title.replace(/ /, '%20')}`,
+            `/sights/${skey}`
+        ].join(' '));
     });
 });
 Object.keys(countries).forEach((c) => {
     index.push(`c:${c.toLowerCase()}`);
+});
+Object.keys(sights).forEach((s) => {
+    indexSights.push(`s:${sights[s].title.toLowerCase()}:${s.toLowerCase()}`);
 });
 
 console.log('Updating JSON');
@@ -42,5 +53,5 @@ const thumbs = Object.keys(countries).map(
 fs.writeFileSync(`${__dirname}/../public/_redirects`,
     thumbs.map((redirectrule) => redirectrule.join(' ')).concat( [
         '/tools/climate/* /tools/climate.html'
-    ] ).join('\n')
+    ] ).concat( sightsRedirects ).join('\n')
 );

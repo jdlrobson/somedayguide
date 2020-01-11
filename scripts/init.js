@@ -8,6 +8,7 @@ import SummaryPage from '../ui/pages/SummaryPage';
 import DashboardPage from '../ui/pages/DashboardPage';
 import OfflinePage from '../ui/pages/OfflinePage';
 import Country from '../ui/pages/Country';
+import SightPage from '../ui/pages/SightPage';
 import NotFound from '../ui/pages/NotFound';
 import places_json from './data/destinations.json';
 import next_json from './data/next.json';
@@ -134,6 +135,24 @@ Object.keys(regions_json).forEach((region) => {
     });
 });
 
+// generate sights
+
+console.log(`Generate ${Object.keys(sights_json).length} sights...`);
+Object.keys(sights_json).forEach((sight) => {
+    const s = Object.assign({}, sights_json[sight], {
+        destinations: Object.keys(places_json)
+            .filter((p) => ( places_json[p].sights || [] ).includes(sight))
+            .map((p) => places_json[p])
+    });
+    renderPage( `sights/${sight}.html`, {
+        page_title: s.title,
+        url: `https://somedayguide.com/sights/${sight}`,
+        img: s.thumbnail,
+        view: render( <SightPage {...s} />),
+        description: s.description
+    });
+});
+
 console.log(`Generate index.html`);
 const randomPlaces = Object.keys(places_json).sort(()=>Math.random() < 0.5 ? -1 : 1)
     .slice(0, 30).map((key) => getGithubWikiData(key, places_json[key]));
@@ -146,7 +165,6 @@ renderPage( 'index.html', {
     view: render( <Home linkPrefix = '/destination/' places={randomPlaces} /> ),
     description: 'Jon and Linz\'s guide to the world'
 } );
-
 
 renderPage( '404.html', {
     page_title: '4 oh no 4',

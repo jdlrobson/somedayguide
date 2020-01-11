@@ -2,6 +2,7 @@ scripts/data/claims
 public/destination
 public/country
 public/region
+public/sights
 node_modules/
 public/*.js
 public/index--js.css

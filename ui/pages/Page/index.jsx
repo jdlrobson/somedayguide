@@ -4,7 +4,7 @@ import Map from '../../components/Map';
 import Footer from '../../components/Footer';
 
 export default function ( {
-    lat, lon, zoom, parent, parentLink, wikibase,
+    lat, lon, zoom, parent, parentLink, wikibase, nowikivoyage,
     title, subtitle, children, childrenLeft, childrenRight
 } ) {
     return (
@@ -28,7 +28,7 @@ export default function ( {
             <div class="page__column page__column--three">
                 {childrenRight}
             </div>
-            <Footer class="page__column--span" title={title} wikibase={wikibase} />
+            <Footer class="page__column--span" title={title} wikibase={wikibase} nowikivoyage={nowikivoyage}/>
         </div>
     )
 };

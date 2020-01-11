@@ -10,11 +10,7 @@ window.initSearch = function (index) {
         loadedAdditionalSearch = true;
         return fetch('/index--sights.json').then((r) => r.json())
             .then((sights) => {
-                Object.keys(sights).forEach((s) => {
-                    sights[s].forEach((d) => {
-                        index.push(`s:${s}:${d}`)
-                    });
-                });
+                return index.concat(sights);
             })
     });
     show(search);

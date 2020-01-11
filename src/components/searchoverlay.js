@@ -47,8 +47,8 @@ export default function searchoverlay(searchindex, ifNoResults) {
                         thumbnail = `/thumbnails${prefix}/${title}`;
                     } else if (str[0] === 's') {
                         tmp = str.split(':');
-                        title = `${tmp[1]} (${tmp[2]})`;
-                        prefix = '/destination';
+                        title = `${tmp[1]} (sight)`;
+                        prefix = '/sights';
                         url = titleToLink(tmp[2], prefix);
                         thumbnail = `/thumbnails${prefix}/${tmp[2]}`;
                     }
@@ -57,7 +57,10 @@ export default function searchoverlay(searchindex, ifNoResults) {
                     };
                 }).slice(0, 10);
         if (results.length === 0 && !tryAgain) {
-            ifNoResults(searchindex).then(function () {
+            ifNoResults(searchindex).then(function (newIndex) {
+                if (newIndex) {
+                    searchindex = newIndex;
+                }
                 doSearch(matchFn, true);
             });
         }
