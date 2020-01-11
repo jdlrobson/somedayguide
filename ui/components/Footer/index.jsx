@@ -6,7 +6,7 @@ export default function ( props ) {
         Someday guide is a <a href="https://jdlrobson.com">Jon Robson</a> and <a href="https://linzybearswings.wordpress.com">Linz Lim</a> production with data mashed together
         from <a href='https://en.wikipedia.org/'>Wikipedia
         </a>{wikibase && <span>, <a href={`https://wikidata.org/wiki/${wikibase}`}>Wikidata</a></span>}
-        {props.nowikivoyage ? '.' : <span>and <a
+        {props.nowikivoyage ? '.' : <span> and <a
         href={`https://en.wikivoyage.org/wiki/${title}`}>Wikivoyage</a>.</span>}
         <br/>
         An open web is a happy web. If anything looks wrong click
