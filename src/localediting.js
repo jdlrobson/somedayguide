@@ -7,7 +7,7 @@ function enableAdminMode() {
     const a = document.createElement('a');
     a.setAttribute('href', `https://github.com/jdlrobson/somedayguide/wiki/${title.toLowerCase()}`);
     a.textContent = 'Edit';
-    const note = document.querySelectorAll('.somedaynote');
+    const note = document.querySelectorAll('#personalnote');
     // not home page
     if (note.length > 0) {
         note[0].appendChild(a);
@@ -51,7 +51,7 @@ function renderDashboard(notes) {
     }
 }
 export default function setupLocalEditing() {
-    const localNote = document.querySelector('#local-edit [contenteditable]'),
+    const localNote = document.querySelector('#local-edit .note__editable'),
         note = localStorage.getItem(LOCAL_NOTE),
         notes = Object.keys(localStorage).filter((key) => key.indexOf('--') === -1),
         dashboardLink = document.querySelector('.menu__link--dashboard');
@@ -65,6 +65,10 @@ export default function setupLocalEditing() {
     }
     if (note) {
         localNote.textContent = note;
+    } else {
+        localNote.addEventListener('focus', function (ev) {
+            this.textContent = '';
+        });
     }
     localNote.addEventListener('input', function (ev) {
         localStorage.setItem(LOCAL_NOTE, this.textContent);

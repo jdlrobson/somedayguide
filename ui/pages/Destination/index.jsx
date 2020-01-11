@@ -8,9 +8,14 @@ import CommonsSlideshow from '../../components/Slideshow/CommonsSlideshow';
 import InstagramEmbed from '../../components/InstagramEmbed';
 import Climate from '../../components/Climate';
 
+const automatedPersonalNote = (title) => {
+    return `Someday we will visit ${title} or begin to dream about going there! However, for now its not on our radar.
+<a href="#tips">Let us know in the comments</a> if you think that should change!`;
+};
+
 export default function ( props ) {
     const { summary, climate, sights, links = [], country, blogs = [], personalNote,
-            instagram, wb, commons,
+            instagram, wb, commons, body, wikipedia,
             title, lat, lon, thumbnail, next = [], thumbnail__source } = props,
             sightInstagrams = sights.map((sight) => sight.instagram).filter((ig) => ig)
                 // reduce into existing list
@@ -47,13 +52,20 @@ export default function ( props ) {
         <Page title={title} lat={lat} lon={lon} parent={country} wikibase={wb}
             parentLink={`/country/${country}`}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
-            <Note><div dangerouslySetInnerHTML={ { __html: summary } } /></Note>
-            {personalNote && <Note>
-                <h4 class="note__heading">Personal note</h4>
-                <div dangerouslySetInnerHTML={ { __html: personalNote } } />
-            </Note>}
+            <Note id="personal">
+                <div dangerouslySetInnerHTML={ { __html: personalNote || automatedPersonalNote(title) } } />
+            </Note>
+            <Note>
+                <h4 class="note__heading">{title}</h4>
+                <div dangerouslySetInnerHTML={ { __html: summary } } />
+                <div dangerouslySetInnerHTML={ { __html: body } } />
+                {wikipedia && <footer class="somedaynote__footer">
+                    Source: <a href={`https://en.wikipedia.org/wiki/${wikipedia}`}>wikipedia</a>
+                </footer>}
+            </Note>
             <Note isprivate={true} id="local-edit">
-                <p contentEditable>What's on your mind?</p>
+                <h4 class="note__heading">Your notes (private)</h4>
+                <p contentEditable class="note__editable">What's on your mind? (you can type here notes just for you and they will show on your <a href="/dashboard">dashboard</a>)</p>
             </Note>
             <Note>
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
@@ -81,6 +93,12 @@ export default function ( props ) {
                     <p>When someday comes you'll need to be able to get around.</p>
                     <button class="note__button">View information</button>
                 </div>
+            </Note>
+            <Note id="tips">
+                <h4 class="note__heading">Your tips and questions</h4>
+                <p>Let us know your best tips about {title}.</p>
+                <button class="note__button" disabled>See and add tips</button>
+                <div id="disqus_thread"></div>
             </Note>
         </Page>
     );

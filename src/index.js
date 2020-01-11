@@ -143,6 +143,27 @@ if (getaround) {
     });
 }
 
+const loadDisqus = document.querySelector('#tips button');
+
+function loadDisqusPlugin() {
+    loadDisqus.parentNode.removeChild(loadDisqus);
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://https-somedayguide-com.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+}
+
+if (loadDisqus) {
+    loadDisqus.removeAttribute('disabled');
+    loadDisqus.addEventListener('click', loadDisqusPlugin);
+}
+window.addEventListener('hashchange', function () {
+    if ( window.location.hash === '#tips' ) {
+        loadDisqusPlugin();
+    }
+});
 if ( !onLine ) {
     document.body.classList.add('offline');
 }
