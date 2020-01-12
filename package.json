@@ -4,8 +4,9 @@
   "description": "Jon and Linzy's guide to the world.",
   "main": "index.js",
   "scripts": {
+    "images": "imagemin-cli public/images/* --out-dir public/images/",
     "server": "http-server public/",
-    "assets": "export MODE=production && export CACHE_KEY=$(git rev-parse HEAD) && rollup -c",
+    "assets": "export MODE=production && export CACHE_KEY=$(git rev-parse HEAD) && rollup -c && npm run images",
     "html": "npx @babel/node -r @babel/register scripts/init.js",
     "start": "export MODE=production && npm run data && npm run html && npm run assets",
     "search-index": "npx @babel/node -r @babel/register scripts/generateIndex.js",
@@ -28,6 +29,7 @@
     "domino": "2.1.3",
     "fetch": "1.1.0",
     "fg-loadjs": "1.1.0",
+    "imagemin-cli": "^5.1.0",
     "leaflet": "1.5.1",
     "marked": "0.6.1",
     "mocha": "6.2.2",
