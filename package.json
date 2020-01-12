@@ -6,7 +6,7 @@
   "scripts": {
     "images": "imagemin-cli public/images/* --out-dir public/images/",
     "server": "http-server public/",
-    "assets": "export MODE=production && export CACHE_KEY=$(git rev-parse HEAD) && rollup -c && npm run images",
+    "assets": "export MODE=production && export CACHE_KEY=$(git rev-parse HEAD) && rollup -c",
     "html": "npx @babel/node -r @babel/register scripts/init.js",
     "start": "export MODE=production && npm run data && npm run html && npm run assets",
     "search-index": "npx @babel/node -r @babel/register scripts/generateIndex.js",
