@@ -7,7 +7,7 @@ function enableAdminMode() {
     const a = document.createElement('a');
     a.setAttribute('href', `https://github.com/jdlrobson/somedayguide/wiki/${title.toLowerCase()}`);
     a.textContent = 'Edit';
-    const note = document.querySelectorAll('#personalnote');
+    const note = document.querySelectorAll('#personal');
     // not home page
     if (note.length > 0) {
         note[0].appendChild(a);
