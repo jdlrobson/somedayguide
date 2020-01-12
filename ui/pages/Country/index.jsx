@@ -5,11 +5,23 @@ import Card from '../../components/Card';
 import InstagramEmbed from '../../components/InstagramEmbed';
 import Slideshow from '../../components/Slideshow';
 import Note from '../../components/Note';
+import PrivateNote from '../../components/PrivateNote';
 import CommonsSlideshow from '../../components/Slideshow/CommonsSlideshow';
+
+const automatedPersonalNote = (title, instagram, blogs) => {
+    if ( blogs.length ) {
+        return `Get to know ${title} and make your own plans for someday by reading <a href="#blogs">our blogs</a>.`;
+    } else if ( instagram.length ) {
+        return `We have visited ${title} but haven't got round to putting something here. Checkout our Instagrams in the meantime.`;
+    } else {
+        return `Someday we will visit ${title} or begin to dream about going there! However, for now its not on our radar.
+<a href="#tips">Let us know in the comments</a> if you think that should change!`;
+    }
+};
 
 export default function ( props ) {
     const { summary, airports = [], sights = [], links = [], personalNote, blogs = [],
-            instagram, neighbors, wb, commons, info,
+            instagram, neighbors, wb, commons, info, wikipedia,
             title, lat, lon, thumbnail, destinations = [], thumbnail__source } = props;
 
     const childrenRight = [
@@ -53,15 +65,16 @@ export default function ( props ) {
     return (
         <Page title={title} lat={lat} lon={lon} zoom={5} wikibase={wb}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
-            <Note><div dangerouslySetInnerHTML={ { __html: summary } } /></Note>
-            {personalNote && <Note>
-                <h4 class="note__heading">Personal note</h4>
-                <div dangerouslySetInnerHTML={ { __html: personalNote } } />
-            </Note>}
-            <Note isprivate={true} id="local-edit">
-                <p contentEditable>What's on your mind?</p>
+            <Note id="personal">
+                <div dangerouslySetInnerHTML={ { __html: personalNote ||
+                    automatedPersonalNote(title, instagram, blogs) } } />
             </Note>
             <Note>
+                <h4 class="note__heading">{title}</h4>
+                <div dangerouslySetInnerHTML={ { __html: summary } } />
+            </Note>
+            <PrivateNote />
+            <Note id="blogs">
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
             {blogs.length > 0 &&
                 blogs.map((blog) =>

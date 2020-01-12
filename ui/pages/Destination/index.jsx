@@ -4,13 +4,20 @@ import Box from '../../components/Box';
 import Card from '../../components/Card';
 import Slideshow from '../../components/Slideshow';
 import Note from '../../components/Note';
+import PrivateNote from '../../components/PrivateNote';
 import CommonsSlideshow from '../../components/Slideshow/CommonsSlideshow';
 import InstagramEmbed from '../../components/InstagramEmbed';
 import Climate from '../../components/Climate';
 
-const automatedPersonalNote = (title) => {
-    return `Someday we will visit ${title} or begin to dream about going there! However, for now its not on our radar.
+const automatedPersonalNote = (title, instagram, blogs) => {
+    if ( blogs.length ) {
+        return `Get to know ${title} and make your own plans for someday by reading <a href="#blogs">our blogs</a>.`;
+    } else if ( instagram.length ) {
+        return `We have visited ${title} but haven't got round to putting something here. Checkout our Instagrams in the meantime.`;
+    } else {
+        return `Someday we will visit ${title} or begin to dream about going there! However, for now its not on our radar.
 <a href="#tips">Let us know in the comments</a> if you think that should change!`;
+    }
 };
 
 export default function ( props ) {
@@ -53,7 +60,7 @@ export default function ( props ) {
             parentLink={`/country/${country}`}
             childrenLeft={childrenLeft} childrenRight={childrenRight}>
             <Note id="personal">
-                <div dangerouslySetInnerHTML={ { __html: personalNote || automatedPersonalNote(title) } } />
+                <div dangerouslySetInnerHTML={ { __html: personalNote || automatedPersonalNote(title, instagram, blogs) } } />
             </Note>
             <Note>
                 <h4 class="note__heading">{title}</h4>
@@ -63,11 +70,8 @@ export default function ( props ) {
                     Source: <a href={`https://en.wikipedia.org/wiki/${wikipedia}`}>wikipedia</a>
                 </footer>}
             </Note>
-            <Note isprivate={true} id="local-edit">
-                <h4 class="note__heading">Your notes (private)</h4>
-                <p contentEditable class="note__editable">What's on your mind? (you can type here notes just for you and they will show on your <a href="/dashboard">dashboard</a>)</p>
-            </Note>
-            <Note>
+            <PrivateNote/>
+            <Note id="blogs">
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
             {blogs.length > 0 &&
                 blogs.map((blog) =>
