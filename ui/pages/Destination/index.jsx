@@ -39,11 +39,11 @@ export default function ( props ) {
         </Box>
     ];
     const childrenLeft = [
-        <Box title="Go next" id="destinations">
+        <Box title="Go next" id="destinations"  modifiers={['cards']}>
             {next.sort((p1, p2)=>p1.distance < p2.distance ? -1 : 1)
                 .map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>,
-        <Box title={`Sights (${sights.length})`} id="sights">
+        <Box title={`Sights (${sights.length})`} id="sights"  modifiers={['cards']}>
             {sights.sort((s1, s2) => {
                     return s1.distance < s2.distance ? -1 : 1
                 }).map((sight) => <Card modifier="condensed" {...sight}
@@ -71,7 +71,7 @@ export default function ( props ) {
                 </footer>}
             </Note>
             <PrivateNote/>
-            <Note id="blogs">
+            <Note id="blogs" modifier="blogs">
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
             {blogs.length > 0 &&
                 blogs.map((blog) =>

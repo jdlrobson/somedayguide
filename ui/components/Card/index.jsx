@@ -1,8 +1,5 @@
 import preact, { h } from 'preact';
-
-const getClassName = (className, modifier, additional) => {
-    return [ className, modifier && `${className}--${modifier}`, additional ].filter((c)=>c !== undefined).join(' ');
-}
+import  { getClassName } from '../utils';
 
 function toFriendlyDistance(km) {
     if ( km < 1 ) {
@@ -27,7 +24,7 @@ export default function ( { title, distance, href,
                 }
             ></div>
             <div class={getClassName('card__text', modifier, 'geo')}>
-                <h3 class={getClassName('card__text__heading')}>{title.replace(/_/g, ' ')}</h3>
+                <h3 class={getClassName('card__text__heading', modifier)}>{title.replace(/_/g, ' ')}</h3>
                 <p class={getClassName('card__text__summary', modifier)}>
                     {description || summary}
                 </p>

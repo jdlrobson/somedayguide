@@ -450,7 +450,6 @@ li {
 }
 
 .box__title {
-    border-bottom: 1px solid #ccc;
     font-size: .8em;
     font-weight: 400;
     padding: .5em 0 6px 20px;
@@ -460,7 +459,58 @@ li {
     text-align: left;
     background: #af9e82;
     color: #fff;
-    margin: 0;
+    margin: 4px 0;
+}
+
+.card--blogs {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.card__thumb--blogs {
+    width: 80px;
+    border-radius: 50%;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.card__text__heading--blogs {
+    max-width: 220px;
+}
+
+/* @Todo: bem class */
+
+.box .card {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-left: 10px;
+    font-size: 0.7em;
+    height: 90px;
+    border: none;
+    margin-bottom: 4px;
+}
+
+.box .card__text__summary {
+    line-height: 10px;
+    max-height: 20px;
+    margin-bottom: 8px;
+}
+
+.box .card__text {
+    min-width: 164px;
+}
+
+.box .card__text__heading {
+    max-width: 100px;
+}
+
+.box .card__thumb {
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    flex-shrink: 0;
 }
 
 .box__content {
@@ -469,6 +519,11 @@ li {
     background: white;
     overflow: scroll;
     max-height: 290px;
+}
+
+.box__content--cards {
+    padding: 0;
+    background: transparent;
 }
 
 .slideshow {
@@ -503,8 +558,8 @@ li {
     background-size: cover;
     height: 100%;
     background-position: center;
-    width: 100%;
     margin: auto;
+    width: 200px;
 }
 
 .slideshow__slide__caption {
@@ -587,6 +642,9 @@ footer.page__column--span {
 }
 
 @media all and (min-width: 1000px) {
+    .slideshow__slide {
+        width: 100%;
+    }
     footer.page__column--span {
         grid-column: 2/3;
     }

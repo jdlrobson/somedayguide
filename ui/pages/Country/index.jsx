@@ -28,8 +28,9 @@ export default function ( props ) {
         <CommonsSlideshow
             commons={commons}
             slides={[{ src: thumbnail, href: thumbnail__source } ]}></CommonsSlideshow>,
-        neighbors && <Box title="Nearby countries">
-            {neighbors.map((country) =><Card modifier="condensed" {...country}/> )}
+        neighbors && <Box title="Nearby countries" modifiers={['cards']}>
+            {neighbors.map((country) =><Card modifier="condensed" {...country}
+                href={`/country/${country.title}`}/> )}
         </Box>,
         // Electrical is ommitted as if you have a universal adapter it shouldn't matter..
         <Box title="Good to know">
@@ -53,10 +54,10 @@ export default function ( props ) {
     ];
     const claimSort = (s1,s2)=> (s1.claims || 0 ) > s2.claims || 0 ? -1 : 1;
     const childrenLeft = [
-        <Box title={`Destinations (${destinations.length})`} id="destinations">
+        <Box title={`Destinations (${destinations.length})`} id="destinations" modifiers={['cards']}>
             {destinations.sort(claimSort).map((place) => <Card modifier="condensed" {...place}/>)}
         </Box>,
-        <Box title={`Sights (${sights.length})`} id="sights">
+        <Box title={`Sights (${sights.length})`} id="sights" modifiers={['cards']}>
             {sights.sort(claimSort).map((sight) => <Card modifier="condensed" {...sight}
                 href={`/sights/${sight.wb}`}/>)}
         </Box>
@@ -78,7 +79,7 @@ export default function ( props ) {
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
             {blogs.length > 0 &&
                 blogs.map((blog) =>
-                    <Card modifier="note" {...blog}/>)
+                    <Card modifier={["note", "blogs"]} {...blog}/>)
             }
             </Note>
             <Note>
