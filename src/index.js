@@ -117,7 +117,7 @@ setupCommonsSlideshow(document.querySelector('.slideshow--commons'));
 document.querySelectorAll('.slideshow--ig').forEach((node) => {
     setupSlideshow(node, function (ev, lastNode, node) {
         lastNode.style.display = 'none';
-        node.style.display = 'block';
+        node.style.display = '';
     })
 })
 

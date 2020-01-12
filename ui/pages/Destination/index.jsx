@@ -71,11 +71,11 @@ export default function ( props ) {
                 </footer>}
             </Note>
             <PrivateNote/>
-            <Note id="blogs" modifier="blogs">
+            <Note id="blogs">
             {blogs.length > 0 && <h4 class="note__heading">Our travel journal</h4>}
             {blogs.length > 0 &&
                 blogs.map((blog) =>
-                    <Card modifier="note" {...blog}/>)
+                    <Card modifier={["note", "blogs"]} {...blog}/>)
             }
             </Note>
             {(instagram.length > 0 || sightInstagrams.length > 0) &&
