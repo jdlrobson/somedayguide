@@ -473,7 +473,10 @@ li {
 
 .slideshow {
     position: relative;
-    background: #333;
+    /* @slideshow-padding */
+    padding: 10px 30px 40px 30px;
+    box-sizing: border-box;
+    background: rgb(193, 181, 158);
     margin-bottom: 16px;
     overflow: hidden;
     width: 100%;
@@ -495,6 +498,7 @@ li {
 }
 
 .slideshow__slide {
+    border-radius: 50%;
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
@@ -515,7 +519,8 @@ li {
     width: 100%;
     display: block;
     padding: 2px;
-    font-size: .9em;
+    text-transform: uppercase;
+    font-size: 0.6em;
     position: absolute;
     bottom: 0;
 }
