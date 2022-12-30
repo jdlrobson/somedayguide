@@ -32,7 +32,7 @@
     "imagemin-cli": "^5.1.0",
     "leaflet": "1.5.1",
     "marked": "0.6.1",
-    "mocha": "6.2.2",
+    "mocha": "10.2.0",
     "mustache": "3.1.0",
     "node-fetch": "2.6.0",
     "preact": "10.0.0",
