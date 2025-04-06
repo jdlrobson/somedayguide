@@ -34,7 +34,7 @@
     "marked": "0.6.1",
     "mocha": "6.2.2",
     "mustache": "3.1.0",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.7",
     "preact": "10.0.0",
     "preact-render-to-string": "5.0.6",
     "rollup": "1.25.2",
